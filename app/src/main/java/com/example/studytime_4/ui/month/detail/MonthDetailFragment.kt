@@ -50,11 +50,10 @@ class MonthDetailFragment : Fragment() {
 
     private fun setBarChart(barData: BarData) {
         val xaxis = binding.monthDetailBarChart.xAxis //sets the spacing between the x labels
-        xaxis.spaceBetweenLabels = 0
 
 //        binding.monthBarChart.fitScreen()
         binding.monthDetailBarChart.data = barData // set the data and list of lables into chart
-        binding.monthDetailBarChart.setDescription(viewModel.month)
+//        binding.monthDetailBarChart.setDescription(viewModel.month)
 
 //        //barDataSet.setColors(ColorTemplate.COLORFUL_COLORS)
 //        barDataSet.color = resources.getColor(R.color.colorAccent)

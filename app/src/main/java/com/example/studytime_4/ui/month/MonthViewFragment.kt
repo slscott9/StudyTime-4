@@ -10,7 +10,9 @@ import androidx.fragment.app.viewModels
 import com.example.studytime_4.R
 import com.example.studytime_4.databinding.FragmentMonthViewBinding
 import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MonthViewFragment : Fragment() {
@@ -45,11 +47,14 @@ class MonthViewFragment : Fragment() {
 
     private fun setBarChart(barData: BarData) {
         val xaxis = binding.monthBarChart.xAxis //sets the spacing between the x labels
-        xaxis.spaceBetweenLabels = 0
+        xaxis.valueFormatter = IndexAxisValueFormatter(viewModel.monthDayLabels)
+        Timber.i(viewModel.monthDayLabels.toString())
+        binding.monthBarChart.xAxis.axisMaximum = 31F
+        binding.monthBarChart.setVisibleXRange(1F,viewModel.monthDayLabels.size.toFloat())
 
-        binding.monthBarChart.fitScreen()
+//        binding.monthBarChart.fitScreen()
         binding.monthBarChart.data = barData // set the data and list of lables into chart
-        binding.monthBarChart.setDescription(viewModel.month)
+//        binding.monthBarChart.setDescription(viewModel.month)
 
 //        //barDataSet.setColors(ColorTemplate.COLORFUL_COLORS)
 //        barDataSet.color = resources.getColor(R.color.colorAccent)

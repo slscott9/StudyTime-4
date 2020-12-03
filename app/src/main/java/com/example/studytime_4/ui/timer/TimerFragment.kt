@@ -107,15 +107,15 @@ class TimerFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                binding.startButton.text = "start"
+//                binding.startButton.text = "start"
                 countdown_timer?.cancel()
-                val minutesStudied = TimeUnit.MILLISECONDS.toMinutes(start_time_in_mili - time_in_milli_seconds)
-                Timber.i("The minutes studies is ${minutesStudied}")
-                val hoursStudied = (minutesStudied / 60.0).toFloat()
+//                val minutesStudied = TimeUnit.MILLISECONDS.toMinutes(start_time_in_mili - time_in_milli_seconds)
+//                Timber.i("The minutes studies is ${minutesStudied}")
+//                val hoursStudied = (minutesStudied / 60.0).toFloat()
 
                 studySession = StudySession(
-                    hours = hoursStudied,
-                    minutes = minutesStudied,
+                    hours = 1F,
+                    minutes = 60,
                     date = formattedDate.toString(),
                     weekDay = currentWeekDay.toString(),
                     month = currentMonth,

@@ -36,12 +36,12 @@ class MonthDetailViewModel @ViewModelInject constructor(
 
     private  fun setSessionWithMonthBarData(monthsStudySessionList: List<StudySession>) : BarData {
 
-        val monthBarDataSetValues = MutableList(31) { BarEntry(0F, 0) }
+        val monthBarDataSetValues = MutableList(31) { BarEntry(0F, 0F) }
         var monthBarData = BarData()
 
         if (monthsStudySessionList.isNullOrEmpty()) {
             val barDataSet = BarDataSet(monthBarDataSetValues, "Hours")
-            monthBarData = BarData(monthDayLabels, barDataSet)
+            monthBarData = BarData(barDataSet)
 
         } else {
             //Entries uses the fixed size so we can add values to it at specific indexes
@@ -51,7 +51,7 @@ class MonthDetailViewModel @ViewModelInject constructor(
                 monthBarDataSetValues[monthsStudySessionList[i].dayOfMonth - 1] =
                     BarEntry(
                         monthsStudySessionList[i].hours,
-                        monthsStudySessionList[i].dayOfMonth - 1
+                        monthsStudySessionList[i].dayOfMonth - 1.toFloat()
                     ) //to match the array indexes
             }
 
@@ -59,7 +59,7 @@ class MonthDetailViewModel @ViewModelInject constructor(
             month =
                 months[monthsStudySessionList[0].month - 1] //set the month value to be displayed in the monthBarChart's description
 
-            monthBarData = BarData(monthDayLabels, monthBarDataSet)
+            monthBarData = BarData(monthBarDataSet)
         }
 
         return monthBarData

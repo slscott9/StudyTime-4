@@ -43,4 +43,18 @@
             android:name="sessionId"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/addGoalFragment"
+        android:name="com.example.studytime_4.ui.goal.AddGoalFragment"
+        android:label="fragment_add_goal"
+        tools:layout="@layout/fragment_add_goal" />
+    <fragment
+        android:id="@+id/weekViewFragment"
+        android:name="com.example.studytime_4.ui.week.WeekViewFragment"
+        android:label="fragment_week_view"
+        tools:layout="@layout/fragment_week_view" >
+        <action
+            android:id="@+id/action_weekViewFragment_to_addGoalFragment"
+            app:destination="@id/addGoalFragment" />
+    </fragment>
 </navigation>

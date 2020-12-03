@@ -16,4 +16,6 @@
     <string name="reset_timer_button">reset</string>
     <string name="enter_study_duration">Enter hours to study</string>
     <string name="_0">0</string>
+    <string name="weekly_goal">Weekly Goal</string>
+    <string name="cancel">cancel</string>
 </resources>

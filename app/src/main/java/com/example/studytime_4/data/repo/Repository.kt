@@ -1,9 +1,18 @@
 package com.example.studytime_4.data.repo
 
+import com.example.studytime_4.data.local.entities.Goal
 import com.example.studytime_4.data.local.entities.StudySession
 import kotlinx.coroutines.flow.Flow
 
 interface Repository {
+
+    //get weekly goal
+    fun getGoalForWeek(currentDate: Int, currentDayOfMonth: Int) : Flow<Goal>
+
+
+
+    //Save user goals
+    suspend fun upsertGoal(goal: Goal)
 
     //Changes for transformations
     fun getLastSevenSessionsHours(currentMonth: Int, currentDayOfMonth: Int): Flow<List<Float>>

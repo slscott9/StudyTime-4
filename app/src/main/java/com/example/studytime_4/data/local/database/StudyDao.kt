@@ -1,11 +1,33 @@
 package com.example.studytime_4.data.local.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.studytime_4.data.local.entities.Goal
 import com.example.studytime_4.data.local.entities.StudySession
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface StudyDao {
+
+    //Get current goal
+    @Query("select * from goal_table where date <= :currentDate and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth ")
+    fun getGoalForWeek(currentDate: Int, currentDayOfMonth: Int) : Flow<Goal>
+
+    //Save user goals
+    @Query("update goal_table set hours = hours + :goal where id = :goalId")
+    suspend fun updateGoal(goal: Float, goalId: Long)
+
+    @Insert
+    suspend fun insertGoal(goal: Goal) : Long
+
+    @Transaction
+    suspend fun upsertGoal(goal: Goal) {
+        val id = insertGoal(goal)
+
+        if(id == -1L){
+            updateGoal(goal.hours, goal.id)
+        }
+    }
 
 
     //Changes for transformations
