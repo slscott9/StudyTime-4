@@ -10,14 +10,14 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/monthBarChart"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="35dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

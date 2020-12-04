@@ -55,6 +55,21 @@ class TimerFragment : Fragment() {
 
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
+//
+//        for(i in 5 until 15){
+//            viewModel.upsertStudySession(
+//                StudySession(
+//                    hours = i.toFloat(),
+//                    minutes = 60,
+//                    date = "2020-12-$i", //formattedDate
+//                    weekDay = "WEDNESDAY",
+//                    month = 12,
+//                    dayOfMonth = i,
+//                    year = 2020,
+//                )
+//            )
+//        }
+
     }
 
     override fun onCreateView(
@@ -119,11 +134,21 @@ class TimerFragment : Fragment() {
                 studySession = StudySession(
                     hours = 1F,
                     minutes = 60,
-                    date = "2020-12-04", //formattedDate
-                    weekDay = currentWeekDay.toString(),
-                    month = currentMonth,
-                    dayOfMonth = currentDayOfMonth,
-                    year = currentYear,
+                    date = "2020-12-02", //formattedDate
+                    weekDay = "WEDNESDAY",
+                    month = 12,
+                    dayOfMonth = 2,
+                    year = 2020,
+
+//                    hours = 1F,
+//                    minutes = 60,
+//                    date = "2020-12-04", //formattedDate
+//                    weekDay = currentWeekDay.toString(),
+//                    month = currentMonth,
+//                    dayOfMonth = currentDayOfMonth,
+//                    year = currentYear,
+
+
                 )
 
                 viewModel.upsertStudySession(studySession)

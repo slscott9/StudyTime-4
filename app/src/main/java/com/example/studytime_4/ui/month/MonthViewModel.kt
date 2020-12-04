@@ -4,14 +4,17 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.studytime_4.data.MonthData
 import com.example.studytime_4.data.local.entities.StudySession
 import com.example.studytime_4.data.repo.Repository
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.Entry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import java.time.LocalDateTime
 
 class MonthViewModel @ViewModelInject constructor(
@@ -39,42 +42,33 @@ class MonthViewModel @ViewModelInject constructor(
 
 
     private val _monthBarData = monthsStudySession.map {
-        setSessionWithMonthBarData(it)
+
+        setMonthBarData(it)
+
+
     }.asLiveData(Dispatchers.Default + viewModelScope.coroutineContext)
 
     val monthBarData = _monthBarData
 
 
-    private fun setSessionWithMonthBarData(monthsStudySessionList: List<StudySession>) : BarData {
+    private fun setMonthBarData(monthStudySessionList : List<StudySession>) : MonthData {
 
-        val monthBarDataSetValues = MutableList(31) { BarEntry(0F, 0F) }
+        val monthData = monthStudySessionList.mapIndexed {index, studySession  ->
 
-        var monthBarData = BarData()
-
-        if (monthsStudySessionList.isNullOrEmpty()) {
-            val barDataSet = BarDataSet(monthBarDataSetValues, "Hours")
-            monthBarData = BarData(barDataSet)
-
-        } else {
-            //Entries uses the fixed size so we can add values to it at specific indexes
-            //BarEntry(value, index) we can specify the index this bar value will be placed
-
-            for (i in monthsStudySessionList.indices) {
-                monthBarDataSetValues[monthsStudySessionList[i].dayOfMonth - 1] =
-                    BarEntry(
-                        monthsStudySessionList[i].hours,
-                        monthsStudySessionList[i].dayOfMonth - 1.toFloat()
-                    ) //to match the array indexes
-            }
-
-            val monthBarDataSet = BarDataSet(monthBarDataSetValues, "Hours")
-            month =
-                months[monthsStudySessionList[0].month - 1] //set the month value to be displayed in the monthBarChart's description
-
-            monthBarData = BarData(monthBarDataSet)
+            BarEntry(index.toFloat(), studySession.hours)
 
         }
 
-        return monthBarData
+        val labels = monthStudySessionList.map {  studySession ->
+            Timber.i(studySession.date)
+
+            studySession.date
+        }
+        Timber.i(labels.toString())
+
+       return  MonthData(monthBarData = BarData(BarDataSet(monthData, months[currentMonth - 1])), labels = labels)
     }
+
+
+
 }

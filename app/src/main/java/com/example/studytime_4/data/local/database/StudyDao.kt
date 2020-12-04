@@ -17,7 +17,7 @@ interface StudyDao {
     @Update
     suspend fun updateGoal(goal: Goal)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE) //ignore if the goal exists so we can update the goal
     suspend fun insertGoal(goal: Goal) : Long
 
     @Transaction
@@ -56,7 +56,7 @@ interface StudyDao {
     suspend fun getCurrentStudySession(currentDate: String): StudySession
 
 
-    @Query("select * from study_table_4 where month= :monthSelected")
+    @Query("select * from study_table_4 where month= :monthSelected order by dayOfMonth asc")
     fun getAllSessionsWithMatchingMonth(monthSelected: Int): Flow<List<StudySession>>
 
 
@@ -68,11 +68,10 @@ interface StudyDao {
     fun getLastSevenSessions(currentMonth: Int, currentDayOfMonth: Int): Flow<List<StudySession>>
 
 
-    //Change to return study sessions
     @Query("select distinct year from study_table_4  order by year asc")
     fun getYearsWithSessions(): Flow<List<Int>>
 
-    @Query("select  month from study_table_4 where year = :yearSelected order by month asc")
+    @Query("select distinct month from study_table_4 where year = :yearSelected order by month asc")
     fun getMonthsWithSelectedYear(yearSelected : Int) : Flow<List<Int>>
 
 

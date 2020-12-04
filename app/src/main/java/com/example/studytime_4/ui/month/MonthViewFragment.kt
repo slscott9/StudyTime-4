@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import com.example.studytime_4.R
+import com.example.studytime_4.data.MonthData
+import com.example.studytime_4.data.WeekData
 import com.example.studytime_4.databinding.FragmentMonthViewBinding
-import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import java.time.Month
 
 @AndroidEntryPoint
 class MonthViewFragment : Fragment() {
@@ -36,31 +38,39 @@ class MonthViewFragment : Fragment() {
             }
         }
 
-        //Flow will only emit when terminal operator is called such as collect
-//        viewModel.viewModelScope.launch {
-//            viewModel.monthBarData.collect {
-//                setBarChart(it)
-//            }
-//        }
+
         return binding.root
     }
 
-    private fun setBarChart(barData: BarData) {
-        val xaxis = binding.monthBarChart.xAxis //sets the spacing between the x labels
-        xaxis.valueFormatter = IndexAxisValueFormatter(viewModel.monthDayLabels)
-        Timber.i(viewModel.monthDayLabels.toString())
-        binding.monthBarChart.xAxis.axisMaximum = 31F
-        binding.monthBarChart.setVisibleXRange(1F,viewModel.monthDayLabels.size.toFloat())
 
-//        binding.monthBarChart.fitScreen()
-        binding.monthBarChart.data = barData // set the data and list of lables into chart
-//        binding.monthBarChart.setDescription(viewModel.month)
+    private fun setBarChart(monthData: MonthData) {
 
-//        //barDataSet.setColors(ColorTemplate.COLORFUL_COLORS)
-//        barDataSet.color = resources.getColor(R.color.colorAccent)
+        var force: Boolean
 
-        binding.monthBarChart.animateY(1000)
+        binding.monthBarChart.data =
+            monthData.monthBarData // set the data and list of lables into chart
+
+        if (monthData.labels.size > 1) {
+            binding.monthBarChart.xAxis.setCenterAxisLabels(false)
+            force = false
+        } else {
+            binding.monthBarChart.xAxis.setCenterAxisLabels(true)
+            force = true
+        }
+
+        binding.monthBarChart.apply {
+            xAxis.setLabelCount(
+                monthData.labels.size,
+                force
+            ) //force = false aligns values with labels
+            xAxis.valueFormatter = IndexAxisValueFormatter(monthData.labels);
+            animateY(1000)
+        }
+
+
     }
+
+
 
 
 }

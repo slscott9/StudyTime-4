@@ -23,66 +23,6 @@ class WeekViewFragment : Fragment() {
     private lateinit var binding: FragmentWeekViewBinding
     private val viewModel: WeekViewModel by viewModels()
 
-    private val monthDayLabels = arrayListOf<String>(
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "20",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "29",
-        "30",
-        "31"
-    )
-    private val nullLabels = arrayListOf<String>(
-        "No Data",
-        "No Data",
-        "No Data",
-        "No Data",
-        "No Data",
-        "No Data",
-        "No Data"
-    )
-    private val months = arrayListOf<String>(
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-    )
-
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -91,29 +31,40 @@ class WeekViewFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_week_view, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
 
-
         viewModel.weekBarData.observe(viewLifecycleOwner) {
             it?.let {
-                setBarChart(it)
+                setupWeekBarChart(it)
             }
         }
 
         viewModel.goalData.observe(viewLifecycleOwner) {
             it?.let {
+
                 val limitLine = LimitLine(it.limit.toFloat(), "Weekly goal")
 
                 binding.totalHoursChart.apply {
                     data = it.totalHours
-                    axisLeft.axisMaximum = (it.limit.toFloat() + 2F)
+                    axisLeft.axisMaximum = (it.limit.toFloat() + it.totalHours.yMax)
                     axisLeft.axisMinimum = 0F
-                    axisLeft.addLimitLine(limitLine)
+
+                    //if limit is zero dont draw it
+                    //if there a limit line remove the current and add new one
+                    if(it.limit != 0){
+                        axisLeft.removeAllLimitLines()
+                        axisLeft.addLimitLine(limitLine)
+                    }
+
+                    //Both must be set to false or double gridlines will be drawn for the goalbarchart
                     axisRight.setDrawLabels(false)
+                    axisRight.setDrawGridLines(false)
+
                     axisLeft.valueFormatter = MyValueFormatter() //remove float decimals
                     axisLeft.granularity = 1F //sets steps by ones
                     xAxis.setDrawLabels(false) //disable labels for x axis
                 }
             }
         }
+
         binding.addGoalChip.setOnClickListener {
             val addGoalDialogFragment = AddGoalFragment()
             addGoalDialogFragment.show(parentFragmentManager, addGoalDialogFragment.tag)
@@ -127,19 +78,20 @@ class WeekViewFragment : Fragment() {
         private val format = DecimalFormat("###,##0.0")
 
         override fun getFormattedValue(value: Float): String {
-            return value.toInt().toString()
+            return value.toInt().toString() //gets y axis values to integers instead of 0.0 floats
         }
     }
 
 
-
-    private fun setBarChart(weekData: WeekData) {
+    private fun setupWeekBarChart(weekData: WeekData) {
 
         var force: Boolean
 
         binding.weekBarChart.data =
             weekData.weekBarData // set the data and list of lables into chart
 
+        //case 1 multiple bar chart values -> axis labels need to move in order to match chart values
+        //case 2 only one bar chart value -> so center the label over value
         if (weekData.labels.size > 1) {
             binding.weekBarChart.apply {
                 xAxis.setCenterAxisLabels(false)
@@ -155,6 +107,8 @@ class WeekViewFragment : Fragment() {
         }
 
         binding.weekBarChart.apply {
+
+            //for labels since we know they will only ever be 7 values for the week
             xAxis.setLabelCount(
                 weekData.labels.size,
                 force

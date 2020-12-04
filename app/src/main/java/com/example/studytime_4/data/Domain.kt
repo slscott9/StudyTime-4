@@ -11,3 +11,8 @@ data class WeekData(
     val weekBarData : BarData,
     val labels : List<String>
 )
+
+data class MonthData(
+    val monthBarData: BarData,
+    val labels: List<String>
+)
