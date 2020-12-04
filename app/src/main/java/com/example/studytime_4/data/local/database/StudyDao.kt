@@ -10,12 +10,12 @@ import kotlinx.coroutines.flow.Flow
 interface StudyDao {
 
     //Get current goal
-    @Query("select * from goal_table where date <= :currentDate and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth ")
-    fun getGoalForWeek(currentDate: Int, currentDayOfMonth: Int) : Flow<Goal>
+    @Query("select * from goal_table where month = :curMonth and year = :curYear and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth ")
+    fun getGoalForWeek(curMonth: Int, curYear: Int, currentDayOfMonth: Int) : Flow<Goal?>
 
     //Save user goals
-    @Query("update goal_table set hours = hours + :goal where id = :goalId")
-    suspend fun updateGoal(goal: Float, goalId: Long)
+    @Update
+    suspend fun updateGoal(goal: Goal)
 
     @Insert
     suspend fun insertGoal(goal: Goal) : Long
@@ -25,9 +25,18 @@ interface StudyDao {
         val id = insertGoal(goal)
 
         if(id == -1L){
-            updateGoal(goal.hours, goal.id)
+            updateGoal(goal)
         }
     }
+
+
+    /*
+        Add Goal entity with date like 2020-12-04 query database for a date in range of todays date and todays date - 7
+
+        if there a goal and user wants to change it update the goal that was in this range
+
+        This ensures that we only need one goal for a week instead of inserting new goals everytime user changes a goal
+     */
 
 
     //Changes for transformations

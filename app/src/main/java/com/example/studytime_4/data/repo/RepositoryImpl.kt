@@ -11,9 +11,8 @@ class RepositoryImpl @Inject constructor (private val dao: StudyDao) : Repositor
 
 
     //get weekly goal
-    override fun getGoalForWeek(currentDate: Int, currentDayOfMonth: Int): Flow<Goal> {
-        Timber.i("currentDate is $currentDate currentDayOfMonth is $currentDayOfMonth")
-        return dao.getGoalForWeek(currentDate, currentDayOfMonth)
+    override fun getGoalForWeek(curMonth: Int, curYear: Int, currentDayOfMonth: Int): Flow<Goal?> {
+        return dao.getGoalForWeek(curMonth, curYear, currentDayOfMonth)
     }
 
     //Save user goals

@@ -19,6 +19,7 @@ import com.example.studytime_4.data.local.entities.StudySession
 import com.example.studytime_4.databinding.FragmentTimerBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_timer.*
+import okhttp3.internal.format
 import timber.log.Timber
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -113,10 +114,12 @@ class TimerFragment : Fragment() {
 //                Timber.i("The minutes studies is ${minutesStudied}")
 //                val hoursStudied = (minutesStudied / 60.0).toFloat()
 
+                Timber.i(formattedDate)
+
                 studySession = StudySession(
                     hours = 1F,
                     minutes = 60,
-                    date = formattedDate.toString(),
+                    date = "2020-12-04", //formattedDate
                     weekDay = currentWeekDay.toString(),
                     month = currentMonth,
                     dayOfMonth = currentDayOfMonth,

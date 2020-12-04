@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface Repository {
 
     //get weekly goal
-    fun getGoalForWeek(currentDate: Int, currentDayOfMonth: Int) : Flow<Goal>
+    fun getGoalForWeek(curMonth: Int, curYear: Int, currentDayOfMonth: Int) : Flow<Goal?>
 
 
 

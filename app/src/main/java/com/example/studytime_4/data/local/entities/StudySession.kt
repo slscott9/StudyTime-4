@@ -30,9 +30,11 @@ data class StudySession(
 
 @Entity(tableName = "goal_table")
 data class Goal(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-    val date: Int,
+    @PrimaryKey
+    val date: String,
+    val weekDay: String,
     val dayOfMonth: Int,
-    val hours: Float
+    val hours: Int,
+    val month: Int,
+    val year: Int
 )

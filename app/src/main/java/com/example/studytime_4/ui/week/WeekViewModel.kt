@@ -1,10 +1,11 @@
 package com.example.studytime_4.ui.week
 
+import android.content.SharedPreferences
+import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.switchMap
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.example.studytime_4.data.GoalData
+import com.example.studytime_4.data.WeekData
 import com.example.studytime_4.data.local.entities.Goal
 import com.example.studytime_4.data.local.entities.StudySession
 import com.example.studytime_4.data.repo.Repository
@@ -13,6 +14,7 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -23,7 +25,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class WeekViewModel @ViewModelInject constructor(
-    private val repository: Repository
+    private val repository: Repository,
 ) : ViewModel() {
 
     private val monthDayLabels = arrayListOf<String>(
@@ -126,36 +128,27 @@ class WeekViewModel @ViewModelInject constructor(
 
     val weekBarData = _weekBarData
 
-
-    val lastSevenSessionsHours =
+    private val lastSevenSessionsHours =
         repository.getLastSevenSessionsHours(currentMonth, currentDayOfMonth)
             .map {
                 setTotalWeeklyHours(it)
             }
 
     val goal = repository.getGoalForWeek(
-        currentDate = Date().time.toInt(),
-        currentDayOfMonth = LocalDateTime.now().dayOfMonth
+        LocalDateTime.now().monthValue,
+        LocalDateTime.now().year,
+        LocalDateTime.now().dayOfMonth
     )
 
-    val goalData = goal.combine(lastSevenSessionsHours) { goal, hours ->
-        GoalData(
-            goal.hours,
-            hours
-        )
 
+    val goalData = goal.combine(lastSevenSessionsHours) {goal, hours ->
+        GoalData(
+            limit = goal?.hours ?: 0,
+            totalHours = hours
+        )
     }.asLiveData()
 
 
-    data class GoalData(
-        val limit: Float,
-        val totalHours: BarData
-    )
-
-    data class WeekData(
-        val weekBarData : BarData,
-        val labels : List<String>
-    )
 
     private fun setTotalWeeklyHours(studySessions: List<Float>): BarData {
 
@@ -178,34 +171,4 @@ class WeekViewModel @ViewModelInject constructor(
 
     }
 
-
-//    private fun setLastSevenSessionsBarData(list: List<StudySession>): BarData {
-//        var weekBarData = BarData()
-//        val weekBarDataSetValues = ArrayList<BarEntry>()
-//        Timber.i(list.toString())
-//
-//
-//        if (list.isNullOrEmpty()) {
-//            val barDataSet = BarDataSet(weekBarDataSetValues, "Sessions")
-//            weekBarData = BarData(barDataSet)
-//
-//        } else {
-//
-//            for (session in list.indices) {
-//                weekBarDataSetValues.add(
-//                    BarEntry(
-//                        list[session].hours,
-//                        session.toFloat()
-//                    )
-//                )
-//                datesFromSessions.add(list[session].date)
-//                Timber.i(list[session].date.toString())
-//            }
-//            val weekBarDataSet = BarDataSet(weekBarDataSetValues, "Hours")
-//            weekBarData = BarData(weekBarDataSet)
-//
-//        }
-//
-//        return weekBarData
-//    }
 }

@@ -8,14 +8,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.studytime_4.R
+import com.example.studytime_4.data.WeekData
 import com.example.studytime_4.databinding.FragmentWeekViewBinding
 import com.example.studytime_4.ui.goal.AddGoalFragment
 import com.github.mikephil.charting.components.LimitLine
-import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_week_view.*
-import timber.log.Timber
+import java.text.DecimalFormat
 
 @AndroidEntryPoint
 class WeekViewFragment : Fragment() {
@@ -81,6 +81,8 @@ class WeekViewFragment : Fragment() {
     )
 
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -98,22 +100,18 @@ class WeekViewFragment : Fragment() {
 
         viewModel.goalData.observe(viewLifecycleOwner) {
             it?.let {
-                val limitline = LimitLine(it.limit, "Weekly goal")
-
-                Timber.i(it.limit.toString())
+                val limitLine = LimitLine(it.limit.toFloat(), "Weekly goal")
 
                 binding.totalHoursChart.apply {
                     data = it.totalHours
-                    axisLeft.axisMaximum = it.limit
+                    axisLeft.axisMaximum = (it.limit.toFloat() + 2F)
                     axisLeft.axisMinimum = 0F
-                    axisLeft.addLimitLine(limitline)
+                    axisLeft.addLimitLine(limitLine)
+                    axisRight.setDrawLabels(false)
+                    axisLeft.valueFormatter = MyValueFormatter() //remove float decimals
+                    axisLeft.granularity = 1F //sets steps by ones
+                    xAxis.setDrawLabels(false) //disable labels for x axis
                 }
-
-                val xaxis = binding.totalHoursChart.xAxis
-                xaxis.valueFormatter = IndexAxisValueFormatter(viewModel.datesFromSessions)
-
-                Timber.i(viewModel.datesFromSessions.toString())
-
             }
         }
         binding.addGoalChip.setOnClickListener {
@@ -121,32 +119,51 @@ class WeekViewFragment : Fragment() {
             addGoalDialogFragment.show(parentFragmentManager, addGoalDialogFragment.tag)
         }
 
-
-
-
         return binding.root
 
     }
 
+    class MyValueFormatter : ValueFormatter() {
+        private val format = DecimalFormat("###,##0.0")
 
-    private fun setBarChart(weekData: WeekViewModel.WeekData) {
-        binding.weekBarChart.fitScreen()
+        override fun getFormattedValue(value: Float): String {
+            return value.toInt().toString()
+        }
+    }
+
+
+
+    private fun setBarChart(weekData: WeekData) {
+
+        var force: Boolean
 
         binding.weekBarChart.data =
             weekData.weekBarData // set the data and list of lables into chart
-        binding.weekBarChart.getXAxis().setValueFormatter(IndexAxisValueFormatter(weekData.labels));
-        binding.weekBarChart.xAxis.setLabelCount(weekData.labels.size, false) //force = false aligns values with labels
-        binding.weekBarChart.xAxis.spaceMin = 0.5F
+
+        if (weekData.labels.size > 1) {
+            binding.weekBarChart.apply {
+                xAxis.setCenterAxisLabels(false)
+                force = false
+
+            }
+        } else {
+            binding.weekBarChart.apply {
+                xAxis.setCenterAxisLabels(true)
+                force = true
+
+            }
+        }
+
+        binding.weekBarChart.apply {
+            xAxis.setLabelCount(
+                weekData.labels.size,
+                force
+            ) //force = false aligns values with labels
+            xAxis.valueFormatter = IndexAxisValueFormatter(weekData.labels);
+            animateY(1000)
+        }
 
 
-//        binding.weekBarChart.setDescription("Sessions from last 7 days")
-//        binding.weekBarChart.setVisibleXRange(1F,viewModel.datesFromSessions.size.toFloat())
-//        binding.weekBarChart.xAxis.setLabelCount(6, true)
-
-//        //barDataSet.setColors(ColorTemplate.COLORFUL_COLORS)
-//        barDataSet.color = resources.getColor(R.color.colorAccent)
-
-        binding.weekBarChart.animateY(1000)
     }
 
 
