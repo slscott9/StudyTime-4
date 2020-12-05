@@ -30,10 +30,11 @@ class MonthViewModel @ViewModelInject constructor(
 
     private val currentMonth = LocalDateTime.now().monthValue
     private val currentDayOfMonth = LocalDateTime.now().dayOfMonth
+    private val currentYear = LocalDateTime.now().year
 
 
     private val lastSevenStudySessions =
-        repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
+        repository.getLastSevenSessions(currentMonth, currentDayOfMonth, currentYear)
             .flowOn(Dispatchers.IO)
 
     private val monthsStudySession =

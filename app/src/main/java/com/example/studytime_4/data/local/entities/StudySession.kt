@@ -28,8 +28,20 @@ data class StudySession(
     lool at the bookmarked stackoverflow to set a limit line in the bar chart
  */
 
-@Entity(tableName = "goal_table")
-data class Goal(
+@Entity(tableName = "weekly_goal_table")
+data class WeeklyGoal(
+    @PrimaryKey
+    val date: String,
+    val weekDay: String,
+    val dayOfMonth: Int,
+    val hours: Int,
+    val month: Int,
+    val year: Int
+)
+
+
+@Entity(tableName = "monthly_goal_table")
+data class MonthlyGoal(
     @PrimaryKey
     val date: String,
     val weekDay: String,

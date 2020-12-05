@@ -4,7 +4,8 @@ import androidx.datastore.core.DataStore
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.studytime_4.data.local.entities.Goal
+import com.example.studytime_4.data.local.entities.MonthlyGoal
+import com.example.studytime_4.data.local.entities.WeeklyGoal
 import com.example.studytime_4.data.repo.Repository
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -15,19 +16,37 @@ class AddGoalViewModel @ViewModelInject constructor(
 ) : ViewModel(){
 
 
-    fun addGoal( hours: Int){
-        viewModelScope.launch {
-            repository.upsertGoal(
-                Goal(
-                    date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                    dayOfMonth =  LocalDateTime.now().dayOfMonth,
-                    hours = hours,
-                    month = LocalDateTime.now().monthValue,
-                    weekDay = LocalDateTime.now().dayOfWeek.toString(),
-                    year = LocalDateTime.now().year
 
+    fun addGoal( hours: Int, monthlyGoal: Boolean){
+        viewModelScope.launch {
+
+
+            if(monthlyGoal){
+                repository.saveMonthlyGoal(
+                    MonthlyGoal(
+                        date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                        dayOfMonth =  LocalDateTime.now().dayOfMonth,
+                        hours = hours,
+                        month = LocalDateTime.now().monthValue,
+                        weekDay = LocalDateTime.now().dayOfWeek.toString(),
+                        year = LocalDateTime.now().year,
+                    )
                 )
-            )
+            }else{
+                repository.saveWeeklyGoal(
+                    WeeklyGoal(
+                        date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                        dayOfMonth =  LocalDateTime.now().dayOfMonth,
+                        hours = hours,
+                        month = LocalDateTime.now().monthValue,
+                        weekDay = LocalDateTime.now().dayOfWeek.toString(),
+                        year = LocalDateTime.now().year,
+                    )
+                )
+            }
+
+
+
         }
     }
 }

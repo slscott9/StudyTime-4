@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import com.example.studytime_4.R
 import com.example.studytime_4.ui.week.WeekViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -26,6 +27,7 @@ class AddGoalFragment : BottomSheetDialogFragment() {
 
 
     private val viewModel: AddGoalViewModel by viewModels()
+    private val navArgs : AddGoalFragmentArgs by navArgs()
 
 
     override fun onCreateView(
@@ -44,7 +46,7 @@ class AddGoalFragment : BottomSheetDialogFragment() {
             if(etWeeklyGoal.text.isNullOrBlank()){
                 Toast.makeText(requireActivity(), "Please enter a goal", Toast.LENGTH_SHORT).show()
             }else{
-                viewModel.addGoal( etWeeklyGoal.text.toString().toInt())
+                viewModel.addGoal( etWeeklyGoal.text.toString().toInt(), navArgs.monthlyGoal)
                 dismiss()
             }
         }

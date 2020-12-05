@@ -6,7 +6,6 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.example.studytime_4.data.GoalData
 import com.example.studytime_4.data.WeekData
-import com.example.studytime_4.data.local.entities.Goal
 import com.example.studytime_4.data.local.entities.StudySession
 import com.example.studytime_4.data.repo.Repository
 import com.github.mikephil.charting.data.BarData
@@ -31,9 +30,10 @@ class WeekViewModel @ViewModelInject constructor(
     var month: String = ""
     private val currentMonth = LocalDateTime.now().monthValue
     private val currentDayOfMonth = LocalDateTime.now().dayOfMonth
+    private val currentYear = LocalDateTime.now().year
 
     private val lastSevenStudySessions =
-        repository.getLastSevenSessions(currentMonth, currentDayOfMonth)
+        repository.getLastSevenSessions(currentMonth, currentDayOfMonth, currentYear)
             .flowOn(Dispatchers.IO)
 
     private val lastSevenSessionsHours =

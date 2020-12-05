@@ -43,11 +43,15 @@
             android:name="sessionId"
             app:argType="integer" />
     </fragment>
-    <fragment
+    <dialog
         android:id="@+id/addGoalFragment"
         android:name="com.example.studytime_4.ui.goal.AddGoalFragment"
         android:label="fragment_add_goal"
-        tools:layout="@layout/fragment_add_goal" />
+        tools:layout="@layout/fragment_add_goal" >
+        <argument
+            android:name="monthlyGoal"
+            app:argType="boolean" />
+    </dialog>
     <fragment
         android:id="@+id/weekViewFragment"
         android:name="com.example.studytime_4.ui.week.WeekViewFragment"
@@ -55,6 +59,14 @@
         tools:layout="@layout/fragment_week_view" >
         <action
             android:id="@+id/action_weekViewFragment_to_addGoalFragment"
+            app:destination="@id/addGoalFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/monthViewFragment"
+        android:name="com.example.studytime_4.ui.month.MonthViewFragment"
+        android:label="MonthViewFragment" >
+        <action
+            android:id="@+id/action_monthViewFragment_to_addGoalFragment"
             app:destination="@id/addGoalFragment" />
     </fragment>
 </navigation>

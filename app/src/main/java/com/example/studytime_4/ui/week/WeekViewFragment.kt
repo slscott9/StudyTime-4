@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.studytime_4.R
 import com.example.studytime_4.data.WeekData
 import com.example.studytime_4.databinding.FragmentWeekViewBinding
@@ -66,8 +67,7 @@ class WeekViewFragment : Fragment() {
         }
 
         binding.addGoalChip.setOnClickListener {
-            val addGoalDialogFragment = AddGoalFragment()
-            addGoalDialogFragment.show(parentFragmentManager, addGoalDialogFragment.tag)
+           findNavController().navigate(WeekViewFragmentDirections.actionWeekViewFragmentToAddGoalFragment(false))
         }
 
         return binding.root

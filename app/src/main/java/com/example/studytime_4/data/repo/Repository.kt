@@ -1,18 +1,21 @@
 package com.example.studytime_4.data.repo
 
-import com.example.studytime_4.data.local.entities.Goal
+import com.example.studytime_4.data.local.entities.MonthlyGoal
 import com.example.studytime_4.data.local.entities.StudySession
+import com.example.studytime_4.data.local.entities.WeeklyGoal
 import kotlinx.coroutines.flow.Flow
 
 interface Repository {
 
-    //get weekly goal
-    fun getGoalForWeek(curMonth: Int, curYear: Int, currentDayOfMonth: Int) : Flow<Goal?>
+    //WEEKLY GOAL
+    fun getGoalForWeek(curMonth: Int, curYear: Int, currentDayOfMonth: Int) : Flow<WeeklyGoal?>
 
+    suspend fun saveWeeklyGoal(weeklyGoal: WeeklyGoal)
 
+    //MONTHLY GOAL
 
-    //Save user goals
-    suspend fun upsertGoal(goal: Goal)
+    suspend fun saveMonthlyGoal(monthlyGoal: MonthlyGoal)
+
 
     //Changes for transformations
     fun getLastSevenSessionsHours(currentMonth: Int, currentDayOfMonth: Int): Flow<List<Float>>
@@ -35,10 +38,9 @@ interface Repository {
         To get the current week's study sessions query database for current day of week
      */
 
-    fun getLastSevenSessions(currentMonth: Int, currentDayOfMonth: Int): Flow<List<StudySession>>
+    fun getLastSevenSessions(currentMonth: Int, currentDayOfMonth: Int, curYear: Int): Flow<List<StudySession>>
 
 
-    //Change to return study sessions
     fun getYearsWithSessions(): Flow<List<Int>>
 
     fun getMonthsWithSelectedYear(yearSelected : Int) : Flow<List<Int>>
