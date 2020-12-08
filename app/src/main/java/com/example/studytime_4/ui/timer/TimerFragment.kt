@@ -134,10 +134,10 @@ class TimerFragment : Fragment() {
                 studySession = StudySession(
                     hours = 1F,
                     minutes = 60,
-                    date = "2020-12-02", //formattedDate
+                    date = "2020-12-07", //formattedDate
                     weekDay = "WEDNESDAY",
                     month = 12,
-                    dayOfMonth = 2,
+                    dayOfMonth = 7,
                     year = 2020,
 
 //                    hours = 1F,

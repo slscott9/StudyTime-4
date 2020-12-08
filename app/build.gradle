@@ -11,6 +11,10 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
     defaultConfig {
         applicationId "com.example.studytime_4"
         minSdkVersion 27

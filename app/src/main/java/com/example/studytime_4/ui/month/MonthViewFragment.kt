@@ -13,6 +13,7 @@ import com.example.studytime_4.data.MonthData
 import com.example.studytime_4.data.WeekData
 import com.example.studytime_4.databinding.FragmentMonthViewBinding
 import com.example.studytime_4.ui.goal.AddGoalFragment
+import com.example.studytime_4.ui.home.HomeFragmentDirections
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -42,7 +43,7 @@ class MonthViewFragment : Fragment() {
 
         binding.addMonthGoalChip.setOnClickListener {
 
-            findNavController().navigate(MonthViewFragmentDirections.actionMonthViewFragmentToAddGoalFragment(true))
+            parentFragment?.findNavController()?.navigate(HomeFragmentDirections.actionHomeFragmentToAddGoalFragment(true))
         }
 
         return binding.root

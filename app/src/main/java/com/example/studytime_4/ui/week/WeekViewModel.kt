@@ -34,7 +34,7 @@ class WeekViewModel @ViewModelInject constructor(
 
     private val lastSevenStudySessions =
         repository.getLastSevenSessions(currentMonth, currentDayOfMonth, currentYear)
-            .flowOn(Dispatchers.IO)
+
 
     private val lastSevenSessionsHours =
         repository.getLastSevenSessionsHours(currentMonth, currentDayOfMonth)
@@ -51,7 +51,7 @@ class WeekViewModel @ViewModelInject constructor(
     private val _weekBarData = lastSevenStudySessions.map { list ->
        setWeekBarData(list)
 
-    }.asLiveData(Dispatchers.Default + viewModelScope.coroutineContext)
+    }.asLiveData(viewModelScope.coroutineContext)
 
     val weekBarData = _weekBarData
 
@@ -61,7 +61,7 @@ class WeekViewModel @ViewModelInject constructor(
             limit = goal?.hours ?: 0,
             totalHours = hours
         )
-    }.asLiveData()
+    }.asLiveData(viewModelScope.coroutineContext)
 
 
     //

@@ -17,6 +17,8 @@ import java.time.LocalDateTime
 class TimerViewModel @ViewModelInject constructor(
     private val repository: Repository
 ) : ViewModel(){
+
+
     private val _insertStatus = MutableLiveData<Long>()
     val insertStatus : LiveData<Long> = _insertStatus
 

@@ -21,25 +21,17 @@ class MonthViewModel @ViewModelInject constructor(
     private val repository: Repository
 ) : ViewModel(){
 
-     val monthDayLabels = arrayListOf<String>("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31")
-    private val nullLabels = arrayListOf<String>("No Data", "No Data", "No Data", "No Data", "No Data", "No Data", "No Data")
+
     private val months = arrayListOf<String>("January", "February" ,"March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
 
 
     var month: String = ""
 
     private val currentMonth = LocalDateTime.now().monthValue
-    private val currentDayOfMonth = LocalDateTime.now().dayOfMonth
-    private val currentYear = LocalDateTime.now().year
 
-
-    private val lastSevenStudySessions =
-        repository.getLastSevenSessions(currentMonth, currentDayOfMonth, currentYear)
-            .flowOn(Dispatchers.IO)
 
     private val monthsStudySession =
         repository.getAllSessionsWithMatchingMonth(currentMonth)
-            .flowOn(Dispatchers.IO)
 
 
     private val _monthBarData = monthsStudySession.map {
@@ -47,7 +39,7 @@ class MonthViewModel @ViewModelInject constructor(
         setMonthBarData(it)
 
 
-    }.asLiveData(Dispatchers.Default + viewModelScope.coroutineContext)
+    }.asLiveData(viewModelScope.coroutineContext)
 
     val monthBarData = _monthBarData
 

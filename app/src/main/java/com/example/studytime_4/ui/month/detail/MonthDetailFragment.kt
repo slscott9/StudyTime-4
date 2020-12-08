@@ -10,8 +10,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.example.studytime_4.R
+import com.example.studytime_4.data.MonthData
 import com.example.studytime_4.databinding.FragmentMonthDetailBinding
 import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,7 +34,7 @@ class MonthDetailFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_month_detail, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel.setMonthSelected(args.sessionId)
+        viewModel.setMonth(args.sessionId)
 
         return binding.root
     }
@@ -48,17 +50,31 @@ class MonthDetailFragment : Fragment() {
         })
     }
 
-    private fun setBarChart(barData: BarData) {
-        val xaxis = binding.monthDetailBarChart.xAxis //sets the spacing between the x labels
+    private fun setBarChart(monthData: MonthData) {
 
-//        binding.monthBarChart.fitScreen()
-        binding.monthDetailBarChart.data = barData // set the data and list of lables into chart
-//        binding.monthDetailBarChart.setDescription(viewModel.month)
+        val force: Boolean
 
-//        //barDataSet.setColors(ColorTemplate.COLORFUL_COLORS)
-//        barDataSet.color = resources.getColor(R.color.colorAccent)
+        binding.monthDetailBarChart.data =
+            monthData.monthBarData // set the data and list of labels into chart
 
-        binding.monthDetailBarChart.animateY(2000)
+        if(monthData.labels.size > 1) {
+            binding.monthDetailBarChart.xAxis.setCenterAxisLabels(false)
+            force = false
+        } else {
+            binding.monthDetailBarChart.xAxis.setCenterAxisLabels(true)
+            force = true
+        }
+
+        binding.monthDetailBarChart.apply {
+            xAxis.setLabelCount(
+                monthData.labels.size,
+                force
+            ) //force = false aligns values with labels
+            xAxis.valueFormatter = IndexAxisValueFormatter(monthData.labels);
+            animateY(1000)
+        }
+
+
     }
 
 }

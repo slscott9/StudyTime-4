@@ -4,12 +4,22 @@ import com.example.studytime_4.data.local.database.StudyDao
 import com.example.studytime_4.data.local.entities.MonthlyGoal
 import com.example.studytime_4.data.local.entities.StudySession
 import com.example.studytime_4.data.local.entities.WeeklyGoal
+import com.example.studytime_4.di.DispatcherModule
+import com.example.studytime_4.dispatcher.DispatcherProvider
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
-class RepositoryImpl @Inject constructor (private val dao: StudyDao) : Repository {
+class RepositoryImpl @Inject constructor (
+    private val dao: StudyDao,
+) : Repository {
 
+    /*
+        Room suspending functions and functions that return live/flow are main safe and dispatchers are taken care of for us
+        No need to use withContext(dispatcher.io)
+     */
 
     //WEEKLY GOAL
 
@@ -17,15 +27,21 @@ class RepositoryImpl @Inject constructor (private val dao: StudyDao) : Repositor
         return dao.getGoalForWeek(curMonth, curYear, currentDayOfMonth)
     }
 
-    override suspend fun saveWeeklyGoal(weeklyGoal: WeeklyGoal) {
+    override suspend fun saveWeeklyGoal(weeklyGoal: WeeklyGoal){
 
+
+        Timber.i(Thread.currentThread().name)
         val goal = dao.checkForWeeklyGoal(weeklyGoal.month, weeklyGoal.year, weeklyGoal.dayOfMonth)
 
         if(goal == null){
             dao.upsertWeeklyGoal(weeklyGoal)
+            Timber.i(Thread.currentThread().name)
+
         }else{
            val updateGoal = goal.copy(hours = weeklyGoal.hours)
             dao.upsertWeeklyGoal(updateGoal)
+            Timber.i(Thread.currentThread().name)
+
         }
     }
 
@@ -60,10 +76,10 @@ class RepositoryImpl @Inject constructor (private val dao: StudyDao) : Repositor
 
     }
 
-    override suspend fun getCurrentStudySession(currentDate: String): StudySession {
-        return dao.getCurrentStudySession(currentDate)
+    override suspend fun getCurrentStudySession(currentDate: String)  =
+        dao.getCurrentStudySession(currentDate)
 
-    }
+
 
     override fun getAllSessionsWithMatchingMonth(monthSelected: Int): Flow<List<StudySession>> {
         return dao.getAllSessionsWithMatchingMonth(monthSelected)
@@ -89,9 +105,10 @@ class RepositoryImpl @Inject constructor (private val dao: StudyDao) : Repositor
 
     }
 
-    override suspend fun upsertStudySession(studySession: StudySession) : Long{
-        return dao.upsertStudySession(studySession)
 
-    }
+    //Inject ioDispatcher for this operation
+    override suspend fun upsertStudySession(studySession: StudySession) =
+        dao.upsertStudySession(studySession)
+
 
 }

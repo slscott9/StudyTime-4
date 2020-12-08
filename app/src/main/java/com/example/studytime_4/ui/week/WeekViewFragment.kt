@@ -12,6 +12,7 @@ import com.example.studytime_4.R
 import com.example.studytime_4.data.WeekData
 import com.example.studytime_4.databinding.FragmentWeekViewBinding
 import com.example.studytime_4.ui.goal.AddGoalFragment
+import com.example.studytime_4.ui.home.HomeFragmentDirections
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
@@ -67,7 +68,7 @@ class WeekViewFragment : Fragment() {
         }
 
         binding.addGoalChip.setOnClickListener {
-           findNavController().navigate(WeekViewFragmentDirections.actionWeekViewFragmentToAddGoalFragment(false))
+           parentFragment?.findNavController()?.navigate(HomeFragmentDirections.actionHomeFragmentToAddGoalFragment(false))
         }
 
         return binding.root

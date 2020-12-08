@@ -2,6 +2,7 @@ package com.example.studytime_4.ui.month.detail
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.example.studytime_4.data.MonthData
 import com.example.studytime_4.data.local.entities.StudySession
 import com.example.studytime_4.data.repo.Repository
 import com.github.mikephil.charting.data.BarData
@@ -9,59 +10,45 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
+import java.time.LocalDateTime
 
 class MonthDetailViewModel @ViewModelInject constructor(
     private val repository: Repository
 ) : ViewModel(){
 
 
-    private val monthDayLabels = arrayListOf<String>("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31")
     private val months = arrayListOf<String>("January", "February" ,"March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
-    var month: String = ""
 
 
-    private val _monthSelected = MutableLiveData<Int>()
+    private val currentMonth = MutableLiveData<Int>()
 
-    val monthBarData = _monthSelected.switchMap {
-        repository.getAllSessionsWithMatchingMonth(it).map {studyList ->
-            setSessionWithMonthBarData(studyList)
-        }.asLiveData(Dispatchers.Default + viewModelScope.coroutineContext)
-    }
-
-    fun setMonthSelected(monthSelected: Int ){
-        _monthSelected.value = monthSelected
+    private val monthsStudySession = currentMonth.switchMap {
+        repository.getAllSessionsWithMatchingMonth(it).asLiveData(viewModelScope.coroutineContext)
     }
 
 
+    private val _monthBarData = monthsStudySession.map {
+        setMonthBarData(it)
+    }
 
-    private  fun setSessionWithMonthBarData(monthsStudySessionList: List<StudySession>) : BarData {
+    val monthBarData = _monthBarData
 
-        val monthBarDataSetValues = MutableList(31) { BarEntry(0F, 0F) }
-        var monthBarData = BarData()
 
-        if (monthsStudySessionList.isNullOrEmpty()) {
-            val barDataSet = BarDataSet(monthBarDataSetValues, "Hours")
-            monthBarData = BarData(barDataSet)
+    fun setMonthBarData(monthStudySessionList : List<StudySession>) : MonthData {
 
-        } else {
-            //Entries uses the fixed size so we can add values to it at specific indexes
-            //BarEntry(value, index) we can specify the index this bar value will be placed
-
-            for (i in monthsStudySessionList.indices) {
-                monthBarDataSetValues[monthsStudySessionList[i].dayOfMonth - 1] =
-                    BarEntry(
-                        monthsStudySessionList[i].hours,
-                        monthsStudySessionList[i].dayOfMonth - 1.toFloat()
-                    ) //to match the array indexes
-            }
-
-            val monthBarDataSet = BarDataSet(monthBarDataSetValues, "Hours")
-            month =
-                months[monthsStudySessionList[0].month - 1] //set the month value to be displayed in the monthBarChart's description
-
-            monthBarData = BarData(monthBarDataSet)
+        val monthData = monthStudySessionList.mapIndexed {index, studySession  ->
+            BarEntry(index.toFloat(), studySession.hours)
         }
 
-        return monthBarData
+        val labels = monthStudySessionList.map {  studySession ->
+            studySession.date
+        }
+
+        return  MonthData(monthBarData = BarData(BarDataSet(monthData, months[monthStudySessionList[0].month - 1])), labels = labels)
+    }
+
+    fun setMonth(monthSelected: Int) {
+        currentMonth.value = monthSelected
     }
 }

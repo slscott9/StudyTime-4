@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.studytime_4.data.local.entities.MonthlyGoal
 import com.example.studytime_4.data.local.entities.WeeklyGoal
 import com.example.studytime_4.data.repo.Repository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -19,6 +21,8 @@ class AddGoalViewModel @ViewModelInject constructor(
 
     fun addGoal( hours: Int, monthlyGoal: Boolean){
         viewModelScope.launch {
+
+            Timber.i(Thread.currentThread().name)
 
 
             if(monthlyGoal){
