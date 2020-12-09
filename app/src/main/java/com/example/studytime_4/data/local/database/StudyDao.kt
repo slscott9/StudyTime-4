@@ -107,6 +107,8 @@ interface StudyDao {
     fun getMonthsWithSelectedYear(yearSelected : Int) : Flow<List<Int>>
 
 
+    @Query("select distinct date from study_table_4 where(month = :month and year = :year)")
+    fun getDateFromSelectedMonth(month: Int, year: Int) : LiveData<String>
 
 
     /*

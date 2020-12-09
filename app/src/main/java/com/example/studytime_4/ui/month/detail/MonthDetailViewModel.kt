@@ -23,6 +23,7 @@ class MonthDetailViewModel @ViewModelInject constructor(
 
     private val currentMonth = MutableLiveData<Int>()
 
+
     private val monthsStudySession = currentMonth.switchMap {
         repository.getAllSessionsWithMatchingMonth(it).asLiveData(viewModelScope.coroutineContext)
     }

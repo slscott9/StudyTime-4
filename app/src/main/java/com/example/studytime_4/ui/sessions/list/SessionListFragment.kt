@@ -23,6 +23,8 @@ class SessionListFragment : Fragment() {
     private lateinit var yearListAdapter: YearListAdapter
     private lateinit var monthListAdapter: MonthListAdapter
 
+    private var yearSelected = 0
+
 
 
     override fun onCreateView(
@@ -41,12 +43,13 @@ class SessionListFragment : Fragment() {
 
         yearListAdapter = YearListAdapter {
             viewModel.setYearSelected(it)
+            yearSelected = it
 
         }
 
 
         monthListAdapter = MonthListAdapter {
-            findNavController().navigate(SessionListFragmentDirections.actionSessionListFragmentToMonthDetailFragment(it))
+            findNavController().navigate(SessionListFragmentDirections.actionSessionListFragmentToMonthDetailFragment(it, yearSelected))
         }
 
 

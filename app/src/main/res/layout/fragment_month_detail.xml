@@ -3,14 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
+<!--    <androidx.core.widget.NestedScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clMonthDetail"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -25,9 +24,518 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
+<!--        <TextView-->
+<!--            android:id="@+id/tvSunday"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="32dp"-->
+<!--            android:text="@string/sunday"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/tvMonday"-->
+<!--            app:layout_constraintHorizontal_bias="0.5"-->
+<!--            app:layout_constraintHorizontal_chainStyle="spread"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/monthDetailBarChart" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvMonday"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/monday"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tvSunday"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/tvTuesday"-->
+<!--            app:layout_constraintHorizontal_bias="0.5"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/tvSunday"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/tvSunday" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvTuesday"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/tuesday"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tvMonday"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/tvWednesday"-->
+<!--            app:layout_constraintHorizontal_bias="0.5"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/tvMonday"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/tvMonday" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvWednesday"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/wednesday"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tvTuesday"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/tvThursday"-->
+<!--            app:layout_constraintHorizontal_bias="0.5"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/tvTuesday"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/tvTuesday" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvThursday"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/thursday"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tvWednesday"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/tvFriday"-->
+<!--            app:layout_constraintHorizontal_bias="0.5"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/tvWednesday"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/tvWednesday" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvFriday"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/friday"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tvThursday"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/tvSaturday"-->
+<!--            app:layout_constraintHorizontal_bias="0.5"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/tvThursday"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/tvThursday" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvSaturday"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/saturday"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tvFriday"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="0.5"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/tvFriday"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/tvFriday" />-->
+
+
+        <TableLayout
+            android:id="@+id/tableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/monthDetailBarChart">
+
+            <TableRow
+                android:id="@+id/trDayNames"
+                android:layout_width="match_parent">
+
+                <TextView
+                    android:id="@+id/tvSunday"
+                    android:padding="1dp"
+                    android:text="@string/sunday" />
+
+                <TextView
+                    android:id="@+id/tvMonday"
+                    android:padding="1dp"
+                    android:text="@string/monday" />
+
+                <TextView
+                    android:id="@+id/tvTuesday"
+                    android:padding="1dp"
+                    android:text="@string/tuesday" />
+
+                <TextView
+                    android:id="@+id/tvWednesday"
+                    android:padding="1dp"
+                    android:text="@string/wednesday" />
+
+                <TextView
+                    android:id="@+id/tvThursday"
+                    android:padding="1dp"
+                    android:text="@string/thursday" />
+
+                <TextView
+                    android:id="@+id/tvFriday"
+                    android:padding="1dp"
+                    android:text="@string/friday" />
+
+                <TextView
+                    android:id="@+id/tvSaturday"
+                    android:padding="1dp"
+                    android:text="@string/saturday" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/trDayNums"
+                android:layout_width="match_parent">
+
+                <TextView
+                    android:id="@+id/tvDay0"
+                    android:padding="1dp"/>
+
+                <TextView
+                    android:id="@+id/tvDay1"
+                    android:padding="1dp"/>
+
+                <TextView
+                    android:id="@+id/tvDay2"
+                    android:padding="1dp" />
+
+                <TextView
+                    android:id="@+id/tvDay3"
+                    android:padding="1dp"/>
+
+                <TextView
+                    android:id="@+id/tvDay4"
+                    android:padding="1dp" />
+
+                <TextView
+                    android:id="@+id/tvDay5"
+                    android:padding="1dp"/>
+
+                <TextView
+                    android:id="@+id/tvDay6"
+                    android:padding="1dp" />
+
+
+            </TableRow>
+
+            <TextView
+                android:padding="1dp" />
+
+            <TextView
+                android:padding="1dp"/>
+
+            <TextView
+                android:padding="1dp" />
+
+            <TextView
+                android:padding="1dp" />
+
+            <TextView
+                android:padding="1dp" />
+
+            <TextView
+                android:padding="1dp" />
+
+            <TextView
+                android:padding="1dp" />
+
+            <TableRow android:id="@+id/trHours">
+
+
+            </TableRow>
+
+            <TableRow android:id="@+id/trDayNums2">
+
+                <TextView
+                    android:padding="1dp" />
+
+                <TextView
+                    android:padding="1dp" />
+
+                <TextView
+                    android:padding="1dp" />
+
+                <TextView
+                    android:padding="1dp"/>
+
+                <TextView
+                    android:padding="1dp" />
+
+                <TextView
+                    android:padding="1dp" />
+
+                <TextView
+                    android:padding="1dp" />
+
+            </TableRow>
+
+            <TableRow android:id="@+id/trHours2">
+
+                <TextView
+                    android:padding="1dp" />
+
+                <TextView
+                    android:padding="1dp" />
+
+                <TextView
+                    android:padding="1dp" />
+
+                <TextView
+                    android:padding="1dp" />
+
+                <TextView
+                    android:padding="1dp"/>
+
+                <TextView
+                    android:padding="1dp" />
+
+                <TextView
+                    android:padding="1dp" />
+
+
+            </TableRow>
+
+            <TableRow android:id="@+id/trDayNums3">
+
+                <TextView
+                    android:padding="1dp" />
+
+                <TextView
+                    android:padding="1dp" />
+
+                <TextView
+                    android:padding="1dp" />
+
+                <TextView
+                    android:padding="1dp"/>
+
+                <TextView
+                    android:padding="1dp" />
+
+                <TextView
+                    android:padding="1dp" />
+
+                <TextView
+                    android:padding="1dp" />
+
+
+
+            </TableRow>
+
+            <TableRow android:id="@+id/trDayNums4">
+
+                <TextView
+                    android:padding="1dp" />
+
+                <TextView
+                    android:padding="1dp"/>
+
+                <TextView
+                    android:padding="1dp"/>
+
+                <TextView
+                    android:padding="1dp"/>
+
+                <TextView
+                    android:padding="1dp"/>
+
+                <TextView
+                    android:padding="1dp"/>
+
+                <TextView
+                    android:padding="1dp"/>
+
+
+            </TableRow>
+
+
+        </TableLayout>
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay1"-->
+<!--            android:text="@string/_1"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="44dp"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/tvSunday"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/tvSunday" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay2"-->
+<!--            android:text="@string/_2"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="8dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tvDay1"-->
+<!--            app:layout_constraintStart_toEndOf="@id/tvDay1" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay3"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/_3"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tvDay2"-->
+<!--            app:layout_constraintStart_toEndOf="@id/tvDay2" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay4"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/_4"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tvDay3"-->
+<!--            app:layout_constraintStart_toEndOf="@id/tvDay3" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay5"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/_5"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tvDay4"-->
+<!--            app:layout_constraintStart_toEndOf="@id/tvDay4" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay6"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/_6"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tvDay5"-->
+<!--            app:layout_constraintStart_toEndOf="@id/tvDay5" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay7"-->
+<!--            android:text="@string/_7"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay8"-->
+<!--            android:text="@string/_8"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay9"-->
+<!--            android:text="@string/_9"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay10"-->
+<!--            android:text="@string/_10"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay11"-->
+<!--            android:text="@string/_11"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay12"-->
+<!--            android:text="@string/_12"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay13"-->
+<!--            android:text="@string/_13"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay14"-->
+<!--            android:text="@string/_14"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay15"-->
+<!--            android:text="@string/_15"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay16"-->
+<!--            android:text="@string/_16"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay17"-->
+<!--            android:text="@string/_17"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay18"-->
+<!--            android:text="@string/_18"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay19"-->
+<!--            android:text="@string/_19"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay20"-->
+<!--            android:text="@string/_20"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay21"-->
+<!--            android:text="@string/_21"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay22"-->
+<!--            android:text="@string/_22"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay23"-->
+<!--            android:text="@string/_23"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay24"-->
+<!--            android:text="@string/_24"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay25"-->
+<!--            android:text="@string/_25"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay26"-->
+<!--            android:text="@string/_26"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay27"-->
+<!--            android:text="@string/_27"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay28"-->
+<!--            android:text="@string/_28"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay29"-->
+<!--            android:text="@string/_29"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay30"-->
+<!--            android:text="@string/_30"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvDay31"-->
+<!--            android:text="@string/_31"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.core.widget.NestedScrollView>
+<!--    </androidx.core.widget.NestedScrollView>-->
 
 
 

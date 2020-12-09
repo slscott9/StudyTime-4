@@ -43,7 +43,10 @@
         android:name="com.example.studytime_4.ui.month.detail.MonthDetailFragment"
         android:label="MonthDetailFragment" >
         <argument
-            android:name="sessionId"
+            android:name="monthSelected"
+            app:argType="integer" />
+        <argument
+            android:name="yearSelected"
             app:argType="integer" />
     </fragment>
     <dialog
