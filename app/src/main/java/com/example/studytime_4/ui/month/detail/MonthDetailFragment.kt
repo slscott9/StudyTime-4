@@ -30,15 +30,20 @@ import java.util.*
 @AndroidEntryPoint
 class MonthDetailFragment : Fragment() {
 
+//    val list = List<String>()
+
+    private val days = hashMapOf<Int, String>(
+        0 to "tvDay0", 1 to "tvDay1", 2 to "tvDay2", 3 to "tvDay3", 4 to "tvDay4", 5 to "tvDay5", 6 to "tvDay6", 7 to "tvDay7", 8 to "tvDay8",
+        9 to "tvDay9", 10 to "tvDay10", 11 to "tvDays11", 12 to "tvDay12", 13 to "tvDay13", 14 to "tvDay14", 15 to "tvDay15", 16 to "tvDay16",
+        17 to "tvDay17", 18 to "tvDay18", 19 to "tvDay19", 20 to "tvDay20", 21 to "tvDay21", 22 to "tvDay22", 23 to "tvDay23", 24 to "tvDay24", 25 to "tvDay25",
+        26 to "tvDay26", 27 to "tvDay27", 28 to "tvDay28", 29 to "tvDay29", 30 to "tvDay30", 31 to "tvDay31", 32 to "tvDay32", 33 to "tvDay33", 34 to "tvDay34"
+    )
+
     private lateinit var binding: FragmentMonthDetailBinding
     private val viewModel: MonthDetailViewModel by viewModels()
     private val args : MonthDetailFragmentArgs by navArgs()
 
     private val calendar = Calendar.getInstance()
-
-
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +53,12 @@ class MonthDetailFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_month_detail, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
 
+        savedInstanceState?.putInt("monthSelected", args.monthSelected)
+        savedInstanceState?.putInt("yearSelected", args.yearSelected)
+
         viewModel.setMonth(args.monthSelected)
+
+        viewModel.setDays(1)
 
         return binding.root
     }
@@ -57,67 +67,54 @@ class MonthDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        calendar.set(Calendar.MONTH, args.monthSelected - 1)
-        calendar.set(Calendar.YEAR, args.yearSelected)
-        calendar.set(Calendar.DAY_OF_MONTH, 1)
-
-        val firstDayOfMonth = calendar.get(Calendar.DAY_OF_WEEK)
-        val monthDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-
-        Timber.i(" first day of month is $firstDayOfMonth")
-
-        val hashMap = hashMapOf(
-            0 to binding.tvSunday,
-            binding.tvMonday to 1,
-            binding.tvTuesday to 2,
-            binding.tvWednesday to 3,
-            binding.tvThursday to 4,
-            binding.tvFriday to 5,
-            binding.tvSaturday to 6
-        )
-
-
-        for(i in 0 until monthDays){
-
-            val tv = TextView(requireActivity())
-
-            when{
-                i < 7 -> {
-//                    Timber.i(i.toString())
-                    drawDays(binding.tableLayout.trDayNums, i, firstDayOfMonth)
-                }
-                i >= 7 -> {
-//                    Timber.i(i.toString())
-
-                    drawDays(binding.tableLayout.trDayNums2, i, firstDayOfMonth)
-                }
-                i >= 14 -> {
-                    Timber.i(i.toString())
-
-                    drawDays(binding.tableLayout.trDayNums3, i, firstDayOfMonth)
-                }
-            }
-        }
-
-
-
-
-
-
-
         viewModel.monthBarData.observe(viewLifecycleOwner, Observer {
             it?.let {
                 setBarChart(it)
             }
         })
+
+        calendar.set(Calendar.MONTH, args.monthSelected - 1)
+        calendar.set(Calendar.YEAR, args.yearSelected)
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
+
+
+        val firstDayOfMonth = calendar.get(Calendar.DAY_OF_WEEK)
+
+        val start = firstDayOfMonth - 1
+
+        val monthDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+        var count = 0
+
+
+
+        /*
+            Order in xml does matter loop is parallel with xml views within clMonthDetail
+
+            Need to fix the last 2 view that are S M they are being set to numbers
+         */
+        for(i in start until 35){
+                val tv = binding.clMonthDetail[i] as TextView
+
+                count +=1
+
+                tv.text = "$count"
+
+        }
+
+
+
     }
 
-    private fun drawDays(tableRow: TableRow, index: Int, firstDayOfMonth: Int) {
-        val b = binding.tableLayout.trDayNums
-        Timber.i("${firstDayOfMonth  + index - 1}")
+    private fun drawDays(tableRowDays: TableRow, tableRowHours: TableRow, index: Int, firstDayOfMonth: Int) {
 
-        val a = b.getChildAt(firstDayOfMonth - 1 + index - 1) as TextView
-        a.text = "${index + 1}"
+
+        val tvDayNum = tableRowDays.getChildAt(firstDayOfMonth) as TextView
+        tvDayNum.text = "${index + 1}"
+
+
+        val tvHour = tableRowHours.getChildAt(firstDayOfMonth) as TextView
+        tvHour.text = "${5} hours"
 
 
     }

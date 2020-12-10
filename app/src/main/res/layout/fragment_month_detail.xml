@@ -2,540 +2,1008 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+    
+    <data>
+        <import type="java.util.List"/>
+        <variable
+            name="list"
+            type="List&lt;String>" />
 
-<!--    <androidx.core.widget.NestedScrollView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
+        <variable
+            name="name"
+            type="com.example.studytime_4.data.local.entities.StudySession" />
+    </data>
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clMonthDetail"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/monthDetailBarChart"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clMonthDetail"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content">
 
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvSunday"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="32dp"-->
-<!--            android:text="@string/sunday"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintEnd_toStartOf="@+id/tvMonday"-->
-<!--            app:layout_constraintHorizontal_bias="0.5"-->
-<!--            app:layout_constraintHorizontal_chainStyle="spread"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/monthDetailBarChart" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvMonday"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/monday"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/tvSunday"-->
-<!--            app:layout_constraintEnd_toStartOf="@+id/tvTuesday"-->
-<!--            app:layout_constraintHorizontal_bias="0.5"-->
-<!--            app:layout_constraintStart_toEndOf="@+id/tvSunday"-->
-<!--            app:layout_constraintTop_toTopOf="@+id/tvSunday" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvTuesday"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/tuesday"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/tvMonday"-->
-<!--            app:layout_constraintEnd_toStartOf="@+id/tvWednesday"-->
-<!--            app:layout_constraintHorizontal_bias="0.5"-->
-<!--            app:layout_constraintStart_toEndOf="@+id/tvMonday"-->
-<!--            app:layout_constraintTop_toTopOf="@+id/tvMonday" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvWednesday"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/wednesday"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/tvTuesday"-->
-<!--            app:layout_constraintEnd_toStartOf="@+id/tvThursday"-->
-<!--            app:layout_constraintHorizontal_bias="0.5"-->
-<!--            app:layout_constraintStart_toEndOf="@+id/tvTuesday"-->
-<!--            app:layout_constraintTop_toTopOf="@+id/tvTuesday" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvThursday"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/thursday"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/tvWednesday"-->
-<!--            app:layout_constraintEnd_toStartOf="@+id/tvFriday"-->
-<!--            app:layout_constraintHorizontal_bias="0.5"-->
-<!--            app:layout_constraintStart_toEndOf="@+id/tvWednesday"-->
-<!--            app:layout_constraintTop_toTopOf="@+id/tvWednesday" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvFriday"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/friday"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/tvThursday"-->
-<!--            app:layout_constraintEnd_toStartOf="@+id/tvSaturday"-->
-<!--            app:layout_constraintHorizontal_bias="0.5"-->
-<!--            app:layout_constraintStart_toEndOf="@+id/tvThursday"-->
-<!--            app:layout_constraintTop_toTopOf="@+id/tvThursday" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvSaturday"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/saturday"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/tvFriday"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintHorizontal_bias="0.5"-->
-<!--            app:layout_constraintStart_toEndOf="@+id/tvFriday"-->
-<!--            app:layout_constraintTop_toTopOf="@+id/tvFriday" />-->
-
-
-        <TableLayout
-            android:id="@+id/tableLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:stretchColumns="*"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/monthDetailBarChart">
-
-            <TableRow
-                android:id="@+id/trDayNames"
-                android:layout_width="match_parent">
-
-                <TextView
-                    android:id="@+id/tvSunday"
-                    android:padding="1dp"
-                    android:text="@string/sunday" />
-
-                <TextView
-                    android:id="@+id/tvMonday"
-                    android:padding="1dp"
-                    android:text="@string/monday" />
-
-                <TextView
-                    android:id="@+id/tvTuesday"
-                    android:padding="1dp"
-                    android:text="@string/tuesday" />
-
-                <TextView
-                    android:id="@+id/tvWednesday"
-                    android:padding="1dp"
-                    android:text="@string/wednesday" />
-
-                <TextView
-                    android:id="@+id/tvThursday"
-                    android:padding="1dp"
-                    android:text="@string/thursday" />
-
-                <TextView
-                    android:id="@+id/tvFriday"
-                    android:padding="1dp"
-                    android:text="@string/friday" />
-
-                <TextView
-                    android:id="@+id/tvSaturday"
-                    android:padding="1dp"
-                    android:text="@string/saturday" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/trDayNums"
-                android:layout_width="match_parent">
-
-                <TextView
-                    android:id="@+id/tvDay0"
-                    android:padding="1dp"/>
-
-                <TextView
-                    android:id="@+id/tvDay1"
-                    android:padding="1dp"/>
-
-                <TextView
-                    android:id="@+id/tvDay2"
-                    android:padding="1dp" />
-
-                <TextView
-                    android:id="@+id/tvDay3"
-                    android:padding="1dp"/>
-
-                <TextView
-                    android:id="@+id/tvDay4"
-                    android:padding="1dp" />
-
-                <TextView
-                    android:id="@+id/tvDay5"
-                    android:padding="1dp"/>
-
-                <TextView
-                    android:id="@+id/tvDay6"
-                    android:padding="1dp" />
-
-
-            </TableRow>
+             <TextView
+                android:id="@+id/tvDay0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toStartOf="@+id/tvDay1"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="@id/tvSunday"
+                app:layout_constraintTop_toBottomOf="@+id/tvSunday" />
 
             <TextView
-                android:padding="1dp" />
+                android:id="@+id/tvDay1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvDay0"
+                app:layout_constraintEnd_toStartOf="@+id/tvDay2"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tvDay0"
+                app:layout_constraintTop_toTopOf="@+id/tvDay0" />
+
 
             <TextView
-                android:padding="1dp"/>
+                android:id="@+id/tvDay2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvDay1"
+                app:layout_constraintEnd_toStartOf="@+id/tvDay3"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tvDay1"
+                app:layout_constraintTop_toTopOf="@+id/tvDay1" />
+
 
             <TextView
-                android:padding="1dp" />
+                android:id="@+id/tvDay3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvDay2"
+                app:layout_constraintEnd_toStartOf="@+id/tvDay4"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tvDay2"
+                app:layout_constraintTop_toTopOf="@+id/tvDay2" />
 
             <TextView
-                android:padding="1dp" />
+                android:id="@+id/tvDay4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvDay3"
+                app:layout_constraintEnd_toStartOf="@+id/tvDay5"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tvDay3"
+                app:layout_constraintTop_toTopOf="@+id/tvDay3" />
+
 
             <TextView
-                android:padding="1dp" />
+                android:id="@+id/tvDay5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvDay4"
+                app:layout_constraintEnd_toStartOf="@+id/tvDay6"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tvDay4"
+                app:layout_constraintTop_toTopOf="@+id/tvDay4" />
+
 
             <TextView
-                android:padding="1dp" />
+                android:id="@+id/tvDay6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvDay5"
+                app:layout_constraintEnd_toEndOf="@+id/tvSaturday"
+                app:layout_constraintStart_toEndOf="@+id/tvDay5"
+                app:layout_constraintTop_toTopOf="@+id/tvDay5" />
+
+
+            <!-- row of days 2-->
 
             <TextView
-                android:padding="1dp" />
-
-            <TableRow android:id="@+id/trHours">
-
-
-            </TableRow>
-
-            <TableRow android:id="@+id/trDayNums2">
-
-                <TextView
-                    android:padding="1dp" />
-
-                <TextView
-                    android:padding="1dp" />
-
-                <TextView
-                    android:padding="1dp" />
-
-                <TextView
-                    android:padding="1dp"/>
-
-                <TextView
-                    android:padding="1dp" />
-
-                <TextView
-                    android:padding="1dp" />
-
-                <TextView
-                    android:padding="1dp" />
-
-            </TableRow>
-
-            <TableRow android:id="@+id/trHours2">
-
-                <TextView
-                    android:padding="1dp" />
-
-                <TextView
-                    android:padding="1dp" />
-
-                <TextView
-                    android:padding="1dp" />
-
-                <TextView
-                    android:padding="1dp" />
-
-                <TextView
-                    android:padding="1dp"/>
-
-                <TextView
-                    android:padding="1dp" />
-
-                <TextView
-                    android:padding="1dp" />
-
-
-            </TableRow>
-
-            <TableRow android:id="@+id/trDayNums3">
-
-                <TextView
-                    android:padding="1dp" />
-
-                <TextView
-                    android:padding="1dp" />
-
-                <TextView
-                    android:padding="1dp" />
-
-                <TextView
-                    android:padding="1dp"/>
-
-                <TextView
-                    android:padding="1dp" />
-
-                <TextView
-                    android:padding="1dp" />
-
-                <TextView
-                    android:padding="1dp" />
-
-
-
-            </TableRow>
-
-            <TableRow android:id="@+id/trDayNums4">
-
-                <TextView
-                    android:padding="1dp" />
-
-                <TextView
-                    android:padding="1dp"/>
-
-                <TextView
-                    android:padding="1dp"/>
-
-                <TextView
-                    android:padding="1dp"/>
-
-                <TextView
-                    android:padding="1dp"/>
-
-                <TextView
-                    android:padding="1dp"/>
-
-                <TextView
-                    android:padding="1dp"/>
-
-
-            </TableRow>
-
-
-        </TableLayout>
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay1"-->
-<!--            android:text="@string/_1"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="44dp"-->
-<!--            app:layout_constraintStart_toStartOf="@+id/tvSunday"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/tvSunday" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay2"-->
-<!--            android:text="@string/_2"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginStart="8dp"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/tvDay1"-->
-<!--            app:layout_constraintStart_toEndOf="@id/tvDay1" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay3"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/_3"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/tvDay2"-->
-<!--            app:layout_constraintStart_toEndOf="@id/tvDay2" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay4"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/_4"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/tvDay3"-->
-<!--            app:layout_constraintStart_toEndOf="@id/tvDay3" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay5"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/_5"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/tvDay4"-->
-<!--            app:layout_constraintStart_toEndOf="@id/tvDay4" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay6"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/_6"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/tvDay5"-->
-<!--            app:layout_constraintStart_toEndOf="@id/tvDay5" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay7"-->
-<!--            android:text="@string/_7"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay8"-->
-<!--            android:text="@string/_8"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay9"-->
-<!--            android:text="@string/_9"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay10"-->
-<!--            android:text="@string/_10"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay11"-->
-<!--            android:text="@string/_11"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay12"-->
-<!--            android:text="@string/_12"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay13"-->
-<!--            android:text="@string/_13"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay14"-->
-<!--            android:text="@string/_14"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay15"-->
-<!--            android:text="@string/_15"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay16"-->
-<!--            android:text="@string/_16"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay17"-->
-<!--            android:text="@string/_17"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay18"-->
-<!--            android:text="@string/_18"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay19"-->
-<!--            android:text="@string/_19"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay20"-->
-<!--            android:text="@string/_20"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay21"-->
-<!--            android:text="@string/_21"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay22"-->
-<!--            android:text="@string/_22"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay23"-->
-<!--            android:text="@string/_23"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay24"-->
-<!--            android:text="@string/_24"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay25"-->
-<!--            android:text="@string/_25"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay26"-->
-<!--            android:text="@string/_26"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay27"-->
-<!--            android:text="@string/_27"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay28"-->
-<!--            android:text="@string/_28"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay29"-->
-<!--            android:text="@string/_29"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay30"-->
-<!--            android:text="@string/_30"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvDay31"-->
-<!--            android:text="@string/_31"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-<!--    </androidx.core.widget.NestedScrollView>-->
+                android:id="@+id/tvDay7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay0"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="@+id/tvDay0"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay0" />
+
+            <TextView
+                android:id="@+id/tvDay8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvDay7"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay1"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/tvDay1"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay1" />
+
+            <TextView
+                android:id="@+id/tvDay9"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay2"
+                app:layout_constraintStart_toStartOf="@+id/tvDay2"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay2" />
+
+            <TextView
+                android:id="@+id/tvDay10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay3"
+                app:layout_constraintStart_toStartOf="@+id/tvDay3"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay3" />
+
+            <TextView
+                android:id="@+id/tvDay11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay4"
+                app:layout_constraintStart_toStartOf="@+id/tvDay4"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay4" />
+
+            <TextView
+                android:id="@+id/tvDay12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay5"
+                app:layout_constraintStart_toStartOf="@+id/tvDay5"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay5" />
+
+            <TextView
+                android:id="@+id/tvDay13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay6"
+                app:layout_constraintStart_toStartOf="@+id/tvDay6"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay6" />
+
+            <TextView
+                android:id="@+id/tvDay14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay7"
+                app:layout_constraintStart_toStartOf="@+id/tvDay7"
+                app:layout_constraintTop_toBottomOf="@id/tvDay7" />
+
+            <TextView
+                android:id="@+id/tvDay15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay8"
+                app:layout_constraintStart_toStartOf="@+id/tvDay8"
+                app:layout_constraintTop_toBottomOf="@id/tvDay8" />
+
+
+            <TextView
+                android:id="@+id/tvDay16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay9"
+                app:layout_constraintStart_toStartOf="@+id/tvDay9"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay9" />
+
+            <TextView
+                android:id="@+id/tvDay17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay10"
+                app:layout_constraintStart_toStartOf="@+id/tvDay10"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay10" />
+
+            <TextView
+                android:id="@+id/tvDay18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay11"
+                app:layout_constraintStart_toStartOf="@+id/tvDay11"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay11" />
+
+            <TextView
+                android:id="@+id/tvDay19"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay12"
+                app:layout_constraintStart_toStartOf="@+id/tvDay12"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay12" />
+
+            <TextView
+                android:id="@+id/tvDay20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay13"
+                app:layout_constraintStart_toStartOf="@+id/tvDay13"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay13" />
+
+            <TextView
+                android:id="@+id/tvDay21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay14"
+                app:layout_constraintStart_toStartOf="@+id/tvDay14"
+                app:layout_constraintTop_toBottomOf="@id/tvDay14" />
+
+            <TextView
+                android:id="@+id/tvDay22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay15"
+                app:layout_constraintStart_toStartOf="@+id/tvDay15"
+                app:layout_constraintTop_toBottomOf="@id/tvDay15" />
+
+
+            <TextView
+                android:id="@+id/tvDay23"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay16"
+                app:layout_constraintStart_toStartOf="@+id/tvDay16"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay16" />
+
+            <TextView
+                android:id="@+id/tvDay24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay17"
+                app:layout_constraintStart_toStartOf="@+id/tvDay17"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay17" />
+
+            <TextView
+                android:id="@+id/tvDay25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay18"
+                app:layout_constraintStart_toStartOf="@+id/tvDay18"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay18" />
+
+            <TextView
+                android:id="@+id/tvDay26"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay19"
+                app:layout_constraintStart_toStartOf="@+id/tvDay19"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay19" />
+
+            <TextView
+                android:id="@+id/tvDay27"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay20"
+                app:layout_constraintStart_toStartOf="@+id/tvDay20"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay20" />
+
+
+            <TextView
+                android:id="@+id/tvDay31"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay23"
+                app:layout_constraintStart_toStartOf="@+id/tvDay23"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay23" />
+
+            <TextView
+                android:id="@+id/tvDay32"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay24"
+                app:layout_constraintStart_toStartOf="@+id/tvDay24"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay24" />
+
+            <TextView
+                android:id="@+id/tvDay33"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay25"
+                app:layout_constraintStart_toStartOf="@+id/tvDay25"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay25" />
+
+            <TextView
+                android:id="@+id/tvDay34"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay26"
+                app:layout_constraintStart_toStartOf="@+id/tvDay26"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay26" />
+
+            <TextView
+                android:id="@+id/tvDay35"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay27"
+                app:layout_constraintStart_toStartOf="@+id/tvDay27"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay27" />
+
+
+
+
+
+            <TextView
+                android:id="@+id/tvSunday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="32dp"
+                android:text="S"
+                app:layout_constraintEnd_toStartOf="@+id/tvMonday"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/monthDetailBarChart" />
+
+            <TextView
+                android:id="@+id/tvMonday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="M"
+                app:layout_constraintBottom_toBottomOf="@+id/tvSunday"
+                app:layout_constraintEnd_toStartOf="@+id/tvTuesday"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tvSunday"
+                app:layout_constraintTop_toTopOf="@+id/tvSunday" />
+
+            <TextView
+                android:id="@+id/tvTuesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="T"
+                app:layout_constraintBottom_toBottomOf="@+id/tvMonday"
+                app:layout_constraintEnd_toStartOf="@+id/tvWednesday"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tvMonday"
+                app:layout_constraintTop_toTopOf="@+id/tvMonday" />
+
+            <TextView
+                android:id="@+id/tvWednesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="W"
+                app:layout_constraintBottom_toBottomOf="@+id/tvTuesday"
+                app:layout_constraintEnd_toStartOf="@+id/tvThursday"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tvTuesday"
+                app:layout_constraintTop_toTopOf="@+id/tvTuesday" />
+
+            <TextView
+                android:id="@+id/tvThursday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="T"
+                app:layout_constraintBottom_toBottomOf="@+id/tvWednesday"
+                app:layout_constraintEnd_toStartOf="@+id/tvFriday"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tvWednesday"
+                app:layout_constraintTop_toTopOf="@+id/tvWednesday" />
+
+            <TextView
+                android:id="@+id/tvFriday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="F"
+                app:layout_constraintBottom_toBottomOf="@+id/tvThursday"
+                app:layout_constraintEnd_toStartOf="@+id/tvSaturday"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tvThursday"
+                app:layout_constraintTop_toTopOf="@+id/tvThursday" />
+
+            <TextView
+                android:id="@+id/tvSaturday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:text="S"
+                app:layout_constraintBottom_toBottomOf="@+id/tvFriday"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvFriday"
+                app:layout_constraintTop_toTopOf="@+id/tvFriday" />
+
+
+
+
+            <TextView
+                android:id="@+id/tvDay0Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay7"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay0"
+                app:layout_constraintStart_toStartOf="@+id/tvDay0"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay0" />
+
+            <TextView
+                android:id="@+id/tvDay1Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay8"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay1"
+                app:layout_constraintStart_toStartOf="@+id/tvDay1"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay1" />
+
+            <TextView
+                android:id="@+id/tvDay2Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay9"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay2"
+                app:layout_constraintStart_toStartOf="@+id/tvDay2"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay2" />
+
+
+            <TextView
+                android:id="@+id/tvDay3Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay10"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay3"
+                app:layout_constraintStart_toStartOf="@+id/tvDay3"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay3" />
+
+            <TextView
+                android:id="@+id/tvDay4Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay11"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay4"
+                app:layout_constraintStart_toStartOf="@+id/tvDay4"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay4" />
+
+            <TextView
+                android:id="@+id/tvDay5Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay12"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay5"
+                app:layout_constraintStart_toStartOf="@+id/tvDay5"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay5" />
+
+            <TextView
+                android:id="@+id/tvDay6Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay13"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay6"
+                app:layout_constraintStart_toStartOf="@+id/tvDay6"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay6" />
+
+
+            <TextView
+                android:id="@+id/tvDay7Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay14"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay7"
+                app:layout_constraintStart_toStartOf="@+id/tvDay7"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay7" />
+
+            <TextView
+                android:id="@+id/tvDay8Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay15"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay8"
+                app:layout_constraintStart_toStartOf="@+id/tvDay8"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay8" />
+
+            <TextView
+                android:id="@+id/tvDay9Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay16"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay9"
+                app:layout_constraintStart_toStartOf="@+id/tvDay9"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay9" />
+
+
+            <TextView
+                android:id="@+id/tvDay10Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay17"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay10"
+                app:layout_constraintStart_toStartOf="@+id/tvDay10"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay10" />
+
+            <TextView
+                android:id="@+id/tvDay11Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay18"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay11"
+                app:layout_constraintStart_toStartOf="@+id/tvDay11"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay11" />
+
+            <TextView
+                android:id="@+id/tvDay12Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay19"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay12"
+                app:layout_constraintStart_toStartOf="@+id/tvDay12"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay12" />
+
+            <TextView
+                android:id="@+id/tvDay13Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay20"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay13"
+                app:layout_constraintStart_toStartOf="@+id/tvDay13"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay13" />
+
+
+
+
+
+            <TextView
+                android:id="@+id/tvDay14Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay21"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay14"
+                app:layout_constraintStart_toStartOf="@+id/tvDay14"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay14" />
+
+            <TextView
+                android:id="@+id/tvDay15Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay22"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay15"
+                app:layout_constraintStart_toStartOf="@+id/tvDay15"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay15" />
+
+            <TextView
+                android:id="@+id/tvDay16Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay23"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay16"
+                app:layout_constraintStart_toStartOf="@+id/tvDay16"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay16" />
+
+
+            <TextView
+                android:id="@+id/tvDay17Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay24"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay17"
+                app:layout_constraintStart_toStartOf="@+id/tvDay17"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay17" />
+
+            <TextView
+                android:id="@+id/tvDay18Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay25"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay18"
+                app:layout_constraintStart_toStartOf="@+id/tvDay18"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay18" />
+
+            <TextView
+                android:id="@+id/tvDay19Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay26"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay19"
+                app:layout_constraintStart_toStartOf="@+id/tvDay19"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay19" />
+
+            <TextView
+                android:id="@+id/tvDay20Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay27"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay20"
+                app:layout_constraintStart_toStartOf="@+id/tvDay20"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay20" />
+
+
+
+
+
+            <TextView
+                android:id="@+id/tvDay21Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay29"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay21"
+                app:layout_constraintStart_toStartOf="@+id/tvDay21"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay21" />
+
+            <TextView
+                android:id="@+id/tvDay22Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay30"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay22"
+                app:layout_constraintStart_toStartOf="@+id/tvDay22"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay22" />
+
+            <TextView
+                android:id="@+id/tvDay23Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay31"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay23"
+                app:layout_constraintStart_toStartOf="@+id/tvDay23"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay23" />
+
+
+            <TextView
+                android:id="@+id/tvDay24Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay32"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay24"
+                app:layout_constraintStart_toStartOf="@+id/tvDay24"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay24" />
+
+            <TextView
+                android:id="@+id/tvDay25Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay33"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay25"
+                app:layout_constraintStart_toStartOf="@+id/tvDay25"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay25" />
+
+            <TextView
+                android:id="@+id/tvDay26Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay34"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay26"
+                app:layout_constraintStart_toStartOf="@+id/tvDay26"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay26" />
+
+            <TextView
+                android:id="@+id/tvDay27Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 hours"
+                app:layout_constraintBottom_toTopOf="@+id/tvDay35"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay27"
+                app:layout_constraintStart_toStartOf="@+id/tvDay27"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay27" />
+
+
+            <TextView
+                android:id="@+id/tvDay29"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:text="29"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay21"
+                app:layout_constraintStart_toStartOf="@+id/tvDay21"
+                app:layout_constraintTop_toBottomOf="@id/tvDay21" />
+
+            <TextView
+                android:id="@+id/tvDay30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:background="@drawable/circle"
+                android:gravity="center"
+                android:text="30"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay22"
+                app:layout_constraintStart_toStartOf="@+id/tvDay22"
+                app:layout_constraintTop_toBottomOf="@id/tvDay22" />
+
+
+
+
+
+            <TextView
+                android:id="@+id/tvDay29Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="5 hours"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay29"
+                app:layout_constraintStart_toStartOf="@+id/tvDay29"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay29" />
+
+            <TextView
+                android:id="@+id/tvDay30Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="5 hours"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay30"
+                app:layout_constraintStart_toStartOf="@+id/tvDay30"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay30" />
+
+            <TextView
+                android:id="@+id/tvDay31Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="5 hours"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay31"
+                app:layout_constraintStart_toStartOf="@+id/tvDay31"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay31" />
+
+
+            <TextView
+                android:id="@+id/tvDay32Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="5 hours"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay32"
+                app:layout_constraintStart_toStartOf="@+id/tvDay32"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay32" />
+
+            <TextView
+                android:id="@+id/tvDay33Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="5 hours"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay33"
+                app:layout_constraintStart_toStartOf="@+id/tvDay33"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay33" />
+
+            <TextView
+                android:id="@+id/tvDay34Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="5 hours"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay34"
+                app:layout_constraintStart_toStartOf="@+id/tvDay34"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay34" />
+
+            <TextView
+                android:id="@+id/tvDay35Hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="5 hours"
+                app:layout_constraintEnd_toEndOf="@+id/tvDay35"
+                app:layout_constraintStart_toStartOf="@+id/tvDay35"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay35" />
+
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/monthDetailBarChart"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 
 
