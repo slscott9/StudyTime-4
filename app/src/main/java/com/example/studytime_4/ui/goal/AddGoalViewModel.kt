@@ -32,7 +32,7 @@ class AddGoalViewModel @ViewModelInject constructor(
                         dayOfMonth =  LocalDateTime.now().dayOfMonth,
                         hours = hours,
                         month = LocalDateTime.now().monthValue,
-                        weekDay = LocalDateTime.now().dayOfWeek.toString(),
+                        weekDay = LocalDateTime.now().dayOfWeek.value,
                         year = LocalDateTime.now().year,
                     )
                 )
@@ -43,7 +43,7 @@ class AddGoalViewModel @ViewModelInject constructor(
                         dayOfMonth =  LocalDateTime.now().dayOfMonth,
                         hours = hours,
                         month = LocalDateTime.now().monthValue,
-                        weekDay = LocalDateTime.now().dayOfWeek.toString(),
+                        weekDay = LocalDateTime.now().dayOfWeek.value,
                         year = LocalDateTime.now().year,
                     )
                 )

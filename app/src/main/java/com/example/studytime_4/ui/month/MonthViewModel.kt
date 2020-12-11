@@ -28,10 +28,11 @@ class MonthViewModel @ViewModelInject constructor(
     var month: String = ""
 
     private val currentMonth = LocalDateTime.now().monthValue
+    private val currentYear = LocalDateTime.now().year
 
 
     private val monthsStudySession =
-        repository.getAllSessionsWithMatchingMonth(currentMonth)
+        repository.getAllSessionsWithMatchingMonth(currentMonth, currentYear)
 
 
     private val _monthBarData = monthsStudySession.map {

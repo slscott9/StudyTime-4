@@ -86,8 +86,8 @@ interface StudyDao {
     suspend fun getCurrentStudySession(currentDate: String): StudySession
 
 
-    @Query("select * from study_table_4 where month= :monthSelected order by dayOfMonth asc")
-    fun getAllSessionsWithMatchingMonth(monthSelected: Int): Flow<List<StudySession>>
+    @Query("select * from study_table_4 where(month= :monthSelected and year = :yearSelected) order by dayOfMonth asc")
+    fun getAllSessionsWithMatchingMonth(monthSelected: Int, yearSelected: Int): Flow<List<StudySession>>
 
 
     /*

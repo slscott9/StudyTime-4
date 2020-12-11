@@ -31,7 +31,7 @@ interface Repository {
     suspend fun getCurrentStudySession(currentDate: String): StudySession
 
 
-    fun getAllSessionsWithMatchingMonth(monthSelected: Int): Flow<List<StudySession>>
+    fun getAllSessionsWithMatchingMonth(monthSelected: Int, yearSelected: Int): Flow<List<StudySession>>
 
 
     /*

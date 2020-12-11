@@ -43,10 +43,9 @@ class TimerFragment : Fragment() {
 
     private val currentDayOfMonth = LocalDateTime.now().dayOfMonth
     private val currentMonth = LocalDateTime.now().monthValue
-    private val currentWeekDay = LocalDateTime.now().dayOfWeek
+    private val currentWeekDay = LocalDateTime.now().dayOfWeek.value
     private val currentDate = LocalDateTime.now()
     private val currentYear = LocalDateTime.now().year
-    private val numericalDayOfWeek = currentWeekDay.value
 
     private val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
@@ -123,34 +122,30 @@ class TimerFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-//                binding.startButton.text = "start"
+                binding.startButton.text = "start"
                 countdown_timer?.cancel()
-//                val minutesStudied = TimeUnit.MILLISECONDS.toMinutes(start_time_in_mili - time_in_milli_seconds)
-//                Timber.i("The minutes studies is ${minutesStudied}")
-//                val hoursStudied = (minutesStudied / 60.0).toFloat()
+                val minutesStudied = TimeUnit.MILLISECONDS.toMinutes(start_time_in_mili - time_in_milli_seconds)
+                val hoursStudied = (minutesStudied / 60.0).toFloat()
 
-                Timber.i(formattedDate)
+                Timber.i("hours studied is $hoursStudied")
 
                 studySession = StudySession(
-                    hours = 1F,
-                    minutes = 60,
-                    date = "2020-12-07", //formattedDate
-                    weekDay = "WEDNESDAY",
-                    month = 12,
-                    dayOfMonth = 7,
-                    year = 2020,
-
 //                    hours = 1F,
 //                    minutes = 60,
-//                    date = "2020-12-04", //formattedDate
-//                    weekDay = currentWeekDay.toString(),
-//                    month = currentMonth,
-//                    dayOfMonth = currentDayOfMonth,
-//                    year = currentYear,
+//                    date = "2020-11-07", //formattedDate
+//                    weekDay = "WEDNESDAY",
+//                    month = 11,
+//                    dayOfMonth = 7,
+//                    year = 2020,
 
-
+                    hours = hoursStudied,
+                    minutes = minutesStudied,
+                    date = formattedDate, //formattedDate
+                    weekDay = currentWeekDay,
+                    month = currentMonth,
+                    dayOfMonth = currentDayOfMonth,
+                    year = currentYear,
                 )
-
                 viewModel.upsertStudySession(studySession)
             }
         }
@@ -208,9 +203,9 @@ class TimerFragment : Fragment() {
                     TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time_in_milli_seconds)), // The change is in this line
             TimeUnit.MILLISECONDS.toSeconds(time_in_milli_seconds) -
                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time_in_milli_seconds))
-        );
+        )
 
-        tvTimerCountDown.text = "$time"
+        tvTimerCountDown.text = time
     }
 
 
@@ -219,15 +214,15 @@ class TimerFragment : Fragment() {
         studySession = StudySession(
             date = formattedDate.toString(),
             hours = time_in_hours.toFloat(),
-            minutes = 0,
-            weekDay = currentWeekDay.toString(),
+            minutes = time_in_hours/60,
+            weekDay = currentWeekDay,
             dayOfMonth = currentDayOfMonth,
             month = currentMonth,
             year = currentYear
         )
 
         val dialogBuilder = AlertDialog.Builder(requireActivity())
-        dialogBuilder.setMessage("Are you sure you want to delete this grave?")
+        dialogBuilder.setMessage("Do you want to save this study session?")
             .setCancelable(false)
             .setPositiveButton("Yes") { _, _ ->
                 viewModel.upsertStudySession(studySession)
@@ -243,7 +238,7 @@ class TimerFragment : Fragment() {
 
     private fun redirectToHomeFragment() {
         val navOptions = NavOptions.Builder()
-            .setPopUpTo(R.id.homeFragment, true) //kills login fragment so when back button is pressed from cemetery list we do not go back to login fragment
+            .setPopUpTo(R.id.homeFragment, true)
             .build()
         findNavController().navigate(
             TimerFragmentDirections.actionTimerFragmentToHomeFragment(), navOptions

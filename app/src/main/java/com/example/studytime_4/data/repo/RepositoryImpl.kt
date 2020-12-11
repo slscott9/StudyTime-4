@@ -81,8 +81,8 @@ class RepositoryImpl @Inject constructor (
 
 
 
-    override fun getAllSessionsWithMatchingMonth(monthSelected: Int): Flow<List<StudySession>> {
-        return dao.getAllSessionsWithMatchingMonth(monthSelected)
+    override fun getAllSessionsWithMatchingMonth(monthSelected: Int, yearSelected: Int): Flow<List<StudySession>> {
+        return dao.getAllSessionsWithMatchingMonth(monthSelected, yearSelected)
 
     }
 

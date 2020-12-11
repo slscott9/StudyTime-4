@@ -9,7 +9,7 @@ data class StudySession(
     val date : String,
     val hours: Float,
     val minutes: Long,
-    val weekDay: String,
+    val weekDay: Int,
     val dayOfMonth: Int,
     val month: Int,
     val year: Int,
@@ -32,7 +32,7 @@ data class StudySession(
 data class WeeklyGoal(
     @PrimaryKey
     val date: String,
-    val weekDay: String,
+    val weekDay: Int,
     val dayOfMonth: Int,
     val hours: Int,
     val month: Int,
@@ -44,7 +44,7 @@ data class WeeklyGoal(
 data class MonthlyGoal(
     @PrimaryKey
     val date: String,
-    val weekDay: String,
+    val weekDay: Int,
     val dayOfMonth: Int,
     val hours: Int,
     val month: Int,
