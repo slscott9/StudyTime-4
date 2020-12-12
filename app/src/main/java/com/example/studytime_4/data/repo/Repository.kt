@@ -10,11 +10,11 @@ interface Repository {
     //WEEKLY GOAL
     fun getGoalForWeek(curMonth: Int, curYear: Int, currentDayOfMonth: Int) : Flow<WeeklyGoal?>
 
-    suspend fun saveWeeklyGoal(weeklyGoal: WeeklyGoal)
+    suspend fun saveWeeklyGoal(weeklyGoal: WeeklyGoal) : Long
 
     //MONTHLY GOAL
 
-    suspend fun saveMonthlyGoal(monthlyGoal: MonthlyGoal)
+    suspend fun saveMonthlyGoal(monthlyGoal: MonthlyGoal) : Long
 
 
     //Changes for transformations

@@ -14,9 +14,12 @@ import com.example.studytime_4.data.WeekData
 import com.example.studytime_4.databinding.FragmentMonthViewBinding
 import com.example.studytime_4.ui.goal.AddGoalFragment
 import com.example.studytime_4.ui.home.HomeFragmentDirections
+import com.example.studytime_4.ui.week.WeekViewFragment
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import java.text.DecimalFormat
 import java.time.Month
 
 @AndroidEntryPoint
@@ -78,10 +81,25 @@ class MonthViewFragment : Fragment() {
                 force
             ) //force = false aligns values with labels
             xAxis.valueFormatter = IndexAxisValueFormatter(monthData.labels);
+            axisLeft.valueFormatter = MyValueFormatter()
+            axisLeft.axisMinimum = 0F
+            axisRight.setDrawLabels(false)
+            axisRight.setDrawGridLines(false)
+
+            axisLeft.valueFormatter = WeekViewFragment.MyValueFormatter() //remove float decimals
+            axisLeft.granularity = 1F //sets steps by one
             animateY(1000)
         }
 
 
+    }
+
+    class MyValueFormatter : ValueFormatter() {
+        private val format = DecimalFormat("###,##0.0")
+
+        override fun getFormattedValue(value: Float): String {
+            return value.toInt().toString() //gets y axis values to integers instead of 0.0 floats
+        }
     }
 
 

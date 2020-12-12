@@ -17,6 +17,7 @@ import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import java.text.DecimalFormat
 
 @AndroidEntryPoint
@@ -43,6 +44,9 @@ class WeekViewFragment : Fragment() {
             it?.let {
 
                 val limitLine = LimitLine(it.limit.toFloat(), "Weekly goal")
+
+                Timber.i("axisMax is ${(it.limit.toFloat() + it.totalHours.yMax)}")
+                Timber.i("limit line is ${it.limit.toFloat()} it.totalHours.ymax = ${it.totalHours.yMax}")
 
                 binding.totalHoursChart.apply {
                     data = it.totalHours
@@ -115,6 +119,13 @@ class WeekViewFragment : Fragment() {
                 force
             ) //force = false aligns values with labels
             xAxis.valueFormatter = IndexAxisValueFormatter(weekData.labels);
+            axisLeft.valueFormatter = MyValueFormatter()
+            axisLeft.axisMinimum = 0F
+            axisRight.setDrawLabels(false)
+            axisRight.setDrawGridLines(false)
+
+            axisLeft.valueFormatter = MyValueFormatter() //remove float decimals
+            axisLeft.granularity = 1F //sets steps by one
             animateY(1000)
         }
 

@@ -17,12 +17,14 @@ interface StudyDao {
     suspend fun insertMonthlyGoal(goal: MonthlyGoal) : Long
 
     @Transaction
-    suspend fun upsertMonthlyGoal(goal: MonthlyGoal) {
+    suspend fun upsertMonthlyGoal(goal: MonthlyGoal) : Long {
         val id = insertMonthlyGoal(goal)
 
         if(id == -1L){
             updateMonthlyGoal(goal)
         }
+
+        return id
     }
 
 
@@ -51,12 +53,14 @@ interface StudyDao {
     suspend fun insertWeeklyGoal(goal: WeeklyGoal) : Long
 
     @Transaction
-    suspend fun upsertWeeklyGoal(goal: WeeklyGoal) {
+    suspend fun upsertWeeklyGoal(goal: WeeklyGoal) : Long {
         val id = insertWeeklyGoal(goal)
 
         if(id == -1L){
             updateWeeklyGoal(goal)
         }
+
+        return id
     }
 
 

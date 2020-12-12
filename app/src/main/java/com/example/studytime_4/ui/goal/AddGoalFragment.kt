@@ -41,13 +41,19 @@ class AddGoalFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.insertStatus.observe(viewLifecycleOwner){
+            it?.let {
+                dismiss()
+            }
+        }
+
 
         btnSaveGoal.setOnClickListener {
             if(etWeeklyGoal.text.isNullOrBlank()){
                 Toast.makeText(requireActivity(), "Please enter a goal", Toast.LENGTH_SHORT).show()
             }else{
+
                 viewModel.addGoal( etWeeklyGoal.text.toString().toInt(), navArgs.monthlyGoal)
-                dismiss()
             }
         }
 

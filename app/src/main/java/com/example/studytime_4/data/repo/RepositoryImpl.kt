@@ -27,20 +27,17 @@ class RepositoryImpl @Inject constructor (
         return dao.getGoalForWeek(curMonth, curYear, currentDayOfMonth)
     }
 
-    override suspend fun saveWeeklyGoal(weeklyGoal: WeeklyGoal){
+    override suspend fun saveWeeklyGoal(weeklyGoal: WeeklyGoal) : Long {
 
 
-        Timber.i(Thread.currentThread().name)
         val goal = dao.checkForWeeklyGoal(weeklyGoal.month, weeklyGoal.year, weeklyGoal.dayOfMonth)
 
-        if(goal == null){
+        return if(goal == null){
             dao.upsertWeeklyGoal(weeklyGoal)
-            Timber.i(Thread.currentThread().name)
 
         }else{
            val updateGoal = goal.copy(hours = weeklyGoal.hours)
             dao.upsertWeeklyGoal(updateGoal)
-            Timber.i(Thread.currentThread().name)
 
         }
     }
@@ -49,11 +46,11 @@ class RepositoryImpl @Inject constructor (
 
     //MONTHLY GOAL
 
-    override suspend fun saveMonthlyGoal(monthlyGoal: MonthlyGoal) {
+    override suspend fun saveMonthlyGoal(monthlyGoal: MonthlyGoal) : Long {
 
         val goal = dao.checkForMonthlyGoal(monthlyGoal.month, monthlyGoal.year, monthlyGoal.dayOfMonth)
 
-        if(goal == null){
+        return if(goal == null){
             dao.upsertMonthlyGoal(monthlyGoal)
         }else{
             val updateGoal = goal.copy(hours = monthlyGoal.hours)

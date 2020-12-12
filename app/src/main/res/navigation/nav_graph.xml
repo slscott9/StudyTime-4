@@ -48,6 +48,9 @@
         <argument
             android:name="yearSelected"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_monthDetailFragment_to_addGoalFragment"
+            app:destination="@id/addGoalFragment" />
     </fragment>
     <dialog
         android:id="@+id/addGoalFragment"

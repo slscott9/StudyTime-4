@@ -2,6 +2,8 @@ package com.example.studytime_4.ui.goal
 
 import androidx.datastore.core.DataStore
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.studytime_4.data.local.entities.MonthlyGoal
@@ -18,6 +20,10 @@ class AddGoalViewModel @ViewModelInject constructor(
 ) : ViewModel(){
 
 
+    private val _insertStatus = MutableLiveData<Long>()
+
+    val insertStatus  : LiveData<Long> = _insertStatus
+
 
     fun addGoal( hours: Int, monthlyGoal: Boolean){
         viewModelScope.launch {
@@ -26,7 +32,7 @@ class AddGoalViewModel @ViewModelInject constructor(
 
 
             if(monthlyGoal){
-                repository.saveMonthlyGoal(
+                val id = repository.saveMonthlyGoal(
                     MonthlyGoal(
                         date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                         dayOfMonth =  LocalDateTime.now().dayOfMonth,
@@ -36,8 +42,11 @@ class AddGoalViewModel @ViewModelInject constructor(
                         year = LocalDateTime.now().year,
                     )
                 )
+
+                _insertStatus.postValue(id)
+
             }else{
-                repository.saveWeeklyGoal(
+                val id = repository.saveWeeklyGoal(
                     WeeklyGoal(
                         date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                         dayOfMonth =  LocalDateTime.now().dayOfMonth,
@@ -47,7 +56,11 @@ class AddGoalViewModel @ViewModelInject constructor(
                         year = LocalDateTime.now().year,
                     )
                 )
+
+                _insertStatus.postValue(id)
             }
+
+
 
 
 

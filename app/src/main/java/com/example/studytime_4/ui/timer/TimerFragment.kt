@@ -130,21 +130,21 @@ class TimerFragment : Fragment() {
                 Timber.i("hours studied is $hoursStudied")
 
                 studySession = StudySession(
-//                    hours = 1F,
-//                    minutes = 60,
-//                    date = "2020-11-07", //formattedDate
-//                    weekDay = "WEDNESDAY",
-//                    month = 11,
-//                    dayOfMonth = 7,
-//                    year = 2020,
+                    hours = .5F,
+                    minutes = 30,
+                    date = "2020-12-11", //formattedDate
+                    weekDay = 5,
+                    month = 12,
+                    dayOfMonth = 11,
+                    year = 2020,
 
-                    hours = hoursStudied,
-                    minutes = minutesStudied,
-                    date = formattedDate, //formattedDate
-                    weekDay = currentWeekDay,
-                    month = currentMonth,
-                    dayOfMonth = currentDayOfMonth,
-                    year = currentYear,
+//                    hours = hoursStudied,
+//                    minutes = minutesStudied,
+//                    date = formattedDate, //formattedDate
+//                    weekDay = currentWeekDay,
+//                    month = currentMonth,
+//                    dayOfMonth = currentDayOfMonth,
+//                    year = currentYear,
                 )
                 viewModel.upsertStudySession(studySession)
             }

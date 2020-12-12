@@ -48,18 +48,14 @@ class MonthDetailViewModel @ViewModelInject constructor(
     }.asLiveData(viewModelScope.coroutineContext)
 
 
-    private fun setMonthlyHours(hours : List<StudySession>) : IntArray {
+    private fun setMonthlyHours(hours : List<StudySession>) : FloatArray {
 
-        val monthlyHours = IntArray(31)
-        Timber.i(monthlyHours.size.toString())
+        val monthlyHours = FloatArray(31)
 
         hours.forEach {
-            monthlyHours[it.dayOfMonth -1] = it.hours.toInt()
+            monthlyHours[it.dayOfMonth -1] = it.hours
         }
 
-        monthlyHours.forEachIndexed { index, i ->
-            Timber.i("i = $i index = $index")
-        }
 
         return monthlyHours
 
