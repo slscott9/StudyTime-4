@@ -13,6 +13,7 @@ import com.example.studytime_4.data.WeekData
 import com.example.studytime_4.databinding.FragmentWeekViewBinding
 import com.example.studytime_4.ui.goal.AddGoalFragment
 import com.example.studytime_4.ui.home.HomeFragmentDirections
+import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
@@ -33,6 +34,11 @@ class WeekViewFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_week_view, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         viewModel.weekBarData.observe(viewLifecycleOwner) {
             it?.let {
@@ -44,9 +50,6 @@ class WeekViewFragment : Fragment() {
             it?.let {
 
                 val limitLine = LimitLine(it.limit.toFloat(), "Weekly goal")
-
-                Timber.i("axisMax is ${(it.limit.toFloat() + it.totalHours.yMax)}")
-                Timber.i("limit line is ${it.limit.toFloat()} it.totalHours.ymax = ${it.totalHours.yMax}")
 
                 binding.totalHoursChart.apply {
                     data = it.totalHours
@@ -72,11 +75,8 @@ class WeekViewFragment : Fragment() {
         }
 
         binding.addGoalChip.setOnClickListener {
-           parentFragment?.findNavController()?.navigate(HomeFragmentDirections.actionHomeFragmentToAddGoalFragment(false))
+            parentFragment?.findNavController()?.navigate(HomeFragmentDirections.actionHomeFragmentToAddGoalFragment(false))
         }
-
-        return binding.root
-
     }
 
     class MyValueFormatter : ValueFormatter() {
@@ -90,25 +90,19 @@ class WeekViewFragment : Fragment() {
 
     private fun setupWeekBarChart(weekData: WeekData) {
 
-        var force: Boolean
-
+        val description = Description()
+        description.text = "Total weekly hours ${weekData.totalHours}"
         binding.weekBarChart.data =
             weekData.weekBarData // set the data and list of lables into chart
 
         //case 1 multiple bar chart values -> axis labels need to move in order to match chart values
         //case 2 only one bar chart value -> so center the label over value
-        if (weekData.labels.size > 1) {
-            binding.weekBarChart.apply {
-                xAxis.setCenterAxisLabels(false)
-                force = false
-
-            }
+        val force: Boolean = if (weekData.labels.size > 1) {
+            binding.weekBarChart.xAxis.setCenterAxisLabels(false)
+            false
         } else {
-            binding.weekBarChart.apply {
-                xAxis.setCenterAxisLabels(true)
-                force = true
-
-            }
+            binding.weekBarChart.xAxis.setCenterAxisLabels(true)
+            true
         }
 
         binding.weekBarChart.apply {
@@ -123,7 +117,7 @@ class WeekViewFragment : Fragment() {
             axisLeft.axisMinimum = 0F
             axisRight.setDrawLabels(false)
             axisRight.setDrawGridLines(false)
-
+            setDescription(description)
             axisLeft.valueFormatter = MyValueFormatter() //remove float decimals
             axisLeft.granularity = 1F //sets steps by one
             animateY(1000)

@@ -1,13 +1,20 @@
 package com.example.studytime_4.ui.adapters
 
+import android.graphics.Color
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studytime_4.R
+import com.example.studytime_4.R.color
 import kotlinx.android.synthetic.main.year_list_item.view.*
+import timber.log.Timber
 
 class YearListAdapter(private val listener: (Int)-> Unit) : RecyclerView.Adapter<YearListAdapter.YearsWithSessionsViewHolder>() {
+
+    var selected = false
 
 
     /*
@@ -37,7 +44,12 @@ class YearListAdapter(private val listener: (Int)-> Unit) : RecyclerView.Adapter
 
         val item = yearList[position]
         holder.cardView.yearTV.text = yearList[position].toString()
-        holder.cardView.setOnClickListener { listener(item) } //When card view is clicked, pass the item value from the array (year)  into SessionWithMonthSelectorActivity
+
+
+        holder.cardView.setOnClickListener {
+
+            listener(item)
+        } //When card view is clicked, pass the item value from the array (year)  into SessionWithMonthSelectorActivity
     }
 
     override fun getItemCount() = yearList.size

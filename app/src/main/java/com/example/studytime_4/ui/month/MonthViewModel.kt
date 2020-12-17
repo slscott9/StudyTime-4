@@ -19,50 +19,58 @@ import java.time.LocalDateTime
 
 class MonthViewModel @ViewModelInject constructor(
     private val repository: Repository
-) : ViewModel(){
+) : ViewModel() {
 
-
-    private val months = arrayListOf<String>("January", "February" ,"March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
-
-
+    private val months = arrayListOf<String>(
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    )
     var month: String = ""
-
     private val currentMonth = LocalDateTime.now().monthValue
     private val currentYear = LocalDateTime.now().year
-
 
     private val monthsStudySession =
         repository.getAllSessionsWithMatchingMonth(currentMonth, currentYear)
 
-
     private val _monthBarData = monthsStudySession.map {
-
         setMonthBarData(it)
-
-
     }.asLiveData(viewModelScope.coroutineContext)
 
     val monthBarData = _monthBarData
 
+    private fun setMonthBarData(monthStudySessionList: List<StudySession>): MonthData {
 
-    private fun setMonthBarData(monthStudySessionList : List<StudySession>) : MonthData {
-
-        val monthData = monthStudySessionList.mapIndexed {index, studySession  ->
-
+        val monthData = monthStudySessionList.mapIndexed { index, studySession ->
             BarEntry(index.toFloat(), studySession.hours)
-
         }
 
-        val labels = monthStudySessionList.map {  studySession ->
-            Timber.i(studySession.date)
-
+        val labels = monthStudySessionList.map { studySession ->
             studySession.date
         }
-        Timber.i(labels.toString())
 
-       return  MonthData(monthBarData = BarData(BarDataSet(monthData, months[currentMonth - 1])), labels = labels)
+        val totalHours = monthStudySessionList.map { it.hours }.sum()
+
+        return MonthData(
+            monthBarData = BarData(
+                BarDataSet(
+                    monthData,
+                    months[currentMonth - 1]
+                )
+            ),
+            labels = labels,
+            totalHours = totalHours
+        )
     }
-
 
 
 }

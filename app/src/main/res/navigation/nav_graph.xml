@@ -12,22 +12,44 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_timerFragment"
-            app:destination="@id/timerFragment" />
+            app:destination="@id/timerFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
         <action
             android:id="@+id/action_homeFragment_to_sessionListFragment"
-            app:destination="@id/sessionListFragment" />
+            app:destination="@id/sessionListFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            />
         <action
             android:id="@+id/action_homeFragment_to_addGoalFragment"
-            app:destination="@id/addGoalFragment" />
+            app:destination="@id/addGoalFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
     </fragment>
     <fragment
         android:id="@+id/sessionListFragment"
         android:name="com.example.studytime_4.ui.sessions.list.SessionListFragment"
-        android:label="fragment_session_list"
-        tools:layout="@layout/fragment_session_list" >
+        android:label="Years"
+        tools:layout="@layout/fragment_session_list">
         <action
             android:id="@+id/action_sessionListFragment_to_monthDetailFragment"
-            app:destination="@id/monthDetailFragment" />
+            app:destination="@id/monthDetailFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
+        <action
+            android:id="@+id/action_sessionListFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_left"/>
     </fragment>
     <fragment
         android:id="@+id/timerFragment"
@@ -36,12 +58,19 @@
         tools:layout="@layout/fragment_timer" >
         <action
             android:id="@+id/action_timerFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_left"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_timerFragment_to_sessionListFragment"
+            app:destination="@id/sessionListFragment" />
     </fragment>
     <fragment
         android:id="@+id/monthDetailFragment"
         android:name="com.example.studytime_4.ui.month.detail.MonthDetailFragment"
-        android:label="MonthDetailFragment" >
+        android:label="Month">
         <argument
             android:name="monthSelected"
             app:argType="integer" />
@@ -50,7 +79,10 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_monthDetailFragment_to_addGoalFragment"
-            app:destination="@id/addGoalFragment" />
+            app:destination="@id/addGoalFragment"/>
+        <action
+            android:id="@+id/action_monthDetailFragment_to_sessionDetailFragment"
+            app:destination="@id/sessionDetailFragment" />
     </fragment>
     <dialog
         android:id="@+id/addGoalFragment"
@@ -61,4 +93,13 @@
             android:name="monthlyGoal"
             app:argType="boolean" />
     </dialog>
+    <fragment
+        android:id="@+id/sessionDetailFragment"
+        android:name="com.example.studytime_4.ui.sessions.sessionsdetail.SessionDetailFragment"
+        android:label="fragment_session_detail"
+        tools:layout="@layout/fragment_session_detail" >
+        <argument
+            android:name="studySession"
+            app:argType="com.example.studytime_4.data.StudySession" />
+    </fragment>
 </navigation>

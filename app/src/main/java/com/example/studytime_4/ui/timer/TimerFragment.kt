@@ -1,5 +1,6 @@
 package com.example.studytime_4.ui.timer
 
+import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import androidx.fragment.app.Fragment
@@ -7,13 +8,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import com.example.studytime_4.R
 import com.example.studytime_4.data.local.entities.StudySession
 import com.example.studytime_4.databinding.FragmentTimerBinding
@@ -52,6 +57,12 @@ class TimerFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val callBack = requireActivity().onBackPressedDispatcher.addCallback(this){
+            findNavController().navigate(TimerFragmentDirections.actionTimerFragmentToHomeFragment())
+        }
+
+
+
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
 //
@@ -85,6 +96,9 @@ class TimerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+//        binding.toolbar.setupWithNavController(findNavController())
+        setupNav()
 
         binding.startButton.isEnabled = false
 
@@ -122,6 +136,8 @@ class TimerFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
+
+                hideSoftKeyboard(it)
                 binding.startButton.text = "start"
                 countdown_timer?.cancel()
                 val minutesStudied = TimeUnit.MILLISECONDS.toMinutes(start_time_in_mili - time_in_milli_seconds)
@@ -132,11 +148,11 @@ class TimerFragment : Fragment() {
                 studySession = StudySession(
                     hours = .5F,
                     minutes = 30,
-                    date = "2020-12-11", //formattedDate
+                    date = "2021-12-11", //formattedDate
                     weekDay = 5,
                     month = 12,
                     dayOfMonth = 11,
-                    year = 2020,
+                    year = 2021,
 
 //                    hours = hoursStudied,
 //                    minutes = minutesStudied,
@@ -153,6 +169,7 @@ class TimerFragment : Fragment() {
         binding.btnReset.setOnClickListener {
             resetTimer()
         }
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -235,14 +252,26 @@ class TimerFragment : Fragment() {
         alert.show()
     }
 
+    private fun setupNav(){
+        binding.toolbar.setNavigationOnClickListener {
+            redirectToHomeFragment()
+        }
+    }
+
 
     private fun redirectToHomeFragment() {
-        val navOptions = NavOptions.Builder()
-            .setPopUpTo(R.id.homeFragment, true)
-            .build()
+//        val navOptions = NavOptions.Builder()
+//            .setPopUpTo(R.id.homeFragment, true)
+//            .build()
         findNavController().navigate(
-            TimerFragmentDirections.actionTimerFragmentToHomeFragment(), navOptions
+            TimerFragmentDirections.actionTimerFragmentToHomeFragment()
         )
+    }
+
+    private fun hideSoftKeyboard(view: View) {
+        val imm =
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 }

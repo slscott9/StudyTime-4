@@ -5,15 +5,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.studytime_4.R
 import com.example.studytime_4.databinding.FragmentSessionListBinding
 import com.example.studytime_4.ui.adapters.MonthListAdapter
 import com.example.studytime_4.ui.adapters.YearListAdapter
+import com.example.studytime_4.ui.timer.TimerFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_session_list.*
 
 @AndroidEntryPoint
 class SessionListFragment : Fragment() {
@@ -24,6 +29,21 @@ class SessionListFragment : Fragment() {
     private lateinit var monthListAdapter: MonthListAdapter
 
     private var yearSelected = 0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val navOptions = NavOptions.Builder()
+            .setEnterAnim(R.anim.slide_in_left)
+            .setPopUpTo(R.id.homeFragment, true)
+
+
+        val callBack = requireActivity().onBackPressedDispatcher.addCallback(this){
+            findNavController().navigate(SessionListFragmentDirections.actionSessionListFragmentToHomeFragment())
+        }
+
+
+    }
 
 
 
@@ -40,6 +60,9 @@ class SessionListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupNav()
+
 
         yearListAdapter = YearListAdapter {
             viewModel.setYearSelected(it)
@@ -65,9 +88,30 @@ class SessionListFragment : Fragment() {
             }
         })
 
-        binding.monthRecyclerView.adapter = monthListAdapter
-        binding.yearsListRecyclerView.adapter = yearListAdapter
+        binding.rvMonths.adapter = monthListAdapter
+        binding.rvYears.adapter = yearListAdapter
+
+
     }
+
+    private fun setupNav(){
+        binding.sessionListToolbar.setNavigationOnClickListener {
+            findNavController().navigate(SessionListFragmentDirections.actionSessionListFragmentToHomeFragment())
+        }
+    }
+
+
+
+    private fun redirectToHomeFragment() {
+        val navOptions = NavOptions.Builder()
+            .setEnterAnim(R.anim.slide_in_left)
+            .setPopUpTo(R.id.homeFragment, true)
+
+        findNavController().navigate(
+            R.id.homeFragment, null, navOptions.build()
+        )
+    }
+
 
 
 }

@@ -35,48 +35,46 @@ class WeekViewModel @ViewModelInject constructor(
     private val lastSevenStudySessions =
         repository.getLastSevenSessions(currentMonth, currentDayOfMonth, currentYear)
 
-
-    private val lastSevenSessionsHours =
-        repository.getLastSevenSessionsHours(currentMonth, currentDayOfMonth)
-            .map {
-                setTotalWeeklyHours(it)
-            }
-
     val goal = repository.getGoalForWeek(
         LocalDateTime.now().monthValue,
         LocalDateTime.now().year,
         LocalDateTime.now().dayOfMonth
     )
 
-    private val _weekBarData = lastSevenStudySessions.map { list ->
-       setWeekBarData(list)
+    private val lastSevenSessionsHours =
+        repository.getLastSevenSessionsHours(currentMonth, currentDayOfMonth)
+            .map { setTotalWeeklyHours(it) }
 
-    }.asLiveData(viewModelScope.coroutineContext)
+    private val _weekBarData = lastSevenStudySessions
+            .map { list -> setWeekBarData(list) }
+            .asLiveData(viewModelScope.coroutineContext)
 
     val weekBarData = _weekBarData
 
 
-    val goalData = goal.combine(lastSevenSessionsHours) {goal, hours ->
-        GoalData(
-            limit = goal?.hours ?: 0,
-            totalHours = hours
-        )
-    }.asLiveData(viewModelScope.coroutineContext)
+    val goalData =
+        goal.combine(lastSevenSessionsHours) { goal, hours ->
+                GoalData(
+                    limit = goal?.hours ?: 0,
+                    totalHours = hours
+                )
+            }.asLiveData(viewModelScope.coroutineContext)
 
 
-    //
     private fun setWeekBarData(studySessionList: List<StudySession>) : WeekData {
         val hours = studySessionList.mapIndexed { index, studySession ->
-
             BarEntry( index.toFloat(), studySession.hours) //x and y hours need to be Y axis
         }
         val labels = studySessionList.mapIndexed {index, study ->
             study.date
         }
 
+        val totalHours = studySessionList.map { it.hours }.sum()
+
         return WeekData(
             weekBarData = BarData(BarDataSet(hours, "Hours")),
-            labels = labels
+            labels = labels,
+            totalHours
         )
     }
 
@@ -88,7 +86,6 @@ class WeekViewModel @ViewModelInject constructor(
         val totalHours = studySessions.map {
             it
         }.sum()
-
 
         //Only need one entry for bar chart which is totals hours
         //x and y values were mixed up totalsHours needs to be y value

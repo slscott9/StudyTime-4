@@ -28,7 +28,6 @@ class MonthViewFragment : Fragment() {
     private lateinit var binding: FragmentMonthViewBinding
     private val viewModel: MonthViewModel by viewModels()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,6 +36,11 @@ class MonthViewFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_month_view, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         viewModel.monthBarData.observe(viewLifecycleOwner){
             it?.let {
@@ -45,34 +49,22 @@ class MonthViewFragment : Fragment() {
         }
 
         binding.addMonthGoalChip.setOnClickListener {
-
             parentFragment?.findNavController()?.navigate(HomeFragmentDirections.actionHomeFragmentToAddGoalFragment(true))
         }
 
-        return binding.root
     }
 
-
-    /*
-
-        add a monthly goal
-
-        REDO RESUME TELL HOW THE PROJECTS YOU MADE SOLVED A PROBLEM!!!
-     */
-
     private fun setBarChart(monthData: MonthData) {
-
-        val force: Boolean
 
         binding.monthBarChart.data =
             monthData.monthBarData // set the data and list of labels into chart
 
-        if(monthData.labels.size > 1) {
+        val force: Boolean = if(monthData.labels.size > 1) {
             binding.monthBarChart.xAxis.setCenterAxisLabels(false)
-            force = false
+            false
         } else {
             binding.monthBarChart.xAxis.setCenterAxisLabels(true)
-            force = true
+            true
         }
 
         binding.monthBarChart.apply {
