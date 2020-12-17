@@ -1,9 +1,11 @@
 package com.example.studytime_4.ui.adapters
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -22,6 +24,10 @@ class CalendarAdapter(
 
     private val weekDays = listOf<String>("S", "M","T","W","T","F","S")
 
+
+    private val lastIndex = daysInMonth + WEEKDAYS + firstDayOfMonth
+
+    private val firstIndex = firstDayOfMonth + WEEKDAYS
 
 
 
@@ -42,22 +48,28 @@ class CalendarAdapter(
         fun bind(studySession: StudySession?, position: Int, listener: CalendarListener ){
 
             when {
-                position < 7 -> binding.tvDay.text = weekDays[position]
+                position < WEEKDAYS ->{
+                    binding.tvDay.apply {
+                        text = weekDays[position]
+                        typeface = Typeface.DEFAULT_BOLD
+                    }
+                }
 
-                position >= 7 && position >= firstDayOfMonth + 7 - 1 -> {
+                position in firstIndex .. lastIndex -> {
                     count += 1
                     binding.tvDay.text = "$count"
 
-                    if(studySession != null) {
+                    studySession?.let {
                         binding.tvDay.setBackgroundResource(R.drawable.circle)
                         ViewCompat.setTransitionName(binding.tvDay, studySession.date)
+                        binding.tvDay.setTextColor(ContextCompat.getColor(binding.tvDay.context, R.color.white))
                         binding.tvDay.setOnClickListener {
                             listener.onClick(studySession, binding.tvDay)
                         }
                     }
                 }
 
-                position > daysInMonth + firstDayOfMonth -> binding.tvDay.visibility = View.GONE
+                position > lastIndex -> binding.tvDay.visibility = View.GONE
             }
 
         }
@@ -77,5 +89,9 @@ class CalendarAdapter(
         override fun areContentsTheSame(oldItem: StudySession, newItem: StudySession): Boolean {
             return oldItem == newItem
         }
+    }
+
+    companion object {
+        const val WEEKDAYS = 7
     }
 }
