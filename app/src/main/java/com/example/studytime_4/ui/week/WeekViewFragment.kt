@@ -82,17 +82,17 @@ class WeekViewFragment : Fragment() {
         }
 
         binding.addGoalChip.setOnClickListener {
-//            parentFragment?.findNavController()?.navigate(HomeFragmentDirections.actionHomeFragmentToAddGoalFragment(false))
-            expandAddGoalCardView()
+            expandAddGoalCV()
         }
     }
 
-    private fun expandAddGoalCardView() {
+    private fun expandAddGoalCV() {
         binding.run {
             binding.cvTotalHours.visibility = View.INVISIBLE
             binding.scrimView.visibility = View.VISIBLE
+
             binding.scrimView.setOnClickListener {
-                collapseChip()
+                collapseAddGoalCV()
             }
 
             val transformation = MaterialContainerTransform().apply {
@@ -105,14 +105,13 @@ class WeekViewFragment : Fragment() {
 
             TransitionManager.beginDelayedTransition(binding.mcvAddGoal, transformation)
             binding.mcvAddGoal.visibility = View.VISIBLE
-//            binding.nsvParent.scrollTo(binding.mcvAddGoal.y.toInt(), binding.mcvAddGoal.x.toInt())
             binding.addGoalChip.visibility = View.INVISIBLE
 
             setupSaveGoalButton()
         }
     }
 
-    private fun collapseChip() {
+    private fun collapseAddGoalCV() {
         binding.mcvAddGoal.visibility = View.GONE
         binding.cvTotalHours.visibility = View.VISIBLE
         binding.scrimView.visibility = View.GONE
@@ -137,23 +136,11 @@ class WeekViewFragment : Fragment() {
                 Toast.makeText(requireActivity(), "Please enter a goal", Toast.LENGTH_SHORT).show()
             }else{
                 viewModel.addGoal(etWeeklyGoal.text.toString().toInt())
-                collapseChip()
+                collapseAddGoalCV()
             }
         }
     }
 
-    private fun setupTransition() {
-        enterTransition = MaterialContainerTransform().apply {
-            startView = binding.addGoalChip
-            endView = mcvAddGoal
-            duration = 300
-
-        }
-        returnTransition = Slide().apply {
-            duration = 300
-            addTarget(binding.mcvAddGoal)
-        }
-    }
 
     class MyValueFormatter : ValueFormatter() {
         private val format = DecimalFormat("###,##0.0")

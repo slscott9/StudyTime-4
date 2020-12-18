@@ -71,6 +71,16 @@ class MonthDetailViewModel @ViewModelInject constructor(
     }.asLiveData(viewModelScope.coroutineContext)
 
 
+    private val _studySession = MutableLiveData<com.example.studytime_4.data.StudySession>()
+
+    val studySession : LiveData<com.example.studytime_4.data.StudySession> = _studySession
+
+
+    fun setStudySession(studySession: com.example.studytime_4.data.StudySession){
+        _studySession.value = studySession
+    }
+
+
     private fun setMonthBarData(monthStudySessionList : List<StudySession>) : MonthData {
 
         val monthData = monthStudySessionList.mapIndexed {index, studySession  ->
