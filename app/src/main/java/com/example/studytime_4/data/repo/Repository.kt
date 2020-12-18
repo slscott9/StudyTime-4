@@ -38,7 +38,8 @@ interface Repository {
         To get the current week's study sessions query database for current day of week
      */
 
-    fun getLastSevenSessions(currentMonth: Int, currentDayOfMonth: Int, curYear: Int): Flow<List<StudySession>>
+//    fun getLastSevenSessions(currentWeekDay: Int, currentMonth: Int, currentDayOfMonth: Int, curYear: Int): Flow<List<StudySession>>
+fun getLastSevenSessions(weekDayEpoch : Long): Flow<List<StudySession>>
 
 
     fun getYearsWithSessions(): Flow<List<Int>>

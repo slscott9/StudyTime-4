@@ -70,7 +70,7 @@ class MonthDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.monthDetailToolbar.setupWithNavController(findNavController())
+        setupToolbar()
         //set the calendar to the year and month that was selected by user
         binding.viewModel = viewModel
 
@@ -117,6 +117,12 @@ class MonthDetailFragment : Fragment() {
         postponeEnterTransition()
         binding.rvCalendar.doOnPreDraw {
             startPostponedEnterTransition()
+        }
+    }
+
+    private fun setupToolbar() {
+        binding.monthDetailToolbar.setNavigationOnClickListener {
+            findNavController().navigate(MonthDetailFragmentDirections.actionMonthDetailFragmentToSessionListFragment())
         }
     }
 

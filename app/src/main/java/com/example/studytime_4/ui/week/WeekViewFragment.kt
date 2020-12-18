@@ -20,6 +20,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.text.DecimalFormat
+import java.time.OffsetDateTime
 
 @AndroidEntryPoint
 class WeekViewFragment : Fragment() {
@@ -34,7 +35,13 @@ class WeekViewFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_week_view, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
+
+
+        val time = OffsetDateTime.now().toEpochSecond()
+
         return binding.root
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,7 +56,7 @@ class WeekViewFragment : Fragment() {
         viewModel.goalData.observe(viewLifecycleOwner) {
             it?.let {
 
-                val limitLine = LimitLine(it.limit.toFloat(), "Weekly goal")
+                val limitLine = LimitLine(it.limit.toFloat(), "Weekly Goal")
 
                 binding.totalHoursChart.apply {
                     data = it.totalHours
@@ -66,7 +73,7 @@ class WeekViewFragment : Fragment() {
                     //Both must be set to false or double gridlines will be drawn for the goalbarchart
                     axisRight.setDrawLabels(false)
                     axisRight.setDrawGridLines(false)
-
+                    description.isEnabled = false
                     axisLeft.valueFormatter = MyValueFormatter() //remove float decimals
                     axisLeft.granularity = 1F //sets steps by ones
                     xAxis.setDrawLabels(false) //disable labels for x axis
@@ -90,8 +97,8 @@ class WeekViewFragment : Fragment() {
 
     private fun setupWeekBarChart(weekData: WeekData) {
 
-        val description = Description()
-        description.text = "Total weekly hours ${weekData.totalHours}"
+//        val description = Description()
+//        description.text = "Total weekly hours ${weekData.totalHours}"
         binding.weekBarChart.data =
             weekData.weekBarData // set the data and list of lables into chart
 
@@ -117,7 +124,7 @@ class WeekViewFragment : Fragment() {
             axisLeft.axisMinimum = 0F
             axisRight.setDrawLabels(false)
             axisRight.setDrawGridLines(false)
-            setDescription(description)
+            description.isEnabled = false
             axisLeft.valueFormatter = MyValueFormatter() //remove float decimals
             axisLeft.granularity = 1F //sets steps by one
             animateY(1000)

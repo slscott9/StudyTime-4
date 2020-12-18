@@ -29,6 +29,8 @@ class CalendarAdapter(
 
     private val firstIndex = firstDayOfMonth + WEEKDAYS
 
+    private val daysInWeek = 7
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
@@ -48,11 +50,15 @@ class CalendarAdapter(
         fun bind(studySession: StudySession?, position: Int, listener: CalendarListener ){
 
             when {
-                position < WEEKDAYS ->{
+                position < daysInWeek ->{
                     binding.tvDay.apply {
                         text = weekDays[position]
                         typeface = Typeface.DEFAULT_BOLD
                     }
+                }
+
+                position in daysInWeek until firstIndex -> {
+                    binding.cvDayContainer.visibility = View.GONE
                 }
 
                 position in firstIndex .. lastIndex -> {
@@ -69,7 +75,7 @@ class CalendarAdapter(
                     }
                 }
 
-                position > lastIndex -> binding.tvDay.visibility = View.GONE
+                position > lastIndex -> binding.cvDayContainer.visibility = View.GONE
             }
 
         }

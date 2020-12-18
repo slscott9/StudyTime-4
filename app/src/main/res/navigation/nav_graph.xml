@@ -83,6 +83,11 @@
         <action
             android:id="@+id/action_monthDetailFragment_to_sessionDetailFragment"
             app:destination="@id/sessionDetailFragment" />
+        <action
+            android:id="@+id/action_monthDetailFragment_to_sessionListFragment"
+            app:destination="@id/sessionListFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_in_left"/>
     </fragment>
     <dialog
         android:id="@+id/addGoalFragment"

@@ -2,6 +2,9 @@ package com.example.studytime_4.data.local.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
+import java.time.OffsetDateTime
 
 @Entity(tableName = "study_table_4")
 data class StudySession(
@@ -13,8 +16,11 @@ data class StudySession(
     val dayOfMonth: Int,
     val month: Int,
     val year: Int,
+    val epochDate : Long
 ) {
 }
+
+
 
 /*
     Add a goal entity

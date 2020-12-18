@@ -77,7 +77,7 @@ class MonthViewFragment : Fragment() {
             axisLeft.axisMinimum = 0F
             axisRight.setDrawLabels(false)
             axisRight.setDrawGridLines(false)
-
+            description.isEnabled = false
             axisLeft.valueFormatter = WeekViewFragment.MyValueFormatter() //remove float decimals
             axisLeft.granularity = 1F //sets steps by one
             animateY(1000)

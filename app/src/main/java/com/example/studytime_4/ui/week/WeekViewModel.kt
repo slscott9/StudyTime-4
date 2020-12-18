@@ -31,9 +31,15 @@ class WeekViewModel @ViewModelInject constructor(
     private val currentMonth = LocalDateTime.now().monthValue
     private val currentDayOfMonth = LocalDateTime.now().dayOfMonth
     private val currentYear = LocalDateTime.now().year
+    private val currentWeekDay = LocalDateTime.now().dayOfWeek.value
+    private val weekDays = listOf<String>("S","M","T","W","T","F","S")
+
 
     private val lastSevenStudySessions =
-        repository.getLastSevenSessions(currentMonth, currentDayOfMonth, currentYear)
+        repository.getLastSevenSessions((currentWeekDay* 86400).toLong())
+
+//    private val lastSevenStudySessions =
+//        repository.getLastSevenSessions(currentMonth, currentDayOfMonth, currentYear)
 
     val goal = repository.getGoalForWeek(
         LocalDateTime.now().monthValue,
@@ -62,6 +68,18 @@ class WeekViewModel @ViewModelInject constructor(
 
 
     private fun setWeekBarData(studySessionList: List<StudySession>) : WeekData {
+
+        Timber.i(studySessionList.toString())
+
+        val weekBarData = Array<BarEntry>(7){it ->
+            BarEntry(it * 1.toFloat(), null)
+        }
+
+        studySessionList.forEach {
+            weekBarData[it.weekDay - 1].y = it.hours
+        }
+
+
         val hours = studySessionList.mapIndexed { index, studySession ->
             BarEntry( index.toFloat(), studySession.hours) //x and y hours need to be Y axis
         }
@@ -72,8 +90,8 @@ class WeekViewModel @ViewModelInject constructor(
         val totalHours = studySessionList.map { it.hours }.sum()
 
         return WeekData(
-            weekBarData = BarData(BarDataSet(hours, "Hours")),
-            labels = labels,
+            weekBarData = BarData(BarDataSet(weekBarData.asList(), "Hours")),
+            labels = weekDays,
             totalHours
         )
     }
@@ -91,7 +109,7 @@ class WeekViewModel @ViewModelInject constructor(
         //x and y values were mixed up totalsHours needs to be y value
         val totalHoursBarDataSet = BarDataSet(
             arrayListOf(BarEntry( 0F, totalHours)),
-            "Weekly total hours"
+            "Total weekly hours"
         )
 
         return BarData(totalHoursBarDataSet)

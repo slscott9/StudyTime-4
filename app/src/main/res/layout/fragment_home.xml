@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".ui.home.HomeFragment">
 
 
@@ -12,13 +11,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/homeToolbar"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:title="@string/progress">
+            app:layout_scrollFlags="scroll|enterAlways|snap">
+
+            <TextView
+                android:id="@+id/tvHomeTitle"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:text="@string/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
         </com.google.android.material.appbar.MaterialToolbar>
 

@@ -27,6 +27,7 @@ import kotlinx.android.synthetic.main.fragment_timer.*
 import okhttp3.internal.format
 import timber.log.Timber
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 
@@ -97,8 +98,9 @@ class TimerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        binding.toolbar.setupWithNavController(findNavController())
         setupNav()
+
+        Timber.i("weekday is $currentWeekDay")
 
         binding.startButton.isEnabled = false
 
@@ -153,6 +155,7 @@ class TimerFragment : Fragment() {
                     month = 12,
                     dayOfMonth = 11,
                     year = 2021,
+                    epochDate = OffsetDateTime.now().toEpochSecond()
 
 //                    hours = hoursStudied,
 //                    minutes = minutesStudied,
@@ -235,7 +238,8 @@ class TimerFragment : Fragment() {
             weekDay = currentWeekDay,
             dayOfMonth = currentDayOfMonth,
             month = currentMonth,
-            year = currentYear
+            year = currentYear,
+            epochDate = OffsetDateTime.now().toEpochSecond()
         )
 
         val dialogBuilder = AlertDialog.Builder(requireActivity())
@@ -272,6 +276,72 @@ class TimerFragment : Fragment() {
         val imm =
             activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.upsertStudySession(
+            StudySession(
+                date = "2020-12-17",
+                dayOfMonth = 17,
+                hours = 1F,
+                minutes = 60,
+                weekDay = 4,
+                month = 12,
+                year = 2020,
+                epochDate = OffsetDateTime.now().toEpochSecond() //today
+            )
+        )
+
+        viewModel.upsertStudySession(
+            StudySession(
+                date = "2020-12-14",
+                dayOfMonth = 14,
+                hours = 2F,
+                minutes = 120,
+                weekDay = 1,
+                month = 12,
+                year = 2020,
+                epochDate = 1607915076
+            )
+        )
+//
+//        viewModel.upsertStudySession(
+//            StudySession(
+//                date = "2020-12-13",
+//                dayOfMonth = 13,
+//                hours = 2F,
+//                minutes = 120,
+//                weekDay = 7,
+//                month = 12,
+//                year = 2020
+//            )
+//        )
+
+//        viewModel.upsertStudySession(
+//            StudySession(
+//                date = "2020-12-14",
+//                dayOfMonth = 14,
+//                hours = 3F,
+//                minutes = 180,
+//                weekDay = 1,
+//                month = 12,
+//                year = 2020
+//            )
+//        )
+//
+//        viewModel.upsertStudySession(
+//            StudySession(
+//                date = "2020-12-19",
+//                dayOfMonth = 19,
+//                hours = 10F,
+//                minutes = 600,
+//                weekDay = 6,
+//                month = 12,
+//                year = 2020
+//            )
+//        )
     }
 
 }

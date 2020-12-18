@@ -12,38 +12,73 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvMonthBarChart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                app:cardCornerRadius="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/cvTotalMonthlyHours">
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/monthBarChart"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:layout_marginTop="35dp"
+                android:layout_margin="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvTotalMonthlyHours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="32dp"
+                app:cardCornerRadius="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cvMonthBarChart">
+
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/totalMonthHoursChart"
+                android:layout_margin="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            </androidx.cardview.widget.CardView>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/addMonthGoalChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="32dp"
                 android:text="@string/monthly_goal"
                 app:chipIcon="@drawable/ic_baseline_add_24"
-                app:layout_constraintBottom_toTopOf="@+id/totalMonthHoursChart"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.044"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/monthBarChart" />
-
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/totalMonthHoursChart"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginTop="64dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/monthBarChart" />
+                app:layout_constraintTop_toBottomOf="@id/cvTotalMonthlyHours" />
+
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
