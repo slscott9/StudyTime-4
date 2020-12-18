@@ -1,13 +1,17 @@
 package com.example.studytime_4.ui.week
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.transition.Slide
+import androidx.transition.TransitionManager
 import com.example.studytime_4.R
 import com.example.studytime_4.data.WeekData
 import com.example.studytime_4.databinding.FragmentWeekViewBinding
@@ -17,7 +21,9 @@ import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_week_view.*
 import timber.log.Timber
 import java.text.DecimalFormat
 import java.time.OffsetDateTime
@@ -35,13 +41,7 @@ class WeekViewFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_week_view, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
-
-
-        val time = OffsetDateTime.now().toEpochSecond()
-
         return binding.root
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -82,7 +82,76 @@ class WeekViewFragment : Fragment() {
         }
 
         binding.addGoalChip.setOnClickListener {
-            parentFragment?.findNavController()?.navigate(HomeFragmentDirections.actionHomeFragmentToAddGoalFragment(false))
+//            parentFragment?.findNavController()?.navigate(HomeFragmentDirections.actionHomeFragmentToAddGoalFragment(false))
+            expandAddGoalCardView()
+        }
+    }
+
+    private fun expandAddGoalCardView() {
+        binding.run {
+            binding.cvTotalHours.visibility = View.INVISIBLE
+            binding.scrimView.visibility = View.VISIBLE
+            binding.scrimView.setOnClickListener {
+                collapseChip()
+            }
+
+            val transformation = MaterialContainerTransform().apply {
+                startView = binding.addGoalChip
+                endView = binding.mcvAddGoal
+                scrimColor = Color.TRANSPARENT
+
+                addTarget(binding.mcvAddGoal) // transform does not run on starting and ending view
+            }
+
+            TransitionManager.beginDelayedTransition(binding.mcvAddGoal, transformation)
+            binding.mcvAddGoal.visibility = View.VISIBLE
+//            binding.nsvParent.scrollTo(binding.mcvAddGoal.y.toInt(), binding.mcvAddGoal.x.toInt())
+            binding.addGoalChip.visibility = View.INVISIBLE
+
+            setupSaveGoalButton()
+        }
+    }
+
+    private fun collapseChip() {
+        binding.mcvAddGoal.visibility = View.GONE
+        binding.cvTotalHours.visibility = View.VISIBLE
+        binding.scrimView.visibility = View.GONE
+
+        val transformation = MaterialContainerTransform().apply {
+            startView = binding.mcvAddGoal
+            endView = binding.addGoalChip
+            scrimColor = Color.TRANSPARENT
+            startElevation = 3F
+
+            addTarget(binding.addGoalChip)
+        }
+
+        TransitionManager.beginDelayedTransition(binding.clBarCharts, transformation)
+        binding.addGoalChip.visibility = View.VISIBLE
+        binding.mcvAddGoal.visibility = View.INVISIBLE
+    }
+
+    private fun setupSaveGoalButton(){
+        binding.btnSaveGoal.setOnClickListener {
+            if(etWeeklyGoal.text.isNullOrBlank()){
+                Toast.makeText(requireActivity(), "Please enter a goal", Toast.LENGTH_SHORT).show()
+            }else{
+                viewModel.addGoal(etWeeklyGoal.text.toString().toInt())
+                collapseChip()
+            }
+        }
+    }
+
+    private fun setupTransition() {
+        enterTransition = MaterialContainerTransform().apply {
+            startView = binding.addGoalChip
+            endView = mcvAddGoal
+            duration = 300
+
+        }
+        returnTransition = Slide().apply {
+            duration = 300
+            addTarget(binding.mcvAddGoal)
         }
     }
 
@@ -93,7 +162,6 @@ class WeekViewFragment : Fragment() {
             return value.toInt().toString() //gets y axis values to integers instead of 0.0 floats
         }
     }
-
 
     private fun setupWeekBarChart(weekData: WeekData) {
 

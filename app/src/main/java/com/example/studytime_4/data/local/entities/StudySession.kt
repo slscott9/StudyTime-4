@@ -16,7 +16,9 @@ data class StudySession(
     val dayOfMonth: Int,
     val month: Int,
     val year: Int,
-    val epochDate : Long
+    val epochDate : Long,
+    val startTime : String,
+    val endTime : String
 ) {
 }
 

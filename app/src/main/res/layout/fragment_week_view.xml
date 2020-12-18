@@ -5,11 +5,13 @@
     tools:context=".ui.week.WeekViewFragment">
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsvParent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clBarCharts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -80,6 +82,81 @@
                 app:layout_constraintHorizontal_bias="0.044"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cvTotalHours" />
+
+
+            <View
+                android:id="@+id/scrimView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcvAddGoal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/clBarCharts"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/etLayoutWeeklyGoal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginBottom="24dp"
+                        android:hint="@string/weekly_goal"
+                        app:layout_constraintBottom_toTopOf="@id/btnSaveGoal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0"
+                        app:layout_constraintVertical_chainStyle="packed">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etWeeklyGoal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:focusable="true" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/btnSaveGoal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="32dp"
+                        android:text="@string/save_session_chip_text"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/btnCancel"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/etLayoutWeeklyGoal" />
+
+                    <Button
+                        android:id="@+id/btnCancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cancel"
+                        app:layout_constraintBottom_toBottomOf="@+id/btnSaveGoal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/btnSaveGoal"
+                        app:layout_constraintTop_toTopOf="@+id/btnSaveGoal" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

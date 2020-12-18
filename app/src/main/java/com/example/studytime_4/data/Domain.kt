@@ -32,7 +32,9 @@ fun List<StudySession>.asParcelable() : List<com.example.studytime_4.data.StudyS
                 weekDay = it.weekDay,
                 dayOfMonth = it.dayOfMonth,
                 month = it.month,
-                year = it.year
+                year = it.year,
+                startTime = it.startTime,
+                endTime = it.endTime
             )
      }
 }
@@ -46,4 +48,6 @@ data class StudySession(
     val dayOfMonth: Int,
     val month: Int,
     val year: Int,
+    val startTime: String,
+    val endTime : String
 ) : Parcelable

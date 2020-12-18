@@ -100,19 +100,6 @@ class MonthDetailFragment : Fragment() {
 
         binding.rvCalendar.adapter = calendarAdapter
 
-//        val gridLayoutManager = GridLayoutManager(requireActivity(), 7, GridLayoutManager.VERTICAL,  false)
-//        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup(){
-//            override fun getSpanSize(position: Int): Int {
-//                return when(position){
-//                    0 -> {
-//                        2
-//                    }
-//                    else -> 1
-//                }
-//            }
-//
-//        }
-//        binding.rvCalendar.layoutManager = gridLayoutManager
 
         postponeEnterTransition()
         binding.rvCalendar.doOnPreDraw {
@@ -135,7 +122,6 @@ class MonthDetailFragment : Fragment() {
 
         viewModel.monthStudySessions.observe(viewLifecycleOwner){
             it?.let {
-                Timber.i(it.asList().toString())
                 calendarAdapter.submitList(it.asList())
             }
         }

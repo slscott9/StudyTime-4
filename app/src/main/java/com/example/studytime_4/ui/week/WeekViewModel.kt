@@ -7,6 +7,7 @@ import androidx.lifecycle.*
 import com.example.studytime_4.data.GoalData
 import com.example.studytime_4.data.WeekData
 import com.example.studytime_4.data.local.entities.StudySession
+import com.example.studytime_4.data.local.entities.WeeklyGoal
 import com.example.studytime_4.data.repo.Repository
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -36,7 +38,7 @@ class WeekViewModel @ViewModelInject constructor(
 
 
     private val lastSevenStudySessions =
-        repository.getLastSevenSessions((currentWeekDay* 86400).toLong())
+        repository.getLastSevenSessions(((currentWeekDay + 1) * 86400).toLong()) //add one since weekDay is zero based
 
 //    private val lastSevenStudySessions =
 //        repository.getLastSevenSessions(currentMonth, currentDayOfMonth, currentYear)
@@ -76,7 +78,7 @@ class WeekViewModel @ViewModelInject constructor(
         }
 
         studySessionList.forEach {
-            weekBarData[it.weekDay - 1].y = it.hours
+            weekBarData[it.weekDay].y = it.hours //WEEK DAY WAS CHANGED FROM -1 WEEKDAYS ARE ZERO BASED
         }
 
 
@@ -94,6 +96,21 @@ class WeekViewModel @ViewModelInject constructor(
             labels = weekDays,
             totalHours
         )
+    }
+
+     fun addGoal(hours : Int){
+        viewModelScope.launch {
+            val id = repository.saveWeeklyGoal(
+                WeeklyGoal(
+                    date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    dayOfMonth =  LocalDateTime.now().dayOfMonth,
+                    hours = hours,
+                    month = LocalDateTime.now().monthValue,
+                    weekDay = LocalDateTime.now().dayOfWeek.value,
+                    year = LocalDateTime.now().year,
+                )
+            )
+        }
     }
 
 

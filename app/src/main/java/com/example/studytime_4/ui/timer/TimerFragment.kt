@@ -27,6 +27,7 @@ import kotlinx.android.synthetic.main.fragment_timer.*
 import okhttp3.internal.format
 import timber.log.Timber
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
@@ -46,14 +47,15 @@ class TimerFragment : Fragment() {
     private var start_time_in_mili = 0L
 
     private lateinit var studySession: StudySession
-
     private val currentDayOfMonth = LocalDateTime.now().dayOfMonth
     private val currentMonth = LocalDateTime.now().monthValue
     private val currentWeekDay = LocalDateTime.now().dayOfWeek.value
     private val currentDate = LocalDateTime.now()
     private val currentYear = LocalDateTime.now().year
-
     private val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+    private var startTime = ""
+    private var endTime = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,9 +108,13 @@ class TimerFragment : Fragment() {
 
 
         binding.startButton.setOnClickListener {
+
+
             if (isRunning) {
                 pauseTimer()
             } else {
+                startTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a"))
+
                 val time = etTimeInput.text.toString()
                 time_in_hours = time.toLong()
                 start_time_in_mili = TimeUnit.HOURS.toMillis(time_in_hours)
@@ -139,23 +145,25 @@ class TimerFragment : Fragment() {
                 ).show()
             } else {
 
+                endTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a"))
+
                 hideSoftKeyboard(it)
                 binding.startButton.text = "start"
                 countdown_timer?.cancel()
                 val minutesStudied = TimeUnit.MILLISECONDS.toMinutes(start_time_in_mili - time_in_milli_seconds)
                 val hoursStudied = (minutesStudied / 60.0).toFloat()
 
-                Timber.i("hours studied is $hoursStudied")
-
                 studySession = StudySession(
-                    hours = .5F,
-                    minutes = 30,
-                    date = "2021-12-11", //formattedDate
-                    weekDay = 5,
-                    month = 12,
-                    dayOfMonth = 11,
-                    year = 2021,
-                    epochDate = OffsetDateTime.now().toEpochSecond()
+                    hours = 6F,
+                    minutes = 100,
+                    date = formattedDate, //formattedDate
+                    weekDay = currentWeekDay,
+                    month = currentMonth,
+                    dayOfMonth = currentDayOfMonth,
+                    year = currentYear,
+                    epochDate = OffsetDateTime.now().toEpochSecond(),
+                    startTime = startTime,
+                    endTime = endTime
 
 //                    hours = hoursStudied,
 //                    minutes = minutesStudied,
@@ -231,6 +239,9 @@ class TimerFragment : Fragment() {
 
     private fun saveSessionDialog() {
 
+        endTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a"))
+
+
         studySession = StudySession(
             date = formattedDate.toString(),
             hours = time_in_hours.toFloat(),
@@ -239,7 +250,9 @@ class TimerFragment : Fragment() {
             dayOfMonth = currentDayOfMonth,
             month = currentMonth,
             year = currentYear,
-            epochDate = OffsetDateTime.now().toEpochSecond()
+            epochDate = OffsetDateTime.now().toEpochSecond(),
+            startTime = startTime,
+            endTime = endTime
         )
 
         val dialogBuilder = AlertDialog.Builder(requireActivity())
@@ -281,41 +294,43 @@ class TimerFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        viewModel.upsertStudySession(
-            StudySession(
-                date = "2020-12-17",
-                dayOfMonth = 17,
-                hours = 1F,
-                minutes = 60,
-                weekDay = 4,
-                month = 12,
-                year = 2020,
-                epochDate = OffsetDateTime.now().toEpochSecond() //today
-            )
-        )
-
-        viewModel.upsertStudySession(
-            StudySession(
-                date = "2020-12-14",
-                dayOfMonth = 14,
-                hours = 2F,
-                minutes = 120,
-                weekDay = 1,
-                month = 12,
-                year = 2020,
-                epochDate = 1607915076
-            )
-        )
+//        viewModel.upsertStudySession(
+//            StudySession(
+//                date = "2020-12-17",
+//                dayOfMonth = 17,
+//                hours = 1F,
+//                minutes = 60,
+//                weekDay = 4,
+//                month = 12,
+//                year = 2020,
+//                epochDate = OffsetDateTime.now().toEpochSecond() //today
+//            )
+//        )
 //
+//        viewModel.upsertStudySession(
+//            StudySession(
+//                date = "2020-12-14",
+//                dayOfMonth = 14,
+//                hours = 2F,
+//                minutes = 120,
+//                weekDay = 1,
+//                month = 12,
+//                year = 2020,
+//                epochDate = 1607915076
+//            )
+//        )
+
 //        viewModel.upsertStudySession(
 //            StudySession(
 //                date = "2020-12-13",
 //                dayOfMonth = 13,
-//                hours = 2F,
+//                hours = 5F,
 //                minutes = 120,
-//                weekDay = 7,
+//                weekDay = 0,
 //                month = 12,
-//                year = 2020
+//                year = 2020,
+//                epochDate = 1607828676
+//
 //            )
 //        )
 
