@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
@@ -20,11 +21,14 @@ import com.example.studytime_4.databinding.FragmentMonthDetailBinding
 import com.example.studytime_4.databinding.FragmentSessionDetailBinding
 import com.example.studytime_4.ui.adapters.CalendarAdapter
 import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_month_detail.view.*
 import kotlinx.android.synthetic.main.fragment_session_detail.view.*
+import java.text.DecimalFormat
 import java.util.*
 
 @AndroidEntryPoint
@@ -164,6 +168,14 @@ class MonthDetailFragment : Fragment() {
         }
     }
 
+    class MyValueFormatter : ValueFormatter() {
+        private val format = DecimalFormat("###,##0.0")
+
+        override fun getFormattedValue(value: Float): String {
+            return value.toInt().toString() //gets y axis values to integers instead of 0.0 floats
+        }
+    }
+
 
 
     private fun setBarChart(monthData: MonthData) {
@@ -172,8 +184,9 @@ class MonthDetailFragment : Fragment() {
 
         description.text = "Monthly total hours ${monthData.totalHours}"
 
+        monthData.monthBarData.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
         binding.monthDetailBarChart.data =
-            monthData.monthBarData // set the data and list of labels into chart
+            BarData( monthData.monthBarData) // set the data and list of labels into chart
 
         val force: Boolean = if (monthData.labels.size > 1) {
             binding.monthDetailBarChart.xAxis.setCenterAxisLabels(false)
@@ -189,6 +202,10 @@ class MonthDetailFragment : Fragment() {
                 force
             ) //force = false aligns values with labels
             xAxis.valueFormatter = IndexAxisValueFormatter(monthData.labels)
+            axisLeft.axisMinimum = 0F
+            axisRight.setDrawLabels(false)
+            axisRight.setDrawGridLines(false)
+            axisLeft.granularity = 1F
             setDescription(description)
             animateY(1000)
         }

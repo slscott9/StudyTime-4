@@ -1,7 +1,5 @@
 package com.example.studytime_4.ui.week
 
-import android.content.SharedPreferences
-import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.example.studytime_4.data.GoalData
@@ -9,21 +7,14 @@ import com.example.studytime_4.data.WeekData
 import com.example.studytime_4.data.local.entities.StudySession
 import com.example.studytime_4.data.local.entities.WeeklyGoal
 import com.example.studytime_4.data.repo.Repository
-import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
-import kotlin.collections.ArrayList
 
 class WeekViewModel @ViewModelInject constructor(
     private val repository: Repository,
@@ -92,7 +83,7 @@ class WeekViewModel @ViewModelInject constructor(
         val totalHours = studySessionList.map { it.hours }.sum()
 
         return WeekData(
-            weekBarData = BarData(BarDataSet(weekBarData.asList(), "Hours")),
+            weekBarData = BarDataSet(weekBarData.asList(), "Hours"),
             labels = weekDays,
             totalHours
         )
@@ -115,7 +106,7 @@ class WeekViewModel @ViewModelInject constructor(
 
 
 
-    private fun setTotalWeeklyHours(studySessions: List<Float>): BarData {
+    private fun setTotalWeeklyHours(studySessions: List<Float>): BarDataSet {
 
         //get totalHours for last seven study sessions
         val totalHours = studySessions.map {
@@ -124,12 +115,11 @@ class WeekViewModel @ViewModelInject constructor(
 
         //Only need one entry for bar chart which is totals hours
         //x and y values were mixed up totalsHours needs to be y value
-        val totalHoursBarDataSet = BarDataSet(
+
+        return BarDataSet(
             arrayListOf(BarEntry( 0F, totalHours)),
             "Total weekly hours"
         )
-
-        return BarData(totalHoursBarDataSet)
 
 
     }

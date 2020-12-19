@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardView"
     app:cardElevation="16dp"
+    app:cardBackgroundColor="@color/floral_white"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="10dp">
@@ -19,7 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="20dp"
-            android:textColor="@color/color_state"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

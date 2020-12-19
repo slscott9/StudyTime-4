@@ -6,6 +6,7 @@
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nsvParent"
+        android:background="@color/cultured"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
@@ -17,6 +18,8 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cvWeekBarChart"
+                app:cardBackgroundColor="@color/floral_white"
+                app:cardElevation="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -45,6 +48,8 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cvTotalHours"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@color/floral_white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -107,6 +112,8 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/mcvAddGoal"
                 android:layout_width="0dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@color/floral_white"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:layout_marginBottom="310dp"

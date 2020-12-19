@@ -61,11 +61,11 @@ class MonthViewModel @ViewModelInject constructor(
         val totalHours = monthStudySessionList.map { it.hours }.sum()
 
         return MonthData(
-            monthBarData = BarData(
+            monthBarData =
                 BarDataSet(
                     monthData,
                     months[currentMonth - 1]
-                )
+
             ),
             labels = labels,
             totalHours = totalHours

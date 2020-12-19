@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -15,6 +16,7 @@ import com.example.studytime_4.databinding.FragmentMonthViewBinding
 import com.example.studytime_4.ui.goal.AddGoalFragment
 import com.example.studytime_4.ui.home.HomeFragmentDirections
 import com.example.studytime_4.ui.week.WeekViewFragment
+import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,8 +58,9 @@ class MonthViewFragment : Fragment() {
 
     private fun setBarChart(monthData: MonthData) {
 
+        monthData.monthBarData.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
         binding.monthBarChart.data =
-            monthData.monthBarData // set the data and list of labels into chart
+            BarData( monthData.monthBarData) // set the data and list of labels into chart
 
         val force: Boolean = if(monthData.labels.size > 1) {
             binding.monthBarChart.xAxis.setCenterAxisLabels(false)

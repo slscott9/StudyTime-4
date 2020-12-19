@@ -94,7 +94,11 @@ class MonthDetailViewModel @ViewModelInject constructor(
         val totalHours = monthStudySessionList.map { it.hours }.sum()
 
         _month.value = months[monthStudySessionList[0].month -1]
-        return  MonthData(monthBarData = BarData(BarDataSet(monthData, "Hours")), labels = labels, totalHours = totalHours)
+
+        return  MonthData(
+            monthBarData = BarDataSet(monthData, "Hours"),
+            labels = labels,
+            totalHours = totalHours)
     }
 
     companion object {

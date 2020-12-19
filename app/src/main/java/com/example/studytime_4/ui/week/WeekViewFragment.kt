@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -19,6 +20,7 @@ import com.example.studytime_4.ui.goal.AddGoalFragment
 import com.example.studytime_4.ui.home.HomeFragmentDirections
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.LimitLine
+import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.android.material.transition.MaterialContainerTransform
@@ -58,8 +60,10 @@ class WeekViewFragment : Fragment() {
 
                 val limitLine = LimitLine(it.limit.toFloat(), "Weekly Goal")
 
+                it.totalHours.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
+
                 binding.totalHoursChart.apply {
-                    data = it.totalHours
+                    data = BarData(it.totalHours)
                     axisLeft.axisMaximum = (it.limit.toFloat() + it.totalHours.yMax)
                     axisLeft.axisMinimum = 0F
 
@@ -154,8 +158,10 @@ class WeekViewFragment : Fragment() {
 
 //        val description = Description()
 //        description.text = "Total weekly hours ${weekData.totalHours}"
+
+        weekData.weekBarData.color = resources.getColor(R.color.marigold)
         binding.weekBarChart.data =
-            weekData.weekBarData // set the data and list of lables into chart
+            BarData( weekData.weekBarData) // set the data and list of lables into chart
 
         //case 1 multiple bar chart values -> axis labels need to move in order to match chart values
         //case 2 only one bar chart value -> so center the label over value
@@ -175,7 +181,6 @@ class WeekViewFragment : Fragment() {
                 force
             ) //force = false aligns values with labels
             xAxis.valueFormatter = IndexAxisValueFormatter(weekData.labels);
-            axisLeft.valueFormatter = MyValueFormatter()
             axisLeft.axisMinimum = 0F
             axisRight.setDrawLabels(false)
             axisRight.setDrawGridLines(false)

@@ -9,4 +9,72 @@
     <color name="white">#FFFFFFFF</color>
 
 
+    <color name="dark_blue">#14213d</color>
+    <color name="blue_grey">#3c6e71</color>
+    <color name="grey_1">#3c6e71</color>
+    <color name="grey_2">#3a506b</color>
+    <color name="blue_1">#22333b</color>
+
+
+    <color name="off_white">#dddddd</color>
+    <color name="light_blue_grey">#A9BCD0</color>
+
+
+    <color name="independence">#424B61</color>
+    <color name="light_blue">#A9B0C6</color>
+    <color name="space_cadet">#272D3F</color>
+    <color name="cool_grey">#818EB1 </color>
+    <color name="light_blue_2">#C4E0E8 </color>
+    <color name="light_blue_3">#C4E0E8 </color>
+    <color name="cerulean_frost">#7C98B3 </color>
+    <color name="dark_electric_blue">#637081 </color>
+    <color name="alice_blue">#DFEEF6 </color>
+    <color name="columbia_blue">#BDDFEF </color>
+    <color name="alabaster">#EEEDE7 </color>
+    <color name="linen">#F6EADF </color>
+    <color name="seashell">#FBF5EF </color>
+    <color name="almond">#F3E0CE </color>
+    <color name="papya_wip">#FDF1D8 </color>
+
+
+    <color name="black_coral">#5B6671 </color>
+
+    <!--mom -->
+    <color name="marigold">#EE9D1B </color>
+    <color name="ruby_red">#9D061A </color>
+
+
+
+<!--for cardviews background-->
+    <color name="cultured">#F5F5F4 </color>
+    <color name="floral_white">#FEF8EC </color>
+
+    <!--for background of app-->
+    <color name="charcoal">#373F51</color>
+
+
+    <!--Best view-->
+    <color name="floral_white1">#FEF8EC </color> //background
+    <color name="cultered1">#F5F5F4 </color> //cardview background
+    <color name="charcoal1">#373F51</color> //toolbar
+    <color name="dark_electric_blue_1">#637081</color> //status bar
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </resources>

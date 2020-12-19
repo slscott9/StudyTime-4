@@ -4,21 +4,22 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.example.studytime_4.data.local.entities.StudySession
 import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
 import kotlinx.android.parcel.Parcelize
 
 data class GoalData(
     val limit: Int,
-    val totalHours: BarData
+    val totalHours: BarDataSet
 )
 
 data class WeekData(
-    val weekBarData : BarData,
+    val weekBarData : BarDataSet,
     val labels : List<String>,
     val totalHours: Float
 )
 
 data class MonthData(
-    val monthBarData: BarData,
+    val monthBarData: BarDataSet,
     val labels: List<String>,
     val totalHours : Float
 )

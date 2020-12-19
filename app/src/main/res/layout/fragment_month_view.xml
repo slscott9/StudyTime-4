@@ -5,6 +5,7 @@
 
 
     <androidx.core.widget.NestedScrollView
+        android:background="@color/floral_white"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -12,8 +13,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cvMonthBarChart"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@color/cultured"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -35,11 +38,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cvTotalMonthlyHours"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@color/cultured"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -61,7 +66,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/addMonthGoalChip"
