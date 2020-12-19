@@ -5,25 +5,24 @@
 
 
     <androidx.core.widget.NestedScrollView
-        android:background="@color/floral_white"
+        android:background="@color/charcoal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clMonthBarCharts"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cvMonthBarChart"
-                app:cardElevation="8dp"
-                app:cardBackgroundColor="@color/cultured"
+                app:cardBackgroundColor="@color/dark_electric_blue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                app:cardCornerRadius="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -37,53 +36,139 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
             </com.google.android.material.card.MaterialCardView>
+
+
 
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cvTotalMonthlyHours"
-                app:cardElevation="8dp"
-                app:cardBackgroundColor="@color/cultured"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="32dp"
-                app:cardCornerRadius="8dp"
+                app:cardBackgroundColor="@color/dark_electric_blue"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cvMonthBarChart">
 
 
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/totalMonthHoursChart"
-                android:layout_margin="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+
+                        <com.github.mikephil.charting.charts.BarChart
+                            android:id="@+id/totalMonthHoursChart"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp"
+                            android:layout_margin="16dp"
+                            android:layout_marginBottom="8dp"
+                            app:layout_constraintBottom_toTopOf="@id/addMonthlyGoalChip"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/addMonthlyGoalChip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="@string/weekly_goal"
+                            app:chipIcon="@drawable/ic_baseline_add_24"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/totalMonthHoursChart" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </com.google.android.material.card.MaterialCardView>
+
+
+                <View
+                    android:id="@+id/scrimView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvAddMonthlyGoal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:visibility="invisible"
+                app:cardBackgroundColor="@color/dark_electric_blue"
+                app:layout_constraintBottom_toBottomOf="@+id/cvTotalMonthlyHours"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/cvTotalMonthlyHours">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/etLayoutMonthlyGoal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginBottom="24dp"
+                        android:hint="@string/monthly_goal"
+                        app:layout_constraintBottom_toTopOf="@id/btnSaveGoal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0"
+                        app:layout_constraintVertical_chainStyle="packed">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etMonthlyGoal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:focusable="true" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/btnSaveGoal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="32dp"
+                        android:text="@string/save_session_chip_text"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/btnCancel"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/etLayoutMonthlyGoal" />
+
+                    <Button
+                        android:id="@+id/btnCancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cancel"
+                        app:layout_constraintBottom_toBottomOf="@+id/btnSaveGoal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/btnSaveGoal"
+                        app:layout_constraintTop_toTopOf="@+id/btnSaveGoal" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/addMonthGoalChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="32dp"
-                android:text="@string/monthly_goal"
-                app:chipIcon="@drawable/ic_baseline_add_24"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cvTotalMonthlyHours" />
-
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

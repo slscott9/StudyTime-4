@@ -58,7 +58,8 @@ class WeekViewFragment : Fragment() {
         viewModel.goalData.observe(viewLifecycleOwner) {
             it?.let {
 
-                val limitLine = LimitLine(it.limit.toFloat(), "Weekly Goal")
+                val limitLineLabel = setLabel(it.limit.toFloat())
+                val limitLine = LimitLine(it.limit.toFloat(), limitLineLabel)
 
                 it.totalHours.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
 
@@ -75,6 +76,7 @@ class WeekViewFragment : Fragment() {
                     }
 
                     //Both must be set to false or double gridlines will be drawn for the goalbarchart
+                    data.barWidth = .25F
                     axisRight.setDrawLabels(false)
                     axisRight.setDrawGridLines(false)
                     description.isEnabled = false
@@ -87,6 +89,15 @@ class WeekViewFragment : Fragment() {
 
         binding.addGoalChip.setOnClickListener {
             expandAddGoalCV()
+        }
+    }
+
+    private fun setLabel(hours : Float) : String{
+
+        return when {
+            hours == 1F -> "$hours hour"
+            hours > 1F -> "$hours hours"
+            else -> "$hours minutes"
         }
     }
 

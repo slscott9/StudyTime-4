@@ -4,18 +4,24 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.studytime_4.data.GoalData
 import com.example.studytime_4.data.MonthData
+import com.example.studytime_4.data.local.entities.MonthlyGoal
 import com.example.studytime_4.data.local.entities.StudySession
+import com.example.studytime_4.data.local.entities.WeeklyGoal
 import com.example.studytime_4.data.repo.Repository
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class MonthViewModel @ViewModelInject constructor(
     private val repository: Repository
@@ -41,6 +47,19 @@ class MonthViewModel @ViewModelInject constructor(
 
     private val monthsStudySession =
         repository.getAllSessionsWithMatchingMonth(currentMonth, currentYear)
+
+    private val monthSessionHours = repository.getSessionHoursForMonth(currentMonth).map {
+        setTotalMonthlyHours(it)
+    }
+
+    val goal = repository.getMonthlyGoal(currentYear, currentMonth)
+
+    val goalData = goal.combine(monthSessionHours){goal  , hours ->
+        GoalData(
+            limit = goal?.hours ?: 0,
+            totalHours = hours
+        )
+    }.asLiveData(viewModelScope.coroutineContext)
 
     private val _monthBarData = monthsStudySession.map {
         setMonthBarData(it)
@@ -69,6 +88,32 @@ class MonthViewModel @ViewModelInject constructor(
             ),
             labels = labels,
             totalHours = totalHours
+        )
+    }
+
+    fun addGoal(hours : Int){
+        viewModelScope.launch {
+            val id = repository.saveMonthlyGoal(
+                MonthlyGoal(
+                    date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    dayOfMonth =  LocalDateTime.now().dayOfMonth,
+                    hours = hours,
+                    month = LocalDateTime.now().monthValue,
+                    weekDay = LocalDateTime.now().dayOfWeek.value,
+                    year = LocalDateTime.now().year,
+                )
+            )
+        }
+    }
+
+    private fun setTotalMonthlyHours(studySessions : List<Float>) : BarDataSet {
+        val totalHours = studySessions.map {
+            it
+        }.sum()
+
+        return BarDataSet(
+            arrayListOf(BarEntry(0F, totalHours)),
+            "Total monthly hours"
         )
     }
 

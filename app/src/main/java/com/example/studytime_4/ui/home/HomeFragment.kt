@@ -37,17 +37,6 @@ class HomeFragment : Fragment() {
 
         setupNav()
 
-//        bottom_nav.setupWithNavController(findNavController())
-//
-//        val appBarConfiguration = AppBarConfiguration(setOf(
-//            R.id.homeFragment
-//        ))
-//
-//        val navHostFragment = NavHostFragment.findNavController(this)
-//        NavigationUI.setupWithNavController(homeToolbar, navHostFragment, appBarConfiguration)
-
-
-
         val viewPager = WeekMonthVPAdapter(this)
         viewPager2.adapter = viewPager
 

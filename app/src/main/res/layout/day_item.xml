@@ -7,9 +7,9 @@
         android:id="@+id/cvDayContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:elevation="8dp"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="8dp">
+        app:cardBackgroundColor="@color/charcoal"
+        app:cardElevation="8dp"
+        android:layout_margin="8dp">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +19,7 @@
 
             <TextView
                 android:id="@+id/tvDay"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -32,18 +33,6 @@
                 app:layout_constraintVertical_bias="0.0"
                 tools:text="22" />
 
-<!--            <TextView-->
-<!--                android:id="@+id/tvGoal"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="8dp"-->
-<!--                android:gravity="bottom|fill"-->
-<!--                android:textSize="15sp"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/tvDay"-->
-<!--                app:layout_constraintVertical_bias="1.0" />-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

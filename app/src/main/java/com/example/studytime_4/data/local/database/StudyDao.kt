@@ -29,7 +29,7 @@ interface StudyDao {
 
 
     @Query("select * from monthly_goal_table where(year = :curYear and month = :curMonth)")
-    fun getGoalForMonth(curYear: Int, curMonth: Int) : Flow<MonthlyGoal>
+    fun getGoalForMonth(curYear: Int, curMonth: Int) : Flow<MonthlyGoal?>
 
 
     @Query("select * from weekly_goal_table where (month = :curMonth and year = :curYear and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth) ") //tested

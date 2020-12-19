@@ -13,8 +13,9 @@ interface Repository {
     suspend fun saveWeeklyGoal(weeklyGoal: WeeklyGoal) : Long
 
     //MONTHLY GOAL
-
     suspend fun saveMonthlyGoal(monthlyGoal: MonthlyGoal) : Long
+
+    fun getMonthlyGoal(yearSelected: Int, monthSelected: Int) : Flow<MonthlyGoal?>
 
 
     //Changes for transformations

@@ -14,14 +14,24 @@ fun TextView.setYear(studySession: StudySession?){
 @BindingAdapter("setHours")
 fun TextView.setHours(studySession: StudySession?){
     studySession?.let {
-        text = it.hours.toString()
+        text = when {
+            it.hours > 1F -> {
+                "${it.hours} hours"
+            }
+            it.hours == 1F -> {
+                "${it.hours} hour"
+            }
+            else -> {
+                "${it.hours} minutes"
+            }
+        }
     }
 }
 
 @BindingAdapter("setDayOfMonth")
 fun TextView.setDayOfMonth(studySession: StudySession?){
     studySession?.let {
-        text = it.dayOfMonth.toString()
+        text = "${it.dayOfMonth},"
     }
 }
 

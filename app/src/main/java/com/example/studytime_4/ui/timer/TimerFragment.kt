@@ -306,7 +306,7 @@ class TimerFragment : Fragment() {
 //                epochDate = OffsetDateTime.now().toEpochSecond() //today
 //            )
 //        )
-//
+
 //        viewModel.upsertStudySession(
 //            StudySession(
 //                date = "2020-12-14",

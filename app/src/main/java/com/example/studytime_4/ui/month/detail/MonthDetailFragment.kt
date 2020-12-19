@@ -105,7 +105,7 @@ class MonthDetailFragment : Fragment() {
             binding.scrimView.visibility = View.VISIBLE
 
             binding.scrimView.setOnClickListener {
-                collapseSessionDetail()
+                collapseSessionDetail(tv)
             }
 
             val transformation = MaterialContainerTransform().apply {
@@ -129,7 +129,7 @@ class MonthDetailFragment : Fragment() {
     }
 
 
-    private fun collapseSessionDetail() {
+    private fun collapseSessionDetail(tv: TextView) {
 //        binding.root.sessionDetail.visibility = View.GONE
         binding.cvSessionDetail.visibility = View.GONE
 
@@ -139,10 +139,10 @@ class MonthDetailFragment : Fragment() {
         val transition = MaterialContainerTransform().apply {
 //            startView = binding.root.sessionDetail
             startView = binding.cvSessionDetail
-            endView = binding.rvCalendar
+            endView = tv
             scrimColor = Color.TRANSPARENT
 
-            addTarget(binding.cvCalendar)
+            addTarget(tv)
         }
 
         TransitionManager.beginDelayedTransition(binding.cvCalendar, transition)
@@ -201,6 +201,7 @@ class MonthDetailFragment : Fragment() {
                 monthData.labels.size,
                 force
             ) //force = false aligns values with labels
+            data.barWidth = .25F
             xAxis.valueFormatter = IndexAxisValueFormatter(monthData.labels)
             axisLeft.axisMinimum = 0F
             axisRight.setDrawLabels(false)

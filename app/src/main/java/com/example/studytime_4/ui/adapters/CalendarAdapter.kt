@@ -68,7 +68,7 @@ class CalendarAdapter(
                     studySession?.let {
                         binding.tvDay.setBackgroundResource(R.drawable.circle)
 //                        ViewCompat.setTransitionName(binding.tvDay, studySession.date)
-                        binding.tvDay.setTextColor(ContextCompat.getColor(binding.tvDay.context, R.color.white))
+                        binding.tvDay.setTextColor(ContextCompat.getColor(binding.tvDay.context, R.color.charcoal))
                         binding.cvDayContainer.setOnClickListener {
                             listener.onClick(studySession, binding.tvDay)
                         }

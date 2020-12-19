@@ -27,29 +27,18 @@ class WeekViewModel @ViewModelInject constructor(
     private val currentWeekDay = LocalDateTime.now().dayOfWeek.value
     private val weekDays = listOf<String>("S","M","T","W","T","F","S")
 
-
     private val lastSevenStudySessions =
         repository.getLastSevenSessions(((currentWeekDay + 1) * 86400).toLong()) //add one since weekDay is zero based
 
-//    private val lastSevenStudySessions =
-//        repository.getLastSevenSessions(currentMonth, currentDayOfMonth, currentYear)
+    private val lastSevenSessionsHours =
+        repository.getLastSevenSessionsHours(currentMonth, currentDayOfMonth)
+            .map { setTotalWeeklyHours(it) }
 
     val goal = repository.getGoalForWeek(
         LocalDateTime.now().monthValue,
         LocalDateTime.now().year,
         LocalDateTime.now().dayOfMonth
     )
-
-    private val lastSevenSessionsHours =
-        repository.getLastSevenSessionsHours(currentMonth, currentDayOfMonth)
-            .map { setTotalWeeklyHours(it) }
-
-    private val _weekBarData = lastSevenStudySessions
-            .map { list -> setWeekBarData(list) }
-            .asLiveData(viewModelScope.coroutineContext)
-
-    val weekBarData = _weekBarData
-
 
     val goalData =
         goal.combine(lastSevenSessionsHours) { goal, hours ->
@@ -58,6 +47,12 @@ class WeekViewModel @ViewModelInject constructor(
                     totalHours = hours
                 )
             }.asLiveData(viewModelScope.coroutineContext)
+
+    private val _weekBarData = lastSevenStudySessions
+        .map { list -> setWeekBarData(list) }
+        .asLiveData(viewModelScope.coroutineContext)
+
+    val weekBarData = _weekBarData
 
 
     private fun setWeekBarData(studySessionList: List<StudySession>) : WeekData {

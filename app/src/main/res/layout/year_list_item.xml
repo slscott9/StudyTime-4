@@ -3,11 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardView"
-    app:cardElevation="16dp"
-    app:cardBackgroundColor="@color/floral_white"
+    app:cardElevation="8dp"
+    app:rippleColor="@color/charcoal"
+    app:cardBackgroundColor="@color/dark_electric_blue"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp">
+    android:layout_margin="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl"
@@ -16,6 +17,7 @@
 
         <TextView
             android:id="@+id/yearTV"
+            android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

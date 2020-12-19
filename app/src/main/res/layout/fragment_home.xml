@@ -19,8 +19,9 @@
             app:layout_scrollFlags="scroll|enterAlways|snap">
 
             <TextView
+                android:textStyle="bold"
                 android:id="@+id/tvHomeTitle"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textColor="@color/white"
                 android:layout_gravity="center"
                 android:text="@string/progress"
