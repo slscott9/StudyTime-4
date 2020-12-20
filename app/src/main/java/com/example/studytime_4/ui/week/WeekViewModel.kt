@@ -9,6 +9,7 @@ import com.example.studytime_4.data.local.entities.WeeklyGoal
 import com.example.studytime_4.data.repo.Repository
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -24,11 +25,20 @@ class WeekViewModel @ViewModelInject constructor(
     private val currentMonth = LocalDateTime.now().monthValue
     private val currentDayOfMonth = LocalDateTime.now().dayOfMonth
     private val currentYear = LocalDateTime.now().year
-    private val currentWeekDay = LocalDateTime.now().dayOfWeek.value
-    private val weekDays = listOf<String>("S","M","T","W","T","F","S")
+    private val weekDayMap = hashMapOf<Int, Int>(7 to 0, 1 to 1, 2 to 2, 3 to 3, 4 to 4, 5 to 5, 6 to 6)
 
-    private val lastSevenStudySessions =
-        repository.getLastSevenSessions(((currentWeekDay + 1) * 86400).toLong()) //add one since weekDay is zero based
+    private var currentWeekDay = LocalDateTime.now().dayOfWeek.value
+    /*
+        1 is monday 7 is sunday
+        week view displays 0 as sunday and saturday as 6
+     */
+
+
+    private val weekDays = listOf<String>("S","M","T","W","T","F","S")
+    private val secondsInDay : Long = 86400
+
+
+    private val lastSevenStudySessions = repository.getLastSevenSessions(6) //weekDayMap[currentWeekDay]!!
 
     private val lastSevenSessionsHours =
         repository.getLastSevenSessionsHours(currentMonth, currentDayOfMonth)
@@ -49,7 +59,7 @@ class WeekViewModel @ViewModelInject constructor(
             }.asLiveData(viewModelScope.coroutineContext)
 
     private val _weekBarData = lastSevenStudySessions
-        .map { list -> setWeekBarData(list) }
+        .map {setWeekBarData(it) }
         .asLiveData(viewModelScope.coroutineContext)
 
     val weekBarData = _weekBarData
@@ -82,6 +92,14 @@ class WeekViewModel @ViewModelInject constructor(
             labels = weekDays,
             totalHours
         )
+    }
+
+    private fun setWeekDay(value : Int) : Long {
+        Timber.i("weekday is $value")
+        return if (value == 7) 0L else{
+            Timber.i("week day is ${(value * secondsInDay).toString()}")
+            value * secondsInDay
+        }
     }
 
      fun addGoal(hours : Int){

@@ -40,7 +40,9 @@ interface Repository {
      */
 
 //    fun getLastSevenSessions(currentWeekDay: Int, currentMonth: Int, currentDayOfMonth: Int, curYear: Int): Flow<List<StudySession>>
-fun getLastSevenSessions(weekDayEpoch : Long): Flow<List<StudySession>>
+//fun getLastSevenSessions(weekDayEpoch : Long): Flow<List<StudySession>>
+fun getLastSevenSessions(weekDay : Int): Flow<List<StudySession>>
+
 
 
     fun getYearsWithSessions(): Flow<List<Int>>

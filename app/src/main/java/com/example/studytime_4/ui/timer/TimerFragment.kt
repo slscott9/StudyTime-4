@@ -39,6 +39,13 @@ class TimerFragment : Fragment() {
     private val viewModel: TimerViewModel by viewModels()
 
 
+    //local time weekday starts with monday as 1 and sunday as 7
+    //strftime sqlite function starts with sunday as 0 and saturday as 6
+    //map will convert local time weekdays to weekday numbering that strftime expects so the weekday comparison matches in the dao for getLastSevenSessions function
+    private val weekDayMap = hashMapOf<Int, Int>(7 to 0, 1 to 1, 2 to 2, 3 to 3, 4 to 4, 5 to 5, 6 to 6)
+
+
+
     private var START_MILLI_SECONDS = 0L
     private var countdown_timer: CountDownTimer? = null
     var isRunning: Boolean = false;
@@ -152,12 +159,12 @@ class TimerFragment : Fragment() {
                 countdown_timer?.cancel()
                 val minutesStudied = TimeUnit.MILLISECONDS.toMinutes(start_time_in_mili - time_in_milli_seconds)
                 val hoursStudied = (minutesStudied / 60.0).toFloat()
-
+                Timber.i("Current weekday is $currentWeekDay")
                 studySession = StudySession(
                     hours = 6F,
                     minutes = 100,
                     date = formattedDate, //formattedDate
-                    weekDay = currentWeekDay,
+                    weekDay = weekDayMap[currentWeekDay]!!, //current weekday
                     month = currentMonth,
                     dayOfMonth = currentDayOfMonth,
                     year = currentYear,

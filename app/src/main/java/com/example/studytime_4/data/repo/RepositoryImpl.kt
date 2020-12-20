@@ -86,25 +86,25 @@ class RepositoryImpl @Inject constructor (
         return dao.getAllSessionsWithMatchingMonth(monthSelected, yearSelected)
 
     }
+//
+//    override  fun getLastSevenSessions(
+//        weekDayEpoch : Long
+//    ): Flow<List<StudySession>> {
+//        Timber.i("heeyyyy")
+//        Timber.i(weekDayEpoch.toString())
+//        return dao.getLastSevenSessions(weekDayEpoch)
+//
+//    }
 
     override  fun getLastSevenSessions(
-        weekDayEpoch : Long
+        weekDay: Int
     ): Flow<List<StudySession>> {
-        Timber.i("heeyyyy")
-        Timber.i(weekDayEpoch.toString())
-        return dao.getLastSevenSessions(weekDayEpoch)
+        Timber.i("weekday is $weekDay")
+        return dao.getLastSevenSessions(weekDay)
 
     }
 
-//    override  fun getLastSevenSessions(
-//        currentWeekDay: Int,
-//        currentMonth: Int,
-//        currentDayOfMonth: Int,
-//        curYear: Int
-//    ): Flow<List<StudySession>> {
-//        return dao.getLastSevenSessions(currentMonth, currentDayOfMonth, curYear)
-//
-//    }
+
 
     override fun getYearsWithSessions(): Flow<List<Int>> {
         return dao.getYearsWithSessions()

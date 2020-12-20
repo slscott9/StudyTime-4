@@ -103,8 +103,11 @@ interface StudyDao {
 //    @Query("select * from study_table_4 where (year = :curYear and month= :currentMonth and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth) order by dayOfMonth asc")
 //    fun getLastSevenSessions(currentWeekDay: Int, currentMonth: Int, currentDayOfMonth: Int, curYear: Int): Flow<List<StudySession>>
 
-    @Query("select * from study_table_4 where epochDate between  (strftime('%s','now') - :weekDayEpoch) and  (strftime('%s', 'now')) order by dayOfMonth asc")
-    fun getLastSevenSessions(weekDayEpoch: Long): Flow<List<StudySession>>
+//    @Query("select * from study_table_4 where epochDate >=  (strftime('%s','now', '-1 day') - :weekDayEpoch) and epochDate <=  strftime('%s', 'now','+1 day') order by dayOfMonth asc")
+
+//    @Query("select * from study_table_4 where epochDate <=  1609042861 and weekDay >= 6 - :weekDay and weekDay <=   6    order by dayOfMonth asc")
+    @Query("select * from study_table_4 where epochDate <=  strftime('%s','now') and weekDay >= (strftime('%w', 'now')  - :weekDay and weekDay <=    strftime('%w', 'now'))    order by dayOfMonth asc")
+                                                        fun getLastSevenSessions(weekDay : Int): Flow<List<StudySession>>
 
 
     @Query("select distinct year from study_table_4  order by year asc") //tested

@@ -90,6 +90,10 @@ class WeekViewFragment : Fragment() {
         binding.addGoalChip.setOnClickListener {
             expandAddGoalCV()
         }
+
+        binding.chipTestFragment.setOnClickListener {
+            parentFragment?.findNavController()?.navigate(HomeFragmentDirections.actionHomeFragmentToTestFragment())
+        }
     }
 
     private fun setLabel(hours : Float) : String{

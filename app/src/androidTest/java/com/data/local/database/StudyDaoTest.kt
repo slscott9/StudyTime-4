@@ -59,84 +59,75 @@ class StudyDaoTest {
 
         dao = database.studyDao()
 
+        /*
+            weekDay should be 1 to monday, 2 to tuesday, 3 to wednesday, 4 to thursday , 5 to friday , 6 to saturday, 7 to sunday
+         */
+
         studySession1 = StudySession(
             hours = 1F,
             minutes = 60,
-            date = "2020-12-02", //formattedDate
-            weekDay = "WEDNESDAY",
+            date = "2020-12-20", //formattedDate
+            weekDay = 7,
             month = 12,
-            dayOfMonth = 2,
+            dayOfMonth = 20,
             year = 2020,
+            startTime = "1",
+            endTime = "3",
+            epochDate = 1608524461
         )
 
         studySession2 = StudySession(
             hours = 2F,
             minutes = 120,
-            date = "2020-12-08", //formattedDate
-            weekDay = "SATURDAY",
+            date = "2020-12-26", //formattedDate
+            weekDay = 6,
             month = 12,
-            dayOfMonth = 8,
+            dayOfMonth = 26,
             year = 2020,
-        )
-
-        studySession3 = StudySession(
-            hours = 3F,
-            minutes = 180,
-            date = "2020-12-10", //formattedDate
-            weekDay = "TUESDAY",
-            month = 12,
-            dayOfMonth = 10,
-            year = 2020,
-        )
-
-        studySession4 = StudySession(
-            hours = 3F,
-            minutes = 180,
-            date = "2020-12-11", //formattedDate
-            weekDay = "TUESDAY",
-            month = 12,
-            dayOfMonth = 10,
-            year = 2021,
+            startTime = "1",
+            endTime = "3",
+            epochDate = 1609042861
         )
 
 
 
 
-        monthlyGoal1 = MonthlyGoal(
-            date = "2020-12-05",
-            weekDay = "FRIDAY",
-            dayOfMonth = 5,
-            hours = 5,
-            month = 12,
-            year = 2020,
-        )
 
-        monthlyGoal2 = MonthlyGoal(
-            date = "2020-12-08",
-            weekDay = "TUESDAY",
-            dayOfMonth = 8,
-            hours = 10,
-            month = 12,
-            year = 2020,
-        )
-
-        weeklyGoal1 = WeeklyGoal(
-            date = "2020-12-05",
-            weekDay = "FRIDAY",
-            dayOfMonth = 5,
-            hours = 5,
-            month = 12,
-            year = 2020,
-        )
-
-        weeklyGoal2 = WeeklyGoal(
-            date = "2020-12-15",
-            weekDay = "TUESDAY",
-            dayOfMonth = 15,
-            hours = 15,
-            month = 12,
-            year = 2020,
-        )
+//        monthlyGoal1 = MonthlyGoal(
+//            date = "2020-12-05",
+//            weekDay = "FRIDAY",
+//            dayOfMonth = 5,
+//            hours = 5,
+//            month = 12,
+//            year = 2020,
+//        )
+//
+//        monthlyGoal2 = MonthlyGoal(
+//            date = "2020-12-08",
+//            weekDay = "TUESDAY",
+//            dayOfMonth = 8,
+//            hours = 10,
+//            month = 12,
+//            year = 2020,
+//        )
+//
+//        weeklyGoal1 = WeeklyGoal(
+//            date = "2020-12-05",
+//            weekDay = "FRIDAY",
+//            dayOfMonth = 5,
+//            hours = 5,
+//            month = 12,
+//            year = 2020,
+//        )
+//
+//        weeklyGoal2 = WeeklyGoal(
+//            date = "2020-12-15",
+//            weekDay = "TUESDAY",
+//            dayOfMonth = 15,
+//            hours = 15,
+//            month = 12,
+//            year = 2020,
+//        )
 
 
     }
@@ -144,6 +135,19 @@ class StudyDaoTest {
     @After
     fun tearDown() {
         database.close()
+    }
+
+
+    //getLastSevenSessions should return any study sessions between todays date and todays date minus todays day of the week
+    @Test
+    fun getLastSevenSessions2() = runBlockingTest {
+
+        dao.insertStudySession(studySession1)
+        dao.insertStudySession(studySession2)
+
+        val list = dao.getLastSevenSessions(6 * 86400).asLiveData().getOrAwaitValue()
+
+        assertThat(list.size).isEqualTo(2)
     }
 
     //checkForWeeklyGoal returns WeeklyGoal for this week
@@ -191,20 +195,20 @@ class StudyDaoTest {
     }
 
     //should return last seven study sessions from todays date
-   @Test
-   fun getLastSevenSessions() = runBlocking {
-
-       dao.insertStudySession(studySession1)
-       dao.insertStudySession(studySession2)
-        dao.insertStudySession(studySession3) //this studySesion is out of range of last seven days from now
-
-       val lastSevenStudySessionsHours = dao.getLastSevenSessions(12, 8, 2020).asLiveData().getOrAwaitValue()
-
-       assertThat(lastSevenStudySessionsHours.size).isEqualTo(2)
-
-
-
-   }
+//   @Test
+//   fun getLastSevenSessions() = runBlocking {
+//
+//       dao.insertStudySession(studySession1)
+//       dao.insertStudySession(studySession2)
+//        dao.insertStudySession(studySession3) //this studySesion is out of range of last seven days from now
+//
+//       val lastSevenStudySessionsHours = dao.getLastSevenSessions(12, 8, 2020).asLiveData().getOrAwaitValue()
+//
+//       assertThat(lastSevenStudySessionsHours.size).isEqualTo(2)
+//
+//
+//
+//   }
 
     //should return DISTINCT years with study sessions
     @Test
