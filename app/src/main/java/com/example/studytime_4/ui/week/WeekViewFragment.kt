@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -14,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import com.example.studytime_4.R
+import com.example.studytime_4.data.GoalData
 import com.example.studytime_4.data.WeekData
 import com.example.studytime_4.databinding.FragmentWeekViewBinding
 import com.example.studytime_4.ui.goal.AddGoalFragment
@@ -57,33 +59,7 @@ class WeekViewFragment : Fragment() {
 
         viewModel.goalData.observe(viewLifecycleOwner) {
             it?.let {
-
-                val limitLineLabel = setLabel(it.limit.toFloat())
-                val limitLine = LimitLine(it.limit.toFloat(), limitLineLabel)
-
-                it.totalHours.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
-
-                binding.totalHoursChart.apply {
-                    data = BarData(it.totalHours)
-                    axisLeft.axisMaximum = (it.limit.toFloat() + it.totalHours.yMax)
-                    axisLeft.axisMinimum = 0F
-
-                    //if limit is zero dont draw it
-                    //if there a limit line remove the current and add new one
-                    if(it.limit != 0){
-                        axisLeft.removeAllLimitLines()
-                        axisLeft.addLimitLine(limitLine)
-                    }
-
-                    //Both must be set to false or double gridlines will be drawn for the goalbarchart
-                    data.barWidth = .25F
-                    axisRight.setDrawLabels(false)
-                    axisRight.setDrawGridLines(false)
-                    description.isEnabled = false
-                    axisLeft.valueFormatter = MyValueFormatter() //remove float decimals
-                    axisLeft.granularity = 1F //sets steps by ones
-                    xAxis.setDrawLabels(false) //disable labels for x axis
-                }
+                setupGoalBarChart(it)
             }
         }
 
@@ -93,6 +69,35 @@ class WeekViewFragment : Fragment() {
 
         binding.chipTestFragment.setOnClickListener {
             parentFragment?.findNavController()?.navigate(HomeFragmentDirections.actionHomeFragmentToTestFragment())
+        }
+    }
+
+    private fun setupGoalBarChart(goalData: GoalData) {
+        val limitLineLabel = setLabel(goalData.limit.toFloat())
+        val limitLine = LimitLine(goalData.limit.toFloat(), limitLineLabel)
+
+        goalData.totalHours.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
+
+        binding.totalHoursChart.apply {
+            data = BarData(goalData.totalHours)
+            axisLeft.axisMaximum = (goalData.limit.toFloat() + goalData.totalHours.yMax)
+            axisLeft.axisMinimum = 0F
+
+            //if limit is zero dont draw it
+            //if there a limit line remove the current and add new one
+            if(goalData.limit != 0){
+                axisLeft.removeAllLimitLines()
+                axisLeft.addLimitLine(limitLine)
+            }
+
+            //Both must be set to false or double grid lines will be drawn for the goalbarchart
+            data.barWidth = .25F
+            axisRight.setDrawLabels(false)
+            axisRight.setDrawGridLines(false)
+            description.isEnabled = false
+            axisLeft.valueFormatter = MyValueFormatter() //remove float decimals
+            axisLeft.granularity = 1F //sets steps by ones
+            xAxis.setDrawLabels(false) //disable labels for x axis
         }
     }
 
@@ -170,13 +175,7 @@ class WeekViewFragment : Fragment() {
     }
 
     private fun setupWeekBarChart(weekData: WeekData) {
-
-//        val description = Description()
-//        description.text = "Total weekly hours ${weekData.totalHours}"
-
-        weekData.weekBarData.color = resources.getColor(R.color.marigold)
-        binding.weekBarChart.data =
-            BarData( weekData.weekBarData) // set the data and list of lables into chart
+        weekData.weekBarData.color = ContextCompat.getColor(requireActivity(), R.color.marigold)
 
         //case 1 multiple bar chart values -> axis labels need to move in order to match chart values
         //case 2 only one bar chart value -> so center the label over value
@@ -190,6 +189,7 @@ class WeekViewFragment : Fragment() {
 
         binding.weekBarChart.apply {
 
+            data = BarData( weekData.weekBarData) // set the data and list of lables into chart
             //for labels since we know they will only ever be 7 values for the week
             xAxis.setLabelCount(
                 weekData.labels.size,

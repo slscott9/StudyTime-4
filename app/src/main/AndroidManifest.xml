@@ -11,7 +11,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudyTime4">
         <activity android:name=".MainActivity"
-            android:windowSoftInputMode="stateUnspecified|adjustResize"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

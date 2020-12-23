@@ -31,18 +31,20 @@ class RepositoryImplTest {
     @Before
     fun setup() {
 
+        //weekday is sunday = 0 saturday = 6
+
         monthlyGoal = MonthlyGoal(
-            date = "2020-12-05",
-            weekDay = "FRIDAY",
-            dayOfMonth = 5,
+            date = "2020-12-20",
+            weekDay = 0,
+            dayOfMonth = 20,
             hours = 5,
             month = 12,
             year = 2020,
         )
         weeklyGoal = WeeklyGoal(
-            date = "2020-12-15",
-            weekDay = "TUESDAY",
-            dayOfMonth = 15,
+            date = "2020-12-21",
+            weekDay = 1,
+            dayOfMonth = 20,
             hours = 15,
             month = 12,
             year = 2020,
@@ -54,13 +56,26 @@ class RepositoryImplTest {
 
     }
 
-    //saveWeeklyGoal should call dao.checkForWeeklyGoal and dao.upsertWeeklyGoal once when a WeeklyGoal exists
+    //saveMonthlyGoal should call dao.upsertMonthlyGoal when goal is null
+    @Test
+    fun saveMonthlyGoal() = runBlockingTest {
+
+        whenever(dao.checkForMonthlyGoal(any(), any(), any())).thenReturn(null)
+        whenever(dao.upsertMonthlyGoal(any())).thenReturn(1L)
+
+        repository.saveMonthlyGoal(monthlyGoal)
+
+        verify(dao, times(1)).upsertMonthlyGoal(any())
+    }
+
+    //saveWeeklyGoal should call dao.checkForWeeklyGoal and dao.upsertWeeklyGoal once when a weekly goal does exist
     @ExperimentalCoroutinesApi
     @Test
     fun saveWeeklyGoal() = runBlockingTest {
 
-
         whenever(dao.checkForWeeklyGoal(any(), any(), any())).thenReturn(weeklyGoal)
+        whenever(dao.upsertWeeklyGoal(any())).thenReturn(1L)
+
 
         repository.saveWeeklyGoal(weeklyGoal)
 
@@ -73,6 +88,8 @@ class RepositoryImplTest {
     @Test
     fun saveWeeklyGoal2() = runBlockingTest {
         whenever(dao.checkForWeeklyGoal(any(), any(), any())).thenReturn(null)
+        whenever(dao.upsertWeeklyGoal(any())).thenReturn(-1L)
+
 
         repository.saveWeeklyGoal(weeklyGoal)
 
@@ -80,29 +97,5 @@ class RepositoryImplTest {
         verify(dao, times(1)).upsertWeeklyGoal(any())
     }
 
-    //saveMonthlyGoal calls dao.checkForMonthlyGoal and dao.insertMonthlyGoal once when goal is returned
-    @ExperimentalCoroutinesApi
-    @Test
-    fun saveMonthlyGoal() = runBlockingTest {
 
-        whenever(dao.checkForMonthlyGoal(any(), any(), any())).thenReturn(monthlyGoal)
-
-        repository.saveMonthlyGoal(monthlyGoal)
-
-        verify(dao, times(1)).checkForMonthlyGoal(any(), any(), any())
-        verify(dao, times(1)).upsertMonthlyGoal(any())
-    }
-
-    //saveMonthlyGoal calls dao.checkForMonthlyGoal and dao.upsertMonthlyGoal once whenever null is returned from dao.checkForWeeklyGoal
-    @ExperimentalCoroutinesApi
-    @Test
-    fun saveMonthlyGoal2() = runBlockingTest{
-
-        whenever(dao.checkForMonthlyGoal(any(), any(), any())).thenReturn(null)
-
-        repository.saveMonthlyGoal(monthlyGoal)
-
-        verify(dao, times(1)).checkForMonthlyGoal(any(), any(), any())
-        verify(dao, times(1)).upsertMonthlyGoal(any())
-    }
 }

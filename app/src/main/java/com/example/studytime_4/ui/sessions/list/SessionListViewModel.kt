@@ -12,12 +12,12 @@ class SessionListViewModel @ViewModelInject constructor(
 ) : ViewModel(){
 
 
-    val yearsWithSessions = repository.getYearsWithSessions().asLiveData()
+    val yearsWithSessions = repository.allYearsWithSessions().asLiveData()
 
     private val _yearSelected = MutableLiveData<Int>()
 
     val monthsWithSessions = _yearSelected.switchMap {
-        repository.getMonthsWithSelectedYear(it).asLiveData()
+        repository.monthsWithSessions(it).asLiveData()
     }
 
     fun setYearSelected(yearSelected : Int) {

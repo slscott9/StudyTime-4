@@ -168,8 +168,6 @@ class MonthViewFragment : Fragment() {
     private fun setMonthBarChart(monthData: MonthData) {
 
         monthData.monthBarData.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
-        binding.monthBarChart.data =
-            BarData( monthData.monthBarData) // set the data and list of labels into chart
 
         val force: Boolean = if(monthData.labels.size > 1) {
             binding.monthBarChart.xAxis.setCenterAxisLabels(false)
@@ -180,6 +178,7 @@ class MonthViewFragment : Fragment() {
         }
 
         binding.monthBarChart.apply {
+            data = BarData( monthData.monthBarData) // set the data and list of labels into chart
             xAxis.setLabelCount(
                 monthData.labels.size,
                 force

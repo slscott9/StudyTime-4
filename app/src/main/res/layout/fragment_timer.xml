@@ -3,90 +3,114 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.studytime_4.ui.timer.TimerViewModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
         android:background="@color/charcoal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarLayout"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:background="@color/charcoal">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appBarLayout"
                 android:layout_width="match_parent"
-                app:title="Timer"
-                app:titleTextColor="@color/white"
-                app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
-                android:layout_height="?attr/actionBarSize" />
-        </com.google.android.material.appbar.AppBarLayout>
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+                    app:title="Timer"
+                    app:titleTextColor="@color/white" />
+            </com.google.android.material.appbar.AppBarLayout>
 
 
-        <TextView
-            android:id="@+id/tvTimerCountDown"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@string/_0"
-            android:textColor="@color/white"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+            <TextView
+                android:id="@+id/tvTimerCountDown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@{viewModel.currentTimeString}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/timerTextInputLayout"
-            android:layout_width="190dp"
-            android:layout_height="79dp"
-            android:layout_marginStart="32dp"
-            android:hint="@string/enter_study_duration"
-            app:layout_constraintBottom_toBottomOf="@+id/startButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/btnReset">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/timerTextInputLayout"
+                android:layout_width="190dp"
+                android:layout_height="79dp"
+                android:layout_marginTop="32dp"
+                android:hint="@string/enter_study_duration"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTimerCountDown">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etTimeInput"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etTimeInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/startButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/start_timer_button"
-            app:layout_constraintEnd_toEndOf="@+id/btnReset"
-            app:layout_constraintStart_toStartOf="@+id/btnReset"
-            app:layout_constraintTop_toBottomOf="@+id/btnReset" />
+            <Button
+                android:id="@+id/startButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                android:text="@string/start_timer_button"
+                app:layout_constraintBottom_toBottomOf="@+id/addStudySessionChip"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/addStudySessionChip"
+                app:layout_constraintTop_toTopOf="@+id/addStudySessionChip" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/addStudySessionChip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/save_session_chip_text"
-            android:textColor="@color/white"
-            app:chipIcon="@drawable/ic_baseline_save_24"
-            app:layout_constraintEnd_toEndOf="@+id/timerTextInputLayout"
-            app:layout_constraintStart_toStartOf="@+id/timerTextInputLayout"
-            app:layout_constraintTop_toBottomOf="@+id/timerTextInputLayout" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/addStudySessionChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save_session_chip_text"
+                android:textColor="@color/charcoal"
+                app:chipIcon="@drawable/ic_baseline_save_24"
+                app:layout_constraintEnd_toStartOf="@id/startButton"
+                app:layout_constraintStart_toEndOf="@+id/btnReset"
+                app:layout_constraintTop_toTopOf="@+id/btnReset" />
 
-        <Button
-            android:id="@+id/btnReset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
-            android:layout_marginEnd="52dp"
-            android:text="@string/reset_timer_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTimerCountDown" />
+            <Button
+                android:id="@+id/btnReset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="32dp"
+                android:text="@string/reset_timer_button"
+                app:layout_constraintEnd_toStartOf="@id/addStudySessionChip"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="274dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
 
 </layout>

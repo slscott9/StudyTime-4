@@ -21,33 +21,10 @@ class RepositoryImpl @Inject constructor (
         No need to use withContext(dispatcher.io)
      */
 
-    //WEEKLY GOAL
-
-    override fun getGoalForWeek(curMonth: Int, curYear: Int, currentDayOfMonth: Int): Flow<WeeklyGoal?> {
-        return dao.getGoalForWeek(curMonth, curYear, currentDayOfMonth)
-    }
-
-    override suspend fun saveWeeklyGoal(weeklyGoal: WeeklyGoal) : Long {
-
-
-        val goal = dao.checkForWeeklyGoal(weeklyGoal.month, weeklyGoal.year, weeklyGoal.dayOfMonth)
-
-        return if(goal == null){
-            dao.upsertWeeklyGoal(weeklyGoal)
-
-        }else{
-           val updateGoal = goal.copy(hours = weeklyGoal.hours)
-            dao.upsertWeeklyGoal(updateGoal)
-
-        }
-    }
-
-
-
     //MONTHLY GOAL
 
-    override fun getMonthlyGoal(yearSelected: Int, monthSelected: Int): Flow<MonthlyGoal?> {
-        return dao.getGoalForMonth(yearSelected, monthSelected)
+    override fun monthlyGoal(yearSelected: Int, monthSelected: Int): Flow<MonthlyGoal?> {
+        return dao.monthlyGoal(yearSelected, monthSelected)
     }
 
     override suspend fun saveMonthlyGoal(monthlyGoal: MonthlyGoal) : Long {
@@ -63,61 +40,69 @@ class RepositoryImpl @Inject constructor (
     }
 
 
-    //SESSIONS
+    //WEEKLY GOAL
 
-    override fun getLastSevenSessionsHours(
+    override fun weeklyGoal(curMonth: Int, curYear: Int, currentDayOfMonth: Int): Flow<WeeklyGoal?> {
+        return dao.weeklyGoal(curMonth, curYear, currentDayOfMonth)
+    }
+
+    override suspend fun saveWeeklyGoal(weeklyGoal: WeeklyGoal) : Long {
+        val goal = dao.checkForWeeklyGoal(weeklyGoal.month, weeklyGoal.year, weeklyGoal.dayOfMonth)
+
+        return if(goal == null){
+            dao.upsertWeeklyGoal(weeklyGoal)
+
+        }else{
+           val updateGoal = goal.copy(hours = weeklyGoal.hours)
+            dao.upsertWeeklyGoal(updateGoal)
+
+        }
+    }
+
+    //WEEKLY SESSIONS AND HOURS
+
+    override fun weeklyHours(
         currentMonth: Int,
         currentDayOfMonth: Int
     ): Flow<List<Float>> {
-        return dao.getLastSevenSessionsHours(currentMonth, currentDayOfMonth)
+        return dao.weeklyHours(currentMonth, currentDayOfMonth)
     }
 
-    override fun getSessionHoursForMonth(monthSelected: Int): Flow<List<Float>> {
-        return dao.getSessionHoursForMonth(monthSelected)
-
-    }
-
-    override suspend fun getCurrentStudySession(currentDate: String)  =
-        dao.getCurrentStudySession(currentDate)
-
-
-
-    override fun getAllSessionsWithMatchingMonth(monthSelected: Int, yearSelected: Int): Flow<List<StudySession>> {
-        return dao.getAllSessionsWithMatchingMonth(monthSelected, yearSelected)
-
-    }
-//
-//    override  fun getLastSevenSessions(
-//        weekDayEpoch : Long
-//    ): Flow<List<StudySession>> {
-//        Timber.i("heeyyyy")
-//        Timber.i(weekDayEpoch.toString())
-//        return dao.getLastSevenSessions(weekDayEpoch)
-//
-//    }
-
-    override  fun getLastSevenSessions(
-        weekDay: Int
+    override  fun weeklyStudySessions(
     ): Flow<List<StudySession>> {
-        Timber.i("weekday is $weekDay")
-        return dao.getLastSevenSessions(weekDay)
+        return dao.weeklyStudySessions()
 
     }
 
 
 
-    override fun getYearsWithSessions(): Flow<List<Int>> {
-        return dao.getYearsWithSessions()
+    //GET MONTHLY HOURS AND STUDY SESSIONS
+
+    override fun monthlyHours(monthSelected: Int): Flow<List<Float>> {
+        return dao.monthlyHours(monthSelected)
 
     }
 
-    override fun getMonthsWithSelectedYear(yearSelected: Int): Flow<List<Int>> {
-        return dao.getMonthsWithSelectedYear(yearSelected)
+    override fun monthlyStudySessions(monthSelected: Int, yearSelected: Int): Flow<List<StudySession>> {
+        return dao.monthlyStudySessions(monthSelected, yearSelected)
 
     }
 
 
-    //Inject ioDispatcher for this operation
+    //GET YEARS AND MONTH WITH STUDY SESSIONS
+    override fun allYearsWithSessions(): Flow<List<Int>> {
+        return dao.allYearsWithSessions()
+
+    }
+
+    override fun monthsWithSessions(yearSelected: Int): Flow<List<Int>> {
+        return dao.monthsWithSessions(yearSelected)
+
+    }
+
+
+    //SAVE STUDY SESSION
+
     override suspend fun upsertStudySession(studySession: StudySession) =
         dao.upsertStudySession(studySession)
 

@@ -46,13 +46,13 @@ class MonthViewModel @ViewModelInject constructor(
     private val currentYear = LocalDateTime.now().year
 
     private val monthsStudySession =
-        repository.getAllSessionsWithMatchingMonth(currentMonth, currentYear)
+        repository.monthlyStudySessions(currentMonth, currentYear)
 
-    private val monthSessionHours = repository.getSessionHoursForMonth(currentMonth).map {
+    private val monthSessionHours = repository.monthlyHours(currentMonth).map {
         setTotalMonthlyHours(it)
     }
 
-    val goal = repository.getMonthlyGoal(currentYear, currentMonth)
+    val goal = repository.monthlyGoal(currentYear, currentMonth)
 
     val goalData = goal.combine(monthSessionHours){goal  , hours ->
         GoalData(

@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 class WeekViewModel @ViewModelInject constructor(
@@ -24,27 +25,23 @@ class WeekViewModel @ViewModelInject constructor(
     var month: String = ""
     private val currentMonth = LocalDateTime.now().monthValue
     private val currentDayOfMonth = LocalDateTime.now().dayOfMonth
-    private val currentYear = LocalDateTime.now().year
-    private val weekDayMap = hashMapOf<Int, Int>(7 to 0, 1 to 1, 2 to 2, 3 to 3, 4 to 4, 5 to 5, 6 to 6)
-
-    private var currentWeekDay = LocalDateTime.now().dayOfWeek.value
     /*
         1 is monday 7 is sunday
         week view displays 0 as sunday and saturday as 6
      */
 
-
     private val weekDays = listOf<String>("S","M","T","W","T","F","S")
     private val secondsInDay : Long = 86400
 
 
-    private val lastSevenStudySessions = repository.getLastSevenSessions(6) //weekDayMap[currentWeekDay]!!
+    private val lastSevenStudySessions = repository.weeklyStudySessions() //weekDayMap[currentWeekDay]!! * secondsInDay
+
 
     private val lastSevenSessionsHours =
-        repository.getLastSevenSessionsHours(currentMonth, currentDayOfMonth)
+        repository.weeklyHours(currentMonth, currentDayOfMonth)
             .map { setTotalWeeklyHours(it) }
 
-    val goal = repository.getGoalForWeek(
+    val goal = repository.weeklyGoal(
         LocalDateTime.now().monthValue,
         LocalDateTime.now().year,
         LocalDateTime.now().dayOfMonth
@@ -77,14 +74,6 @@ class WeekViewModel @ViewModelInject constructor(
             weekBarData[it.weekDay].y = it.hours //WEEK DAY WAS CHANGED FROM -1 WEEKDAYS ARE ZERO BASED
         }
 
-
-        val hours = studySessionList.mapIndexed { index, studySession ->
-            BarEntry( index.toFloat(), studySession.hours) //x and y hours need to be Y axis
-        }
-        val labels = studySessionList.mapIndexed {index, study ->
-            study.date
-        }
-
         val totalHours = studySessionList.map { it.hours }.sum()
 
         return WeekData(
@@ -92,14 +81,6 @@ class WeekViewModel @ViewModelInject constructor(
             labels = weekDays,
             totalHours
         )
-    }
-
-    private fun setWeekDay(value : Int) : Long {
-        Timber.i("weekday is $value")
-        return if (value == 7) 0L else{
-            Timber.i("week day is ${(value * secondsInDay).toString()}")
-            value * secondsInDay
-        }
     }
 
      fun addGoal(hours : Int){

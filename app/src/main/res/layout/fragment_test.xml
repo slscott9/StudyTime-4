@@ -124,6 +124,17 @@
                 app:layout_constraintTop_toBottomOf="@id/etStartTime"
                 app:layout_constraintVertical_chainStyle="packed" />
 
+            <EditText
+                android:id="@+id/etOffsetTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="offset time"
+                app:layout_constraintBottom_toTopOf="@id/btnSave"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etEndTime"
+                app:layout_constraintVertical_chainStyle="packed" />
+
             <Button
                 android:id="@+id/btnSave"
                 android:layout_width="wrap_content"

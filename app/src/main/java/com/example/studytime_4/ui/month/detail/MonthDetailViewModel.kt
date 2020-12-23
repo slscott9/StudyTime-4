@@ -32,12 +32,11 @@ class MonthDetailViewModel @ViewModelInject constructor(
     private val sessionList = arrayOfNulls<com.example.studytime_4.data.StudySession>(42)
 
     private val months = arrayListOf<String>("January", "February" ,"March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
-    private val daysNums = listOf<String>("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20", "21","22","23","24","25","26","27","28", "29","30", "31")
     private var _month = MutableLiveData<String>()
     val month: LiveData<String> = _month
 
     private val _monthsStudySession =
-        repository.getAllSessionsWithMatchingMonth(
+        repository.monthlyStudySessions(
             savedStateHandle.get<Int>(MONTH_SELECTED)!!,
             savedStateHandle.get<Int>(YEAR_SELECTED)!!
         )

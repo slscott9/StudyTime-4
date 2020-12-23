@@ -18,7 +18,8 @@ data class StudySession(
     val year: Int,
     val epochDate : Long,
     val startTime : String,
-    val endTime : String
+    val endTime : String,
+    val offsetDateTime: OffsetDateTime
 ) {
 }
 

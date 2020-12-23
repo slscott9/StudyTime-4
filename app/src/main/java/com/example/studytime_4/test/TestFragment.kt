@@ -13,6 +13,7 @@ import com.example.studytime_4.data.local.entities.StudySession
 import com.example.studytime_4.databinding.FragmentTestBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_test.*
+import java.time.OffsetDateTime
 
 @AndroidEntryPoint
 class TestFragment : Fragment() {
@@ -52,7 +53,8 @@ class TestFragment : Fragment() {
                 year = etYear.text.toString().toInt(),
                 epochDate = etEpochDate.text.toString().toLong(),
                 startTime = etStartTime.text.toString(),
-                endTime = etEndTime.text.toString()
+                endTime = etEndTime.text.toString(),
+                offsetDateTime = OffsetDateTime.now()
             )
 
             viewModel.insertStudySession(studySession)

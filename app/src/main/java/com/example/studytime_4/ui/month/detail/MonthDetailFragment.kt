@@ -49,18 +49,15 @@ class MonthDetailFragment : Fragment() {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_month_detail, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         setupToolbar()
         //set the calendar to the year and month that was selected by user
         binding.viewModel = viewModel
-
 
         calendar.apply {
             set(Calendar.MONTH, args.monthSelected - 1)
@@ -74,25 +71,13 @@ class MonthDetailFragment : Fragment() {
 
 
         calendarAdapter = CalendarAdapter(firstDayOfMonth, daysInMonth, CalendarAdapter.CalendarListener {studySession, textView ->
-//                val directions = MonthDetailFragmentDirections.actionMonthDetailFragmentToSessionDetailFragment(studySession!!)
-//
-//            val extras = FragmentNavigatorExtras(
-//                textView to studySession.hours.toString()
-//            )
-//            findNavController().navigate(directions, extras)
-
             viewModel.setStudySession(studySession!!)
-
             expandSessionDetail(textView)
-
-
-
         })
 
         setupObservers(firstDayOfMonth, daysInMonth)
 
         binding.rvCalendar.adapter = calendarAdapter
-
 
         postponeEnterTransition()
         binding.rvCalendar.doOnPreDraw {
@@ -110,41 +95,28 @@ class MonthDetailFragment : Fragment() {
 
             val transformation = MaterialContainerTransform().apply {
                 startView = tv
-//                endView = binding.root.sessionDetail
                 endView = binding.cvSessionDetail
                 scrimColor = Color.TRANSPARENT
-
-//                addTarget(binding.root.sessionDetail)
                 addTarget(binding.cvSessionDetail)
             }
 
             TransitionManager.beginDelayedTransition(binding.cvCalendar, transformation)
-//            binding.root.sessionDetail.visibility = View.VISIBLE
             binding.cvSessionDetail.visibility = View.VISIBLE
             binding.rvCalendar.visibility = View.INVISIBLE
         }
-
-
-
     }
 
-
     private fun collapseSessionDetail(tv: TextView) {
-//        binding.root.sessionDetail.visibility = View.GONE
         binding.cvSessionDetail.visibility = View.GONE
-
         binding.rvCalendar.visibility = View.VISIBLE
         binding.scrimView.visibility = View.GONE
 
         val transition = MaterialContainerTransform().apply {
-//            startView = binding.root.sessionDetail
             startView = binding.cvSessionDetail
             endView = tv
             scrimColor = Color.TRANSPARENT
-
             addTarget(tv)
         }
-
         TransitionManager.beginDelayedTransition(binding.cvCalendar, transition)
 
     }
@@ -168,25 +140,12 @@ class MonthDetailFragment : Fragment() {
         }
     }
 
-    class MyValueFormatter : ValueFormatter() {
-        private val format = DecimalFormat("###,##0.0")
-
-        override fun getFormattedValue(value: Float): String {
-            return value.toInt().toString() //gets y axis values to integers instead of 0.0 floats
-        }
-    }
-
-
-
     private fun setBarChart(monthData: MonthData) {
 
         val description = Description()
-
-        description.text = "Monthly total hours ${monthData.totalHours}"
+        description.text = "Total monthly hours ${monthData.totalHours}"
 
         monthData.monthBarData.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
-        binding.monthDetailBarChart.data =
-            BarData( monthData.monthBarData) // set the data and list of labels into chart
 
         val force: Boolean = if (monthData.labels.size > 1) {
             binding.monthDetailBarChart.xAxis.setCenterAxisLabels(false)
@@ -197,6 +156,7 @@ class MonthDetailFragment : Fragment() {
         }
 
         binding.monthDetailBarChart.apply {
+            data = BarData( monthData.monthBarData) // set the data and list of labels into chart
             xAxis.setLabelCount(
                 monthData.labels.size,
                 force

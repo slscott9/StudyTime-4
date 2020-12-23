@@ -10,6 +10,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface StudyDao {
 
+
+    //MONTHLY GOAL
+    @Query("select * from monthly_goal_table where(year = :curYear and month = :curMonth)")
+    fun monthlyGoal(curYear: Int, curMonth: Int) : Flow<MonthlyGoal?>
+
     @Update
     suspend fun updateMonthlyGoal(goal: MonthlyGoal) //tested
 
@@ -28,24 +33,11 @@ interface StudyDao {
     }
 
 
-    @Query("select * from monthly_goal_table where(year = :curYear and month = :curMonth)")
-    fun getGoalForMonth(curYear: Int, curMonth: Int) : Flow<MonthlyGoal?>
-
-
-    @Query("select * from weekly_goal_table where (month = :curMonth and year = :curYear and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth) ") //tested
-    suspend fun checkForWeeklyGoal(curMonth: Int, curYear: Int, currentDayOfMonth: Int) : WeeklyGoal?
-
-    @Query("select * from monthly_goal_table where (month = :curMonth and year = :curYear and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth) ")
-    suspend fun checkForMonthlyGoal(curMonth: Int, curYear: Int, currentDayOfMonth: Int) : MonthlyGoal?
-
-
-//    @Query("select * from goal_table where monthlyGoal = 0 and  month = :curMonth and year = :curYear and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth ")
-
-    //Get current goal
+    //WEEKLY GOAL
     @Query("select * from weekly_goal_table where (month = :curMonth and year = :curYear and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth)") //tested
-    fun getGoalForWeek(curMonth: Int, curYear: Int, currentDayOfMonth: Int) : Flow<WeeklyGoal?>
+    fun weeklyGoal(curMonth: Int, curYear: Int, currentDayOfMonth: Int) : Flow<WeeklyGoal?>
 
-    //Save user goals
+    //SAVE AND UPDATE WEEKLY GOALS
     @Update
     suspend fun updateWeeklyGoal(goal: WeeklyGoal) //tested
 
@@ -64,66 +56,49 @@ interface StudyDao {
     }
 
 
-    /*
-        Add Goal entity with date like 2020-12-04 query database for a date in range of todays date and todays date - 7
+    //CHECK FOR MONTHLY AND WEEKLY GOALS
+    @Query("select * from weekly_goal_table where (month = :curMonth and year = :curYear and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth) ") //tested
+    suspend fun checkForWeeklyGoal(curMonth: Int, curYear: Int, currentDayOfMonth: Int) : WeeklyGoal?
 
-        if there a goal and user wants to change it update the goal that was in this range
-
-        This ensures that we only need one goal for a week instead of inserting new goals everytime user changes a goal
-     */
+    @Query("select * from monthly_goal_table where (month = :curMonth and year = :curYear and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth) ")
+    suspend fun checkForMonthlyGoal(curMonth: Int, curYear: Int, currentDayOfMonth: Int) : MonthlyGoal?
 
 
-    //Changes for transformations
+
+    //GET WEEK'S HOURS AND STUDY SESSIONS
     @Query("select hours from study_table_4 where month = :currentMonth and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth order by dayOfMonth asc")
-    fun getLastSevenSessionsHours(currentMonth: Int, currentDayOfMonth: Int): Flow<List<Float>>
+    fun weeklyHours(currentMonth: Int, currentDayOfMonth: Int): Flow<List<Float>>
 
+    @Query("select * from study_table_4 where date(offsetDateTime) >= date('now', 'weekday 0', '-7 day') and date(offsetDateTime) <= date('now') order by dayOfMonth asc ")
+    fun weeklyStudySessions(): Flow<List<StudySession>>
+
+
+    //GET MONTH'S HOURS AND STUDY SESSIONS
 
     @Query("select hours from study_table_4 where month= :monthSelected")
-    fun getSessionHoursForMonth(monthSelected: Int): Flow<List<Float>>
-
-
-    /*
-        Should we return live data straight form the dao? The repo methods can receive parameters that we can use to query the database
-     */
-
-    @Query("select * from study_table_4 where date= :currentDate ")
-    suspend fun getCurrentStudySession(currentDate: String): StudySession
-
+    fun monthlyHours(monthSelected: Int): Flow<List<Float>>
 
     @Query("select * from study_table_4 where(month= :monthSelected and year = :yearSelected) order by dayOfMonth asc")
-    fun getAllSessionsWithMatchingMonth(monthSelected: Int, yearSelected: Int): Flow<List<StudySession>>
+    fun monthlyStudySessions(monthSelected: Int, yearSelected: Int): Flow<List<StudySession>>
 
 
-    /*
-        To get the current week's study sessions query database for current day of week
-     */
 
 
-    //Needs year to get the study sessions from current date
-//    @Query("select * from study_table_4 where (year = :curYear and month= :currentMonth and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth) order by dayOfMonth asc")
-//    fun getLastSevenSessions(currentWeekDay: Int, currentMonth: Int, currentDayOfMonth: Int, curYear: Int): Flow<List<StudySession>>
-
-//    @Query("select * from study_table_4 where epochDate >=  (strftime('%s','now', '-1 day') - :weekDayEpoch) and epochDate <=  strftime('%s', 'now','+1 day') order by dayOfMonth asc")
-
-//    @Query("select * from study_table_4 where epochDate <=  1609042861 and weekDay >= 6 - :weekDay and weekDay <=   6    order by dayOfMonth asc")
-    @Query("select * from study_table_4 where epochDate <=  strftime('%s','now') and weekDay >= (strftime('%w', 'now')  - :weekDay and weekDay <=    strftime('%w', 'now'))    order by dayOfMonth asc")
-                                                        fun getLastSevenSessions(weekDay : Int): Flow<List<StudySession>>
-
+    //GET YEARS AND MONTHS WITH STUDY SESSIONS
 
     @Query("select distinct year from study_table_4  order by year asc") //tested
-    fun getYearsWithSessions(): Flow<List<Int>>
+    fun allYearsWithSessions(): Flow<List<Int>>
 
     @Query("select distinct month from study_table_4 where year = :yearSelected order by month asc") //tested
-    fun getMonthsWithSelectedYear(yearSelected : Int) : Flow<List<Int>>
+    fun monthsWithSessions(yearSelected : Int) : Flow<List<Int>>
 
 
     @Query("select distinct date from study_table_4 where(month = :month and year = :year)")
     fun getDateFromSelectedMonth(month: Int, year: Int) : LiveData<String>
 
 
-    /*
-        The problem is when the database is empty how do you know when to call updateStudySession or insert a study session
-     */
+
+    //SAVE AND UPDATE STUDY SESSION
 
     @Transaction
     suspend fun upsertStudySession(study: StudySession ) : Long{
