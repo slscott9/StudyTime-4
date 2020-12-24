@@ -21,6 +21,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import com.example.studytime_4.MainViewModel
 import com.example.studytime_4.R
 import com.example.studytime_4.data.local.entities.StudySession
 import com.example.studytime_4.databinding.FragmentTimerBinding
@@ -40,23 +41,14 @@ import java.util.concurrent.TimeUnit
 class TimerFragment : Fragment() {
 
     private lateinit var binding: FragmentTimerBinding
-    private val viewModel: TimerViewModel by viewModels()
-
-    val SAVED_MILLI = "SAVED_MILLI"
-
+    private val viewModel: MainViewModel by activityViewModels()
 
     //local time weekday starts with monday as 1 and sunday as 7
     //strftime sqlite function starts with sunday as 0 and saturday as 6
     //map will convert local time weekdays to weekday numbering that strftime expects so the weekday comparison matches in the dao for getLastSevenSessions function
     private val weekDayMap = hashMapOf<Int, Int>(7 to 0, 1 to 1, 2 to 2, 3 to 3, 4 to 4, 5 to 5, 6 to 6)
 
-    private var START_MILLI_SECONDS = 0L
-    private var countdown_timer: CountDownTimer? = null
-//    var isRunning: Boolean = false;
-    private var time_in_milli_seconds = 0L
     private var startTimeHours = 0F
-    private var start_time_in_mili = 0L
-
     private lateinit var studySession: StudySession
     private val currentDayOfMonth = LocalDateTime.now().dayOfMonth
     private val currentMonth = LocalDateTime.now().monthValue
@@ -70,8 +62,6 @@ class TimerFragment : Fragment() {
     private var startTime = ""
     private var endTime = ""
 
-    private var timeAvailable : Boolean = false //Used to know if there is a unfinished time on the clock
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -79,84 +69,67 @@ class TimerFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_timer, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
-
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupSaveSessionButton()
+
+        if(viewModel.getTimeAvailable()){
+            binding.timerTextInputLayout.visibility = View.GONE
+        }
+
+        setupStartButton()
         binding.viewModel = viewModel
 
         setupNav()
-        setupSaveSessionButton()
-
-        etTimeInput.addTextChangedListener {
-            binding.startButton.text = getString(R.string.start_timer_button)
-            setupStartButton()
-        }
 
         binding.btnReset.setOnClickListener {
-            timeAvailable = false
             binding.timerTextInputLayout.visibility = View.VISIBLE
             viewModel.setStartTime(0L)
             viewModel.setIsRunning(false)
-            binding.startButton.text = getString(R.string.start_timer_button)
             binding.etTimeInput.text?.clear()
+            viewModel.setTimeAvailable(false)
+            binding.startButton.text = "Start"
         }
         setupObservers()
     }
 
 
-    /*
-
-        mAKE VIEW MODEL AN ACTIVITY VIEW MODEL IN ORDER TO SAVE THE STATE OF THE TIMER
-        tHE STATE IS NOT SAVED BECAUSE THIS VIEW MODEL IS SCOPED TO THIS FRAGMENT INSTEAD OF THE MAIN ACTIVITY
-     */
-
-
     private fun setupStartButton() {
         binding.startButton.setOnClickListener {
 
-            if(binding.etTimeInput.text.isNullOrBlank()){
-                Toast.makeText(requireActivity(), "Please enter a study time", Toast.LENGTH_SHORT).show()
-            }else{
-                startTimeHours = binding.etTimeInput.text.toString().toFloat()
+            when (binding.startButton.text) {
 
-                Timber.i("time input edit text is ${binding.etTimeInput.text}")
+                "Start" -> {
 
-                when (binding.startButton.text) {
-
-                    "Start" -> {
-
-                        if(timeAvailable){
-                            viewModel.setIsRunning(true)
-                        }else{
-                            viewModel.setStartTime(
-                                TimeUnit.HOURS.toMillis(
-                                    binding.etTimeInput.text.toString().toLong()
-                                )
+                    if(viewModel.getTimeAvailable()){
+                        viewModel.setIsRunning(true)
+                    }else{
+                        viewModel.setStartTime(
+                            TimeUnit.HOURS.toMillis(
+                                binding.etTimeInput.text.toString().toLong()
                             )
-                            viewModel.setIsRunning(true)
-                        }
-
-                        binding.startButton.text = getString(R.string.start_timer_button_pause)
+                        )
+                        viewModel.setIsRunning(true)
                     }
-                    "Pause" -> {
-                        timeAvailable = true
-                        viewModel.cancelTimer()
-                        viewModel.setIsRunning(false)
-                        binding.startButton.text = getString(R.string.start_timer_button)
 
-                    }
+                    binding.startButton.text = getString(R.string.start_timer_button_pause)
                 }
+                "Pause" -> {
+                    viewModel.setTimeAvailable(true)
+                    viewModel.cancelTimer()
+                    viewModel.setIsRunning(false)
+                    binding.startButton.text = getString(R.string.start_timer_button)
+
+                }
+            }
 
                 hideSoftKeyboard(it)
                 binding.timerTextInputLayout.visibility = View.GONE
-            }
         }
     }
 
@@ -169,13 +142,12 @@ class TimerFragment : Fragment() {
         viewModel.isRunning.observe(viewLifecycleOwner){}
 
         viewModel.startTime.observe(viewLifecycleOwner){
-            it.let {
+            it?.let {
                 Timber.i(it.toString())
                 viewModel.setCurrentMili(it)
                 viewModel.setCurrentTimeString(it)
+                viewModel.setTimeAvailable(true)
             }
-
-
         }
 
         viewModel.timerFinished.observe(viewLifecycleOwner){
@@ -205,13 +177,13 @@ class TimerFragment : Fragment() {
 
                 val minutesStudied = TimeUnit.MILLISECONDS.toMinutes(TimeUnit.HOURS.toMillis(startTimeHours.toLong()) - viewModel.getCurrentTime())
                 Timber.i("Minutes studied is $minutesStudied")
-                val hoursStudied = decimalFormat.format(minutesStudied / 60.0).toFloat()
+                val hoursStudied = minutesStudied / 60.0 //decimalFormat.format(minutesStudied / 60.0).toFloat()
 
 
                 Timber.i("Hours studied is $hoursStudied")
 
                 studySession = StudySession(
-                    hours = hoursStudied,
+                    hours = hoursStudied.toFloat(),
                     minutes = minutesStudied/60,
                     date = formattedDate, //formattedDate
                     weekDay = weekDayMap[currentWeekDay]!!, //current weekday
@@ -291,10 +263,10 @@ class TimerFragment : Fragment() {
         viewModel.setIsRunning(false)
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.setIsRunning(true)
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        viewModel.setIsRunning(true)
+//    }
 
 
 
