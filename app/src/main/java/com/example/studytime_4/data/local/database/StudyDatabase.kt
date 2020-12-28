@@ -9,7 +9,7 @@ import com.example.studytime_4.data.local.entities.MonthlyGoal
 import com.example.studytime_4.data.local.entities.StudySession
 import com.example.studytime_4.data.local.entities.WeeklyGoal
 
-@Database(entities = [StudySession::class, WeeklyGoal::class, MonthlyGoal::class], version = 22)
+@Database(entities = [StudySession::class, WeeklyGoal::class, MonthlyGoal::class], version = 23)
 @TypeConverters(Converters::class)
 abstract class StudyDatabase : RoomDatabase(){
 

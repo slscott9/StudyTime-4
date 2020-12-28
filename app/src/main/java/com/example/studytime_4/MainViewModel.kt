@@ -13,53 +13,74 @@ class MainViewModel @ViewModelInject constructor(
     private val repository: Repository
 ) : ViewModel(){
 
-    private val _currentTimeString =  MutableLiveData<String>()
-    val currentTimeString : LiveData<String> = _currentTimeString
 
-    private val _currentMili = MutableLiveData<Long>()
-    val currentMili : LiveData<Long> = _currentMili
+    private var timer : CountDownTimer ? = null
 
-    private val _startTime =  MutableLiveData<Long>()
-    val startTime : LiveData<Long> = _startTime
+    private val _isRunning =  MutableLiveData<Boolean>()
+    val isRunning : LiveData<Boolean> = _isRunning
 
 
-    private val _isRunning = MutableLiveData<Boolean>()
+    private val _currentTimeMilli = MutableLiveData<Long>()
 
-    private var timeAvailable = false
-
-    val isRunning : LiveData<Boolean> = _isRunning.map {
-        if(it){
-            startTimer(_currentMili.value ?: _startTime.value ?: 0L)
-        }else{
-            cancelTimer()
+    val currentTimeString : LiveData<String> = _currentTimeMilli.switchMap {
+        liveData {
+            emit(timerFormatter(it))
         }
     }
 
-    fun getTimeAvailable() : Boolean {
-        return timeAvailable
-    }
+    private var starTimeHours = 0
 
-    fun setTimeAvailable(isTime : Boolean) {
-        timeAvailable = isTime
-    }
+    private var startTime = ""
+    private var endTime = ""
+
+    private var timeAvailable = false
 
     private val _timerFinished = MutableLiveData<Boolean>()
     val timerFinished : LiveData<Boolean> = _timerFinished
 
-    var timer : CountDownTimer? = null
+    fun setStartTime(startingTime: String){
+        startTime = startingTime
+    }
 
-    private val _insertStatus = MutableLiveData<Long>()
-    val insertStatus : LiveData<Long> = _insertStatus
+    fun getStartTime() : String {
+        return startTime
+    }
 
+    fun setEndTime(endingTime : String){
+        endTime = endingTime
+    }
+
+    fun getEndTime() : String {
+        return endTime
+    }
+
+    fun isTimeAvailable() : Boolean {
+        return timeAvailable
+    }
+
+    fun setIsTimeAvailable(availabe: Boolean){
+        timeAvailable = availabe
+    }
+
+
+    fun getCurrentTimeMilli() : Long {
+        return _currentTimeMilli.value ?: 0L
+    }
+
+    fun setCurrentTimeMilli(milliseconds : Long) {
+        _currentTimeMilli.value = milliseconds
+    }
+
+    fun setStartTimeHours(hours : Int) {
+        starTimeHours = hours
+    }
+
+    fun  getStartTimeHours() : Int {
+        return starTimeHours
+    }
 
     fun setIsRunning(running : Boolean){
         _isRunning.value = running
-    }
-
-    private var time_in_milli = 0L
-
-    fun getIsRunning() : Boolean {
-        return _isRunning.value!!
     }
 
     fun startTimer(startingTime: Long) : Boolean{
@@ -69,10 +90,10 @@ class MainViewModel @ViewModelInject constructor(
                 _timerFinished.value = true
             }
 
-            override fun onTick(p0: Long) {
+            override fun onTick(milliseconds: Long) {
                 Timber.i("in on tick")
-                _startTime.value = p0
-                _currentTimeString.value = timerFormatter(p0)
+
+                _currentTimeMilli.value = milliseconds
             }
         }
 
@@ -80,26 +101,7 @@ class MainViewModel @ViewModelInject constructor(
         return true
     }
 
-    fun setStartTime(startingTime: Long) {
-        Timber.i("setTime called startingTime = $startingTime")
-        _startTime.value = startingTime
-    }
-
-    fun getCurrentTime() : Long {
-        return _currentMili.value!!
-    }
-
-    fun setCurrentTimeString(time_in_milli : Long) {
-        _currentTimeString.value = timerFormatter(time_in_milli)
-        Timber.i(" setCurrentTimeString function time is ${timerFormatter(time_in_milli)}")
-    }
-
-    fun setCurrentMili(time_in_milli: Long){
-        _currentMili.value = time_in_milli
-    }
-
-
-    fun timerFormatter(time_in_milli : Long) : String {
+    private fun timerFormatter(time_in_milli : Long) : String {
 
         val time = String.format( "%02d:%02d:%02d",
             TimeUnit.MILLISECONDS.toHours(time_in_milli),
@@ -118,11 +120,17 @@ class MainViewModel @ViewModelInject constructor(
         return false
     }
 
+
+    /*
+        Dont need to observer insertStatus since this is activity's view model.
+        once insertStatus is set, when navigating backto timer fragment the live data triggers again and redirects to home fragment.
+     */
+
+
     fun upsertStudySession(newStudySession: StudySession){
         viewModelScope.launch {
             val status = repository.upsertStudySession(newStudySession)
 
-            _insertStatus.postValue(status)
         }
     }
 }
