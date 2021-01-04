@@ -28,7 +28,7 @@ class MainViewModel @ViewModelInject constructor(
         }
     }
 
-    private var starTimeHours = 0
+    private var starTimeHours = 0L
 
     private var startTime = ""
     private var endTime = ""
@@ -37,6 +37,10 @@ class MainViewModel @ViewModelInject constructor(
 
     private val _timerFinished = MutableLiveData<Boolean>()
     val timerFinished : LiveData<Boolean> = _timerFinished
+
+    fun setTimerFinished(finished : Boolean) {
+        _timerFinished.value = finished
+    }
 
     fun setStartTime(startingTime: String){
         startTime = startingTime
@@ -71,11 +75,11 @@ class MainViewModel @ViewModelInject constructor(
         _currentTimeMilli.value = milliseconds
     }
 
-    fun setStartTimeHours(hours : Int) {
+    fun setStartTimeHours(hours : Long) {
         starTimeHours = hours
     }
 
-    fun  getStartTimeHours() : Int {
+    fun  getStartTimeHours() : Long {
         return starTimeHours
     }
 

@@ -107,12 +107,17 @@ class TimerFragment : Fragment() {
 
     private fun setupResetButton() {
         binding.btnReset.setOnClickListener {
-            viewModel.setCurrentTimeMilli(0L)
-            viewModel.setStartTimeHours(0)
-            viewModel.setIsRunning(false)
-            viewModel.setIsTimeAvailable(false)
-            binding.timerTextInputLayout.visibility = View.VISIBLE
+            resetTimer()
         }
+    }
+
+    private fun resetTimer() {
+        viewModel.setCurrentTimeMilli(0L)
+        viewModel.setStartTimeHours(0)
+        viewModel.setIsRunning(false)
+        viewModel.setIsTimeAvailable(false)
+        viewModel.setTimerFinished(false)
+        binding.timerTextInputLayout.visibility = View.VISIBLE
     }
 
     private fun setupStartButton() {
@@ -137,9 +142,10 @@ class TimerFragment : Fragment() {
                     }else{ //Clock is set for first time
 
                         viewModel.setCurrentTimeMilli(TimeUnit.HOURS.toMillis(etTimeInput.text.toString().toLong()))
+//                        viewModel.setCurrentTimeMilli(100000)
                         viewModel.setIsTimeAvailable(true)
                         viewModel.setIsRunning(true)
-                        viewModel.setStartTimeHours(etTimeInput.text.toString().toInt())
+                        viewModel.setStartTimeHours(etTimeInput.text.toString().toLong())
                         viewModel.setStartTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a")))
                         binding.timerTextInputLayout.visibility = View.GONE
 
@@ -155,7 +161,7 @@ class TimerFragment : Fragment() {
 
         //Adding a study session needs to insert into database
         binding.addStudySessionChip.setOnClickListener {
-            if (viewModel.getStartTimeHours() == 0) {
+            if (viewModel.getStartTimeHours() == 0L) {
                 Toast.makeText(
                     requireActivity(),
                     "Please enter a study duration",
@@ -163,6 +169,7 @@ class TimerFragment : Fragment() {
                 ).show()
             } else {
 
+                viewModel.setIsRunning(false)
                 val minutesStudied = minutesStudied()
                 val hoursStudied =  decimalFormat.format(minutesStudied / 60.0).toFloat() //minutesStudied / 60.0
 
@@ -179,6 +186,7 @@ class TimerFragment : Fragment() {
                     endTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a")),
                     offsetDateTime = OffsetDateTime.now()
                 )
+                resetTimer()
                 viewModel.upsertStudySession(studySession)
                 redirectToHomeFragment()
             }
@@ -193,9 +201,12 @@ class TimerFragment : Fragment() {
 
 
     private fun saveSessionDialog() {
+
+        Timber.i(decimalFormat.format(viewModel.getStartTimeHours()/60).toFloat().toString())
+
         studySession = StudySession(
             date = formattedDate.toString(),
-            hours = decimalFormat.format(minutesStudied()/60).toFloat(),
+            hours = decimalFormat.format(viewModel.getStartTimeHours()).toFloat(),
             minutes = minutesStudied(),
             weekDay = currentWeekDay,
             dayOfMonth = currentDayOfMonth,
@@ -212,6 +223,7 @@ class TimerFragment : Fragment() {
         dialogBuilder.setMessage("Do you want to save this study session?")
             .setCancelable(false)
             .setPositiveButton("Yes") { _, _ ->
+                resetTimer()
                 viewModel.upsertStudySession(studySession)
                 redirectToHomeFragment()
             }
