@@ -1,10 +1,29 @@
 package com.example.studytime_4.data.local.entities
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
-import androidx.room.TypeConverters
+import androidx.room.*
 import java.time.OffsetDateTime
+
+
+/*
+    Study session will be stored separately in order to get start and end times for each session
+ */
+//@Entity(tableName = "study_table_4")
+//data class StudySession(
+//    @PrimaryKey
+//    val id : Int = 0,
+//    val date : String,
+//    val hours: Float,
+//    val minutes: Long,
+//    val weekDay: Int,
+//    val dayOfMonth: Int,
+//    val month: Int,
+//    val year: Int,
+//    val epochDate : Long,
+//    val startTime : String,
+//    val endTime : String,
+//    val offsetDateTime: OffsetDateTime
+//) {
+//}
 
 @Entity(tableName = "study_table_4")
 data class StudySession(
@@ -20,7 +39,38 @@ data class StudySession(
     val startTime : String,
     val endTime : String,
     val offsetDateTime: OffsetDateTime
-) {
+)
+
+data class Durations(
+    @Embedded val studySession: StudySession,
+    @Relation(
+        parentColumn = "date",
+        entityColumn = "date"
+    )
+    val durationList: List<Duration>
+)
+
+@Entity(
+    tableName = "duration_table",
+    foreignKeys = arrayOf(
+        ForeignKey(
+            entity = StudySession::class,
+            parentColumns = arrayOf("date"),
+            childColumns = arrayOf("date")
+        )
+    )
+)
+data class Duration(
+    @PrimaryKey(autoGenerate = true)
+    val id : Int = 0,
+    val date: String,
+    val startTime : String,
+    val endTime : String,
+    val hours: Float,
+    val minutes: Long,
+    val epochDate: Long,
+){
+
 }
 
 

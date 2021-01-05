@@ -5,6 +5,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.example.studytime_4.data.MonthData
 import com.example.studytime_4.data.asParcelable
+import com.example.studytime_4.data.local.entities.Durations
 import com.example.studytime_4.data.local.entities.StudySession
 import com.example.studytime_4.data.repo.Repository
 import com.example.studytime_4.other.MONTH_SELECTED
@@ -73,6 +74,11 @@ class MonthDetailViewModel @ViewModelInject constructor(
     private val _studySession = MutableLiveData<com.example.studytime_4.data.StudySession>()
 
     val studySession : LiveData<com.example.studytime_4.data.StudySession> = _studySession
+
+    val _durationList = _studySession.switchMap {
+        repository.studyDurations(it.date)
+    }
+
 
 
     fun setStudySession(studySession: com.example.studytime_4.data.StudySession){

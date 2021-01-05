@@ -3,6 +3,7 @@ package com.example.studytime_4.other
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.example.studytime_4.data.StudySession
+import com.example.studytime_4.data.local.entities.Duration
 
 @BindingAdapter("setYear")
 fun TextView.setYear(studySession: StudySession?){
@@ -22,7 +23,7 @@ fun TextView.setHours(studySession: StudySession?){
                 "${it.hours} hour"
             }
             else -> {
-                "${it.hours} minutes"
+                "${it.minutes} minutes"
             }
         }
     }
@@ -32,6 +33,22 @@ fun TextView.setHours(studySession: StudySession?){
 fun TextView.setDayOfMonth(studySession: StudySession?){
     studySession?.let {
         text = "${it.dayOfMonth},"
+    }
+}
+@BindingAdapter("setTime")
+fun TextView.setTime(duration: Duration){
+    duration?.let {
+        text = when{
+            it.hours > 1F -> {
+                "${it.hours} hours"
+            }
+            it.hours == 1F -> {
+                "${it.hours} hour"
+            }
+            else -> {
+                "${it.minutes} minutes"
+            }
+        }
     }
 }
 

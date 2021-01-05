@@ -1,8 +1,7 @@
 package com.example.studytime_4.data.repo
 
-import com.example.studytime_4.data.local.entities.MonthlyGoal
-import com.example.studytime_4.data.local.entities.StudySession
-import com.example.studytime_4.data.local.entities.WeeklyGoal
+import androidx.lifecycle.LiveData
+import com.example.studytime_4.data.local.entities.*
 import kotlinx.coroutines.flow.Flow
 
 interface Repository {
@@ -46,4 +45,13 @@ interface Repository {
     //SAVE STUDY SESSION
 
     suspend fun upsertStudySession(studySession: StudySession) : Long
+
+
+//    suspend fun insertStudySession(studySession: StudySession)
+
+    suspend fun insertStudyDuration(duration: Duration)
+
+
+    fun studyDurations(date : String) : LiveData<Durations>
+
 }

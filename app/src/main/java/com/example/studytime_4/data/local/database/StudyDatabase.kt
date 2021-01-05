@@ -4,12 +4,9 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
-import com.example.studytime_4.data.local.entities.Converters
-import com.example.studytime_4.data.local.entities.MonthlyGoal
-import com.example.studytime_4.data.local.entities.StudySession
-import com.example.studytime_4.data.local.entities.WeeklyGoal
+import com.example.studytime_4.data.local.entities.*
 
-@Database(entities = [StudySession::class, WeeklyGoal::class, MonthlyGoal::class], version = 24)
+@Database(entities = [StudySession::class, WeeklyGoal::class, MonthlyGoal::class, Duration::class], version = 27)
 @TypeConverters(Converters::class)
 abstract class StudyDatabase : RoomDatabase(){
 

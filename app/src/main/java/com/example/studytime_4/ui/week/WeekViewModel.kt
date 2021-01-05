@@ -37,6 +37,7 @@ class WeekViewModel @ViewModelInject constructor(
     private val lastSevenStudySessions = repository.weeklyStudySessions() //weekDayMap[currentWeekDay]!! * secondsInDay
 
 
+
     private val lastSevenSessionsHours =
         repository.weeklyHours(currentMonth, currentDayOfMonth)
             .map { setTotalWeeklyHours(it) }
@@ -63,9 +64,6 @@ class WeekViewModel @ViewModelInject constructor(
 
 
     private fun setWeekBarData(studySessionList: List<StudySession>) : WeekData {
-
-        Timber.i(studySessionList.toString())
-
         val weekBarData = Array<BarEntry>(7){it ->
             BarEntry(it * 1.toFloat(), null)
         }

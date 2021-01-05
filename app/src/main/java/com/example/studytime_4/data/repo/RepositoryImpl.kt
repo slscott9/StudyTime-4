@@ -1,9 +1,8 @@
 package com.example.studytime_4.data.repo
 
+import androidx.lifecycle.LiveData
 import com.example.studytime_4.data.local.database.StudyDao
-import com.example.studytime_4.data.local.entities.MonthlyGoal
-import com.example.studytime_4.data.local.entities.StudySession
-import com.example.studytime_4.data.local.entities.WeeklyGoal
+import com.example.studytime_4.data.local.entities.*
 import com.example.studytime_4.di.DispatcherModule
 import com.example.studytime_4.dispatcher.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
@@ -106,5 +105,16 @@ class RepositoryImpl @Inject constructor (
     override suspend fun upsertStudySession(studySession: StudySession) =
         dao.upsertStudySession(studySession)
 
+//    override suspend fun insertStudySession(studySession: StudySession) {
+//        dao.insertStudySession(studySession)
+//    }
 
+
+    override suspend fun insertStudyDuration(duration: Duration) {
+        dao.insertStudyDuration(duration)
+    }
+
+    override fun studyDurations(date: String): LiveData<Durations> {
+        return dao.studyDurations(date)
+    }
 }

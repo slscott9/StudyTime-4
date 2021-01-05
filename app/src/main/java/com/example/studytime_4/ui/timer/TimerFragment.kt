@@ -24,6 +24,7 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.example.studytime_4.MainViewModel
 import com.example.studytime_4.R
+import com.example.studytime_4.data.local.entities.Duration
 import com.example.studytime_4.data.local.entities.StudySession
 import com.example.studytime_4.databinding.FragmentTimerBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -88,11 +89,9 @@ class TimerFragment : Fragment() {
 
         viewModel.isRunning.observe(viewLifecycleOwner){
             if(it){
-                Timber.i("is running is true start timer")
                 binding.startButton.text = getString(R.string.start_timer_button_pause)
                 viewModel.startTimer(viewModel.getCurrentTimeMilli())
             }else{
-                Timber.i("is running is false cancel timer")
                 binding.startButton.text = getString(R.string.start_timer_button)
                 viewModel.cancelTimer()
             }
@@ -171,7 +170,9 @@ class TimerFragment : Fragment() {
 
                 viewModel.setIsRunning(false)
                 val minutesStudied = minutesStudied()
+                Timber.i("minutes studied is ${minutesStudied.toString()}")
                 val hoursStudied =  decimalFormat.format(minutesStudied / 60.0).toFloat() //minutesStudied / 60.0
+                Timber.i("hours studied is $hoursStudied")
 
                 studySession = StudySession(
                     hours = hoursStudied,
@@ -186,16 +187,29 @@ class TimerFragment : Fragment() {
                     endTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a")),
                     offsetDateTime = OffsetDateTime.now()
                 )
+
+                val duration = Duration(
+                    date = formattedDate.toString(),
+                    startTime = viewModel.getStartTime(),
+                    endTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a")),
+                    epochDate = OffsetDateTime.now().toEpochSecond(),
+                    hours = hoursStudied,
+                    minutes = if(hoursStudied >= 1) hoursStudied.toLong() else minutesStudied
+                )
+
                 resetTimer()
                 viewModel.upsertStudySession(studySession)
+                viewModel.insertStudyDuration(duration)
                 redirectToHomeFragment()
             }
         }
     }
 
     private fun minutesStudied() : Long {
+        Timber.i("from minutes studied function minutes studied are ${ TimeUnit.HOURS.toMillis(viewModel.getStartTimeHours()) - viewModel.getCurrentTimeMilli()}")
+        Timber.i("view models currentTimeMilli is ${viewModel.getCurrentTimeMilli()}")
         return TimeUnit.MILLISECONDS.toMinutes(
-            TimeUnit.HOURS.toMillis(viewModel.getStartTimeHours().toLong()) - viewModel.getCurrentTimeMilli()
+            TimeUnit.HOURS.toMillis(viewModel.getStartTimeHours()) - viewModel.getCurrentTimeMilli()
         )
     }
 
@@ -219,12 +233,22 @@ class TimerFragment : Fragment() {
 
         )
 
+        val duration = Duration(
+            date = formattedDate.toString(),
+            startTime = viewModel.getStartTime(),
+            endTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a")),
+            epochDate = OffsetDateTime.now().toEpochSecond(),
+            hours = decimalFormat.format(viewModel.getStartTimeHours()).toFloat(),
+            minutes = decimalFormat.format(viewModel.getStartTimeHours()).toLong()
+        )
+
         val dialogBuilder = AlertDialog.Builder(requireActivity())
         dialogBuilder.setMessage("Do you want to save this study session?")
             .setCancelable(false)
             .setPositiveButton("Yes") { _, _ ->
                 resetTimer()
                 viewModel.upsertStudySession(studySession)
+                viewModel.insertStudyDuration(duration)
                 redirectToHomeFragment()
             }
             .setNegativeButton("No") { dialogInterface, _ ->

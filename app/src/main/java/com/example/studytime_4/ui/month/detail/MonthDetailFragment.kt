@@ -20,6 +20,7 @@ import com.example.studytime_4.data.MonthData
 import com.example.studytime_4.databinding.FragmentMonthDetailBinding
 import com.example.studytime_4.databinding.FragmentSessionDetailBinding
 import com.example.studytime_4.ui.adapters.CalendarAdapter
+import com.example.studytime_4.ui.adapters.DurationListAdapter
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
@@ -40,6 +41,7 @@ class MonthDetailFragment : Fragment() {
     private val calendar = Calendar.getInstance()
     private var firstDayOfMonth = 0
     private lateinit var calendarAdapter: CalendarAdapter
+    private lateinit var durationAdapter : DurationListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,8 +73,19 @@ class MonthDetailFragment : Fragment() {
 
 
         calendarAdapter = CalendarAdapter(firstDayOfMonth, daysInMonth, CalendarAdapter.CalendarListener {studySession, textView ->
-            viewModel.setStudySession(studySession!!)
             expandSessionDetail(textView)
+            viewModel.setStudySession(studySession!!)
+
+            durationAdapter = DurationListAdapter()
+
+            viewModel._durationList.observe(viewLifecycleOwner){
+                it?.let{
+                    durationAdapter.submitList(it.durationList)
+                }
+            }
+
+            binding.rvDurations.adapter = durationAdapter
+
         })
 
         setupObservers(firstDayOfMonth, daysInMonth)

@@ -2,9 +2,7 @@ package com.example.studytime_4.data.local.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.studytime_4.data.local.entities.MonthlyGoal
-import com.example.studytime_4.data.local.entities.StudySession
-import com.example.studytime_4.data.local.entities.WeeklyGoal
+import com.example.studytime_4.data.local.entities.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -116,4 +114,17 @@ interface StudyDao {
 
     @Query("update study_table_4 set hours = hours + :a  where dayOfMonth= :currentDayOfMonth and month= :currentMonth")
     suspend fun updateStudySession(currentMonth: Int, currentDayOfMonth: Int, a: Float )
+
+//
+//    @Insert
+//    suspend fun insertStudySession(studySession: StudySession)
+
+    //INSERT AND GET STUDY TIMES
+    @Insert
+    suspend fun insertStudyDuration(duration: Duration)
+
+
+    @Transaction
+    @Query("select * from study_table_4 where date = :date order by epochDate asc ")
+    fun studyDurations(date : String) : LiveData<Durations>
 }

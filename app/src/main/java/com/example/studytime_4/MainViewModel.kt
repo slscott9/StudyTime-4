@@ -3,6 +3,7 @@ package com.example.studytime_4
 import android.os.CountDownTimer
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.example.studytime_4.data.local.entities.Duration
 import com.example.studytime_4.data.local.entities.StudySession
 import com.example.studytime_4.data.repo.Repository
 import kotlinx.coroutines.launch
@@ -129,6 +130,12 @@ class MainViewModel @ViewModelInject constructor(
         Dont need to observer insertStatus since this is activity's view model.
         once insertStatus is set, when navigating backto timer fragment the live data triggers again and redirects to home fragment.
      */
+
+    fun insertStudyDuration(duration: Duration){
+        viewModelScope.launch {
+            repository.insertStudyDuration(duration)
+        }
+    }
 
 
     fun upsertStudySession(newStudySession: StudySession){
