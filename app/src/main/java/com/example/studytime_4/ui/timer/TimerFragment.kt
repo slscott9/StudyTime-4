@@ -59,7 +59,7 @@ class TimerFragment : Fragment() {
     private val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
 
-    private val decimalFormat = DecimalFormat("#,00")
+    private val decimalFormat = DecimalFormat("#.00")
 
 
     override fun onCreateView(
@@ -75,6 +75,77 @@ class TimerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        //insert this study session and the one after it
+        viewModel.upsertStudySession(
+                    StudySession(
+            date = "2021-01-11",
+            minutes = 50F,
+            weekDay = 1,
+            dayOfMonth = 11,
+            month = 1,
+            year = 2021,
+            epochDate =  OffsetDateTime.now().toEpochSecond(),
+            startTime = "2:34 pm",
+            endTime = "3:26 pm",
+            offsetDateTime = OffsetDateTime.now()
+        )
+        )
+
+//        StudySession(
+//            date = "2021-01-08",
+//            minutes = 120F,
+//            weekDay = 5,
+//            dayOfMonth = 8,
+//            month = 1,
+//            year = 2021,
+//            epochDate =  OffsetDateTime.now().toEpochSecond(),
+//            startTime = "2:34 pm",
+//            endTime = "3:26 pm",
+//            offsetDateTime = OffsetDateTime.now()
+//        )
+
+
+
+//        StudySession(
+//            date = "2021-01-11",
+//            minutes = 50F,
+//            weekDay = 1,
+//            dayOfMonth = 11,
+//            month = 1,
+//            year = 2021,
+//            epochDate =  OffsetDateTime.now().toEpochSecond(),
+//            startTime = "2:34 pm",
+//            endTime = "3:26 pm",
+//            offsetDateTime = OffsetDateTime.now()
+//        )
+//
+//        StudySession(
+//            date = "2021-01-15",
+//            minutes = 180F,
+//            weekDay = 5,
+//            dayOfMonth = 15,
+//            month = 1,
+//            year = 2021,
+//            epochDate =  OffsetDateTime.now().toEpochSecond(),
+//            startTime = "2:34 pm",
+//            endTime = "3:26 pm",
+//            offsetDateTime = OffsetDateTime.now()
+//        )
+//
+//        StudySession(
+//            date = "2021-01-27",
+//            minutes = 90F,
+//            weekDay = 3,
+//            dayOfMonth = 27,
+//            month = 1,
+//            year = 2021,
+//            epochDate =  OffsetDateTime.now().toEpochSecond(),
+//            startTime = "2:34 pm",
+//            endTime = "3:26 pm",
+//            offsetDateTime = OffsetDateTime.now()
+//        )
 
         if(viewModel.isTimeAvailable()){
             binding.timerTextInputLayout.visibility = View.GONE
@@ -93,6 +164,7 @@ class TimerFragment : Fragment() {
                 viewModel.startTimer(viewModel.getCurrentTimeMilli())
             }else{
                 binding.startButton.text = getString(R.string.start_timer_button)
+                viewModel.setEndTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a")))
                 viewModel.cancelTimer()
             }
         }
@@ -175,8 +247,7 @@ class TimerFragment : Fragment() {
                 Timber.i("hours studied is $hoursStudied")
 
                 studySession = StudySession(
-                    hours = hoursStudied,
-                    minutes = minutesStudied/60,
+                    minutes = decimalFormat.format(minutesStudied).toFloat(),
                     date = formattedDate, //formattedDate
                     weekDay = weekDayMap[currentWeekDay]!!, //current weekday
                     month = currentMonth,
@@ -184,17 +255,16 @@ class TimerFragment : Fragment() {
                     year = currentYear,
                     epochDate = OffsetDateTime.now().toEpochSecond(),
                     startTime = viewModel.getStartTime(),
-                    endTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a")),
+                    endTime = viewModel.getEndTime(),
                     offsetDateTime = OffsetDateTime.now()
                 )
 
                 val duration = Duration(
                     date = formattedDate.toString(),
                     startTime = viewModel.getStartTime(),
-                    endTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a")),
+                    endTime = viewModel.getEndTime(),
                     epochDate = OffsetDateTime.now().toEpochSecond(),
-                    hours = hoursStudied,
-                    minutes = if(hoursStudied >= 1) hoursStudied.toLong() else minutesStudied
+                    minutes = decimalFormat.format(minutesStudied).toFloat(),
                 )
 
                 resetTimer()
@@ -205,12 +275,14 @@ class TimerFragment : Fragment() {
         }
     }
 
-    private fun minutesStudied() : Long {
+    private fun minutesStudied() : Float {
         Timber.i("from minutes studied function minutes studied are ${ TimeUnit.HOURS.toMillis(viewModel.getStartTimeHours()) - viewModel.getCurrentTimeMilli()}")
         Timber.i("view models currentTimeMilli is ${viewModel.getCurrentTimeMilli()}")
+        Timber.i("helllloooooooooo")
+
         return TimeUnit.MILLISECONDS.toMinutes(
             TimeUnit.HOURS.toMillis(viewModel.getStartTimeHours()) - viewModel.getCurrentTimeMilli()
-        )
+        ).toFloat()
     }
 
 
@@ -220,8 +292,8 @@ class TimerFragment : Fragment() {
 
         studySession = StudySession(
             date = formattedDate.toString(),
-            hours = decimalFormat.format(viewModel.getStartTimeHours()).toFloat(),
-            minutes = minutesStudied(),
+//            hours = decimalFormat.format(viewModel.getStartTimeHours()).toFloat(),
+            minutes = decimalFormat.format(minutesStudied()).toFloat(),
             weekDay = currentWeekDay,
             dayOfMonth = currentDayOfMonth,
             month = currentMonth,
@@ -238,8 +310,8 @@ class TimerFragment : Fragment() {
             startTime = viewModel.getStartTime(),
             endTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a")),
             epochDate = OffsetDateTime.now().toEpochSecond(),
-            hours = decimalFormat.format(viewModel.getStartTimeHours()).toFloat(),
-            minutes = decimalFormat.format(viewModel.getStartTimeHours()).toLong()
+//            hours = decimalFormat.format(viewModel.getStartTimeHours()).toFloat(),
+            minutes = decimalFormat.format(minutesStudied()).toFloat(),
         )
 
         val dialogBuilder = AlertDialog.Builder(requireActivity())

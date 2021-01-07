@@ -144,4 +144,15 @@ class MainViewModel @ViewModelInject constructor(
 
         }
     }
+
+    fun testSessions() {
+        viewModelScope.launch {
+
+        }
+    }
+
+
+
+
+
 }

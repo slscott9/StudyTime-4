@@ -29,8 +29,7 @@ import java.time.OffsetDateTime
 data class StudySession(
     @PrimaryKey
     val date : String,
-    val hours: Float,
-    val minutes: Long,
+    val minutes: Float,
     val weekDay: Int,
     val dayOfMonth: Int,
     val month: Int,
@@ -66,8 +65,7 @@ data class Duration(
     val date: String,
     val startTime : String,
     val endTime : String,
-    val hours: Float,
-    val minutes: Long,
+    val minutes: Float,
     val epochDate: Long,
 ){
 

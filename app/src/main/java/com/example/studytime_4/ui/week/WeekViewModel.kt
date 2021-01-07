@@ -31,15 +31,10 @@ class WeekViewModel @ViewModelInject constructor(
      */
 
     private val weekDays = listOf<String>("S","M","T","W","T","F","S")
-    private val secondsInDay : Long = 86400
 
+    private val sessionsForWeek = repository.weeklyStudySessions() //weekDayMap[currentWeekDay]!! * secondsInDay
 
-    private val lastSevenStudySessions = repository.weeklyStudySessions() //weekDayMap[currentWeekDay]!! * secondsInDay
-
-
-
-    private val lastSevenSessionsHours =
-        repository.weeklyHours(currentMonth, currentDayOfMonth)
+    private val lastSevenSessionsHours = repository.weeklyHours(currentMonth, currentDayOfMonth)
             .map { setTotalWeeklyHours(it) }
 
     val goal = repository.weeklyGoal(
@@ -56,11 +51,10 @@ class WeekViewModel @ViewModelInject constructor(
                 )
             }.asLiveData(viewModelScope.coroutineContext)
 
-    private val _weekBarData = lastSevenStudySessions
+    val weekBarData = sessionsForWeek
         .map {setWeekBarData(it) }
         .asLiveData(viewModelScope.coroutineContext)
 
-    val weekBarData = _weekBarData
 
 
     private fun setWeekBarData(studySessionList: List<StudySession>) : WeekData {
@@ -69,15 +63,15 @@ class WeekViewModel @ViewModelInject constructor(
         }
 
         studySessionList.forEach {
-            weekBarData[it.weekDay].y = it.hours //WEEK DAY WAS CHANGED FROM -1 WEEKDAYS ARE ZERO BASED
+            weekBarData[it.weekDay].y = formatHours(it.minutes)//WEEK DAY WAS CHANGED FROM -1 WEEKDAYS ARE ZERO BASED
         }
 
-        val totalHours = studySessionList.map { it.hours }.sum()
+        val totalHours = studySessionList.map { it.minutes }.sum()
 
         return WeekData(
             weekBarData = BarDataSet(weekBarData.asList(), "Hours"),
             labels = weekDays,
-            totalHours
+            formatHours(totalHours)
         )
     }
 
@@ -97,23 +91,27 @@ class WeekViewModel @ViewModelInject constructor(
     }
 
 
+    private fun formatHours(minutes : Float) : Float {
+        return when {
+            minutes >= 60 -> {
+               minutes / 60
+            }
+            else -> {
+                minutes / 100
+            }
+        }
+    }
+
 
     private fun setTotalWeeklyHours(studySessions: List<Float>): BarDataSet {
 
         //get totalHours for last seven study sessions
-        val totalHours = studySessions.map {
-            it
-        }.sum()
-
-        //Only need one entry for bar chart which is totals hours
-        //x and y values were mixed up totalsHours needs to be y value
+        val totalHours = studySessions.map { it }.sum()
 
         return BarDataSet(
-            arrayListOf(BarEntry( 0F, totalHours)),
+            arrayListOf(BarEntry( 0F, formatHours(totalHours))),
             "Total weekly hours"
         )
-
-
     }
 
 }

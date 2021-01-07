@@ -28,7 +28,7 @@ fun List<StudySession>.asParcelable() : List<com.example.studytime_4.data.StudyS
      return map {
             com.example.studytime_4.data.StudySession(
                 date = it.date,
-                hours = it.hours,
+//                hours = it.hours,
                 minutes = it.minutes,
                 weekDay = it.weekDay,
                 dayOfMonth = it.dayOfMonth,
@@ -43,8 +43,8 @@ fun List<StudySession>.asParcelable() : List<com.example.studytime_4.data.StudyS
 @Parcelize
 data class StudySession(
     val date : String,
-    val hours: Float,
-    val minutes: Long,
+//    val hours: Float,
+    val minutes: Float,
     val weekDay: Int,
     val dayOfMonth: Int,
     val month: Int,

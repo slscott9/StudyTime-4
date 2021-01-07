@@ -64,7 +64,7 @@ interface StudyDao {
 
 
     //GET WEEK'S HOURS AND STUDY SESSIONS
-    @Query("select hours from study_table_4 where month = :currentMonth and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth order by dayOfMonth asc")
+    @Query("select minutes from study_table_4 where month = :currentMonth and dayOfMonth between :currentDayOfMonth - 6 and :currentDayOfMonth order by dayOfMonth asc")
     fun weeklyHours(currentMonth: Int, currentDayOfMonth: Int): Flow<List<Float>>
 
     @Query("select * from study_table_4 where date(offsetDateTime) >= date('now', 'weekday 0', '-7 day') and date(offsetDateTime) <= date('now') order by dayOfMonth asc ")
@@ -73,7 +73,7 @@ interface StudyDao {
 
     //GET MONTH'S HOURS AND STUDY SESSIONS
 
-    @Query("select hours from study_table_4 where month= :monthSelected")
+    @Query("select minutes from study_table_4 where month= :monthSelected")
     fun monthlyHours(monthSelected: Int): Flow<List<Float>>
 
     @Query("select * from study_table_4 where(month= :monthSelected and year = :yearSelected) order by dayOfMonth asc")
@@ -103,7 +103,7 @@ interface StudyDao {
         val inserted = insertStudySession(study)
 
         if(inserted == -1L){
-            updateStudySession(study.month, study.dayOfMonth, study.hours)
+            updateStudySession(study.month, study.dayOfMonth, study.minutes)
         }
 
         return inserted
@@ -112,8 +112,8 @@ interface StudyDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE) //tested
     suspend fun insertStudySession(study: StudySession): Long
 
-    @Query("update study_table_4 set hours = hours + :a  where dayOfMonth= :currentDayOfMonth and month= :currentMonth")
-    suspend fun updateStudySession(currentMonth: Int, currentDayOfMonth: Int, a: Float )
+    @Query("update study_table_4 set minutes = minutes + :minutes where dayOfMonth= :currentDayOfMonth and month= :currentMonth")
+    suspend fun updateStudySession(currentMonth: Int, currentDayOfMonth: Int, minutes : Float)
 
 //
 //    @Insert

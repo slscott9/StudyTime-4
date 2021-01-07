@@ -42,6 +42,8 @@ class MonthDetailFragment : Fragment() {
     private var firstDayOfMonth = 0
     private lateinit var calendarAdapter: CalendarAdapter
     private lateinit var durationAdapter : DurationListAdapter
+    private val decimalFormat = DecimalFormat("#.00")
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,7 +80,7 @@ class MonthDetailFragment : Fragment() {
 
             durationAdapter = DurationListAdapter()
 
-            viewModel._durationList.observe(viewLifecycleOwner){
+            viewModel.durationList.observe(viewLifecycleOwner){
                 it?.let{
                     durationAdapter.submitList(it.durationList)
                 }
@@ -88,7 +90,7 @@ class MonthDetailFragment : Fragment() {
 
         })
 
-        setupObservers(firstDayOfMonth, daysInMonth)
+        setupObservers()
 
         binding.rvCalendar.adapter = calendarAdapter
 
@@ -139,14 +141,14 @@ class MonthDetailFragment : Fragment() {
         }
     }
 
-    private fun setupObservers(firstDayOfMonth: Int, daysInMonth: Int) {
+    private fun setupObservers() {
         viewModel.monthBarData.observe(viewLifecycleOwner, Observer {
             it?.let {
                 setBarChart(it)
             }
         })
 
-        viewModel.monthStudySessions.observe(viewLifecycleOwner){
+        viewModel.sessionsForMonth.observe(viewLifecycleOwner){
             it?.let {
                 calendarAdapter.submitList(it.asList())
             }
@@ -156,7 +158,7 @@ class MonthDetailFragment : Fragment() {
     private fun setBarChart(monthData: MonthData) {
 
         val description = Description()
-        description.text = "Total monthly hours ${monthData.totalHours}"
+        description.text = "Total monthly hours ${decimalFormat.format(monthData.totalHours)}"
 
         monthData.monthBarData.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
 

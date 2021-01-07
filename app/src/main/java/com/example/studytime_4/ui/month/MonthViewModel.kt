@@ -54,49 +54,46 @@ class MonthViewModel @ViewModelInject constructor(
 
     val goal = repository.monthlyGoal(currentYear, currentMonth)
 
-    val goalData = goal.combine(monthSessionHours){goal  , hours ->
+    val goalData = goal.combine(monthSessionHours) { goal, hours ->
         GoalData(
             limit = goal?.hours ?: 0,
             totalHours = hours
         )
     }.asLiveData(viewModelScope.coroutineContext)
 
-    private val _monthBarData = monthsStudySession.map {
+    val monthBarData = monthsStudySession.map {
         setMonthBarData(it)
     }.asLiveData(viewModelScope.coroutineContext)
 
-    val monthBarData = _monthBarData
 
     private fun setMonthBarData(monthStudySessionList: List<StudySession>): MonthData {
 
         val monthData = monthStudySessionList.mapIndexed { index, studySession ->
-            BarEntry(index.toFloat(), studySession.hours)
+            BarEntry(index.toFloat(), formatHours(studySession.minutes))
         }
 
         val labels = monthStudySessionList.map { studySession ->
             studySession.date
         }
 
-        val totalHours = monthStudySessionList.map { it.hours }.sum()
+        val totalHours = monthStudySessionList.map { it.minutes }.sum()
 
         return MonthData(
-            monthBarData =
-                BarDataSet(
-                    monthData,
-                    months[currentMonth - 1]
-
+            monthBarData = BarDataSet(
+                monthData,
+                months[currentMonth - 1]
             ),
             labels = labels,
-            totalHours = totalHours
+            totalHours = formatHours(totalHours)
         )
     }
 
-    fun addGoal(hours : Int){
+    fun addGoal(hours: Int) {
         viewModelScope.launch {
             val id = repository.saveMonthlyGoal(
                 MonthlyGoal(
                     date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                    dayOfMonth =  LocalDateTime.now().dayOfMonth,
+                    dayOfMonth = LocalDateTime.now().dayOfMonth,
                     hours = hours,
                     month = LocalDateTime.now().monthValue,
                     weekDay = LocalDateTime.now().dayOfWeek.value,
@@ -106,15 +103,26 @@ class MonthViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun setTotalMonthlyHours(studySessions : List<Float>) : BarDataSet {
+    private fun setTotalMonthlyHours(studySessions: List<Float>): BarDataSet {
         val totalHours = studySessions.map {
             it
         }.sum()
 
         return BarDataSet(
-            arrayListOf(BarEntry(0F, totalHours)),
+            arrayListOf(BarEntry(0F, formatHours(totalHours))),
             "Total monthly hours"
         )
+    }
+
+    private fun formatHours(minutes: Float): Float {
+        return when {
+            minutes >= 60 -> {
+                minutes / 60
+            }
+            else -> {
+                minutes / 100
+            }
+        }
     }
 
 

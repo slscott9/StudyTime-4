@@ -41,26 +41,26 @@ class TestFragment : Fragment() {
             }
         }
 
-        binding.btnSave.setOnClickListener {
+//        binding.btnSave.setOnClickListener {
+//
+//            val studySession = StudySession(
+//                date = etDate.text.toString(),
+////                hours = etHours.text.toString().toFloat(),
+//                minutes = etMinutes.text.toString().toLong(),
+//                weekDay = etWeekDay.text.toString().toInt(),
+//                dayOfMonth = etDayOfMonth.text.toString().toInt(),
+//                month = etMonth.text.toString().toInt(),
+//                year = etYear.text.toString().toInt(),
+//                epochDate = etEpochDate.text.toString().toLong(),
+//                startTime = etStartTime.text.toString(),
+//                endTime = etEndTime.text.toString(),
+//                offsetDateTime = OffsetDateTime.now()
+//            )
 
-            val studySession = StudySession(
-                date = etDate.text.toString(),
-                hours = etHours.text.toString().toFloat(),
-                minutes = etMinutes.text.toString().toLong(),
-                weekDay = etWeekDay.text.toString().toInt(),
-                dayOfMonth = etDayOfMonth.text.toString().toInt(),
-                month = etMonth.text.toString().toInt(),
-                year = etYear.text.toString().toInt(),
-                epochDate = etEpochDate.text.toString().toLong(),
-                startTime = etStartTime.text.toString(),
-                endTime = etEndTime.text.toString(),
-                offsetDateTime = OffsetDateTime.now()
-            )
-
-            viewModel.insertStudySession(studySession)
+//            viewModel.insertStudySession(studySession)
 
 
-        }
+
     }
 
 

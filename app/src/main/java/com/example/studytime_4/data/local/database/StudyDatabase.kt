@@ -6,7 +6,7 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.example.studytime_4.data.local.entities.*
 
-@Database(entities = [StudySession::class, WeeklyGoal::class, MonthlyGoal::class, Duration::class], version = 27)
+@Database(entities = [StudySession::class, WeeklyGoal::class, MonthlyGoal::class, Duration::class], version = 34)
 @TypeConverters(Converters::class)
 abstract class StudyDatabase : RoomDatabase(){
 

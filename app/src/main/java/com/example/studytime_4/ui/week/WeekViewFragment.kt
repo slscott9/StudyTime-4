@@ -1,10 +1,12 @@
 package com.example.studytime_4.ui.week
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -67,9 +69,7 @@ class WeekViewFragment : Fragment() {
             expandAddGoalCV()
         }
 
-        binding.chipTestFragment.setOnClickListener {
-            parentFragment?.findNavController()?.navigate(HomeFragmentDirections.actionHomeFragmentToTestFragment())
-        }
+
     }
 
     private fun setupGoalBarChart(goalData: GoalData) {
@@ -117,6 +117,7 @@ class WeekViewFragment : Fragment() {
 
             binding.scrimView.setOnClickListener {
                 collapseAddGoalCV()
+                hideSoftKeyboard(it)
             }
 
             val transformation = MaterialContainerTransform().apply {
@@ -145,13 +146,14 @@ class WeekViewFragment : Fragment() {
             endView = binding.addGoalChip
             scrimColor = Color.TRANSPARENT
             startElevation = 3F
-
             addTarget(binding.addGoalChip)
         }
 
         TransitionManager.beginDelayedTransition(binding.clBarCharts, transformation)
         binding.addGoalChip.visibility = View.VISIBLE
         binding.mcvAddGoal.visibility = View.INVISIBLE
+
+
     }
 
     private fun setupSaveGoalButton(){
@@ -160,6 +162,7 @@ class WeekViewFragment : Fragment() {
                 Toast.makeText(requireActivity(), "Please enter a goal", Toast.LENGTH_SHORT).show()
             }else{
                 viewModel.addGoal(etWeeklyGoal.text.toString().toInt())
+                hideSoftKeyboard(it)
                 collapseAddGoalCV()
             }
         }
@@ -206,6 +209,12 @@ class WeekViewFragment : Fragment() {
         }
 
 
+    }
+
+    private fun hideSoftKeyboard(view: View) {
+        val imm =
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 
