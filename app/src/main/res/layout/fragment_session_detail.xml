@@ -8,7 +8,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.studytime_4.ui.month.detail.MonthDetailViewModel" />
+            type="com.sscott.studytime_4.ui.month.detail.MonthDetailViewModel" />
     </data>
 
         <com.google.android.material.card.MaterialCardView

@@ -8,11 +8,11 @@
 
         <variable
             name="viewModel"
-            type="com.example.studytime_4.ui.month.detail.MonthDetailViewModel" />
+            type="com.sscott.studytime_4.ui.month.detail.MonthDetailViewModel" />
 
         <variable
             name="studySession"
-            type="com.example.studytime_4.data.StudySession" />
+            type="com.sscott.studytime_4.data.StudySession" />
     </data>
 
 

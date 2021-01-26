@@ -6,7 +6,7 @@
     <data>
         <variable
             name="duration"
-            type="com.example.studytime_4.data.local.entities.Duration" />
+            type="com.sscott.studytime_4.data.local.entities.Duration" />
     </data>
 
         <androidx.constraintlayout.widget.ConstraintLayout

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.studytime_4.MainViewModel" />
+            type="com.sscott.studytime_4.MainViewModel" />
     </data>
 
     <androidx.core.widget.NestedScrollView

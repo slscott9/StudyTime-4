@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.studytime_4.ui.home.HomeFragment"
+        android:name="com.sscott.studytime_4.ui.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -38,7 +38,7 @@
     </fragment>
     <fragment
         android:id="@+id/sessionListFragment"
-        android:name="com.example.studytime_4.ui.sessions.list.SessionListFragment"
+        android:name="com.sscott.studytime_4.ui.sessions.list.SessionListFragment"
         android:label="Years"
         tools:layout="@layout/fragment_session_list">
         <action
@@ -56,7 +56,7 @@
     </fragment>
     <fragment
         android:id="@+id/timerFragment"
-        android:name="com.example.studytime_4.ui.timer.TimerFragment"
+        android:name="com.sscott.studytime_4.ui.timer.TimerFragment"
         android:label="fragment_timer"
         tools:layout="@layout/fragment_timer" >
         <action
@@ -72,7 +72,7 @@
     </fragment>
     <fragment
         android:id="@+id/monthDetailFragment"
-        android:name="com.example.studytime_4.ui.month.detail.MonthDetailFragment"
+        android:name="com.sscott.studytime_4.ui.month.detail.MonthDetailFragment"
         android:label="Month">
         <argument
             android:name="monthSelected"
@@ -94,7 +94,7 @@
     </fragment>
     <dialog
         android:id="@+id/addGoalFragment"
-        android:name="com.example.studytime_4.ui.goal.AddGoalFragment"
+        android:name="com.sscott.studytime_4.ui.goal.AddGoalFragment"
         android:label="fragment_add_goal"
         tools:layout="@layout/fragment_add_goal" >
         <argument
@@ -103,16 +103,16 @@
     </dialog>
     <fragment
         android:id="@+id/sessionDetailFragment"
-        android:name="com.example.studytime_4.ui.sessions.sessionsdetail.SessionDetailFragment"
+        android:name="com.sscott.studytime_4.ui.sessions.sessionsdetail.SessionDetailFragment"
         android:label="fragment_session_detail"
         tools:layout="@layout/fragment_session_detail" >
         <argument
             android:name="studySession"
-            app:argType="com.example.studytime_4.data.StudySession" />
+            app:argType="com.sscott.studytime_4.data.StudySession" />
     </fragment>
     <fragment
         android:id="@+id/testFragment"
-        android:name="com.example.studytime_4.test.TestFragment"
+        android:name="com.sscott.studytime_4.test.TestFragment"
         android:label="fragment_test"
         tools:layout="@layout/fragment_test" />
 </navigation>

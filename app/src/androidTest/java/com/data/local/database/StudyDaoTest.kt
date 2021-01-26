@@ -1,20 +1,15 @@
 package com.data.local.database
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.asLiveData
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.filters.SmallTest
-import com.data.getOrAwaitValue
-import com.example.studytime_4.data.local.database.StudyDao
-import com.example.studytime_4.data.local.database.StudyDatabase
-import com.example.studytime_4.data.local.entities.MonthlyGoal
-import com.example.studytime_4.data.local.entities.StudySession
-import com.example.studytime_4.data.local.entities.WeeklyGoal
+import com.sscott.studytime_4.data.local.database.StudyDao
+import com.sscott.studytime_4.data.local.database.StudyDatabase
+import com.sscott.studytime_4.data.local.entities.MonthlyGoal
+import com.sscott.studytime_4.data.local.entities.StudySession
+import com.sscott.studytime_4.data.local.entities.WeeklyGoal
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
@@ -23,7 +18,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import retrofit2.http.GET
 
 @RunWith(JUnit4::class)
 @SmallTest

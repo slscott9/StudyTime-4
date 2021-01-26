@@ -16,11 +16,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.studytime_4"
+        applicationId "com.sscott.studytime_4"
         minSdkVersion 27
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
