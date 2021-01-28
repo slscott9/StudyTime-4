@@ -9,6 +9,8 @@ import com.sscott.studytime_4.data.local.entities.WeeklyGoal
 import com.sscott.studytime_4.data.repo.Repository
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.sscott.studytime_4.di.DispatcherModule
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -16,7 +18,8 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class WeekViewModel @ViewModelInject constructor(
-    private val weekUseCase: WeekUseCase
+    private val weekUseCase: WeekUseCase,
+    @DispatcherModule.IoDispatcher private val dispatcher : CoroutineDispatcher
 ) : ViewModel() {
 
     var month: String = ""
@@ -28,6 +31,7 @@ class WeekViewModel @ViewModelInject constructor(
      */
 
     //These flows are not right these are one shot flows
+
 
     private val weekDays = listOf<String>("S","M","T","W","T","F","S")
 
@@ -47,7 +51,7 @@ class WeekViewModel @ViewModelInject constructor(
 
 
     fun saveGoal(hours : Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             weekUseCase.saveGoal(hours)
         }
     }

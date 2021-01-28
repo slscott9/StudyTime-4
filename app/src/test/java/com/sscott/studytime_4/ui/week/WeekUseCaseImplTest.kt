@@ -89,12 +89,35 @@ class WeekUseCaseImplTest {
     }
 
     @Test
-    fun `toBarDataSet positions studySessions accoring to weekday`() {
+    fun `toBarDataSet positions studySessions according to weekday`() {
 
         val subject = weekUseCase.toBarDataSet(studySessionList)
 
+        //weekdays are 0 sunday 1 monday, 2 tuesday, 3 wednesday 4 thursday, 5 friday, 6 saturday
+        //in order to get study session hours to be displayed for the correct weekday an array must be prepopulated with size 7 (for each weekday) for mpandroid
+        //then looping through the array use the weekday property to set it accordingly in the array
+        //hours are displayed for y coordinates indices are x coordinates
         assertEquals(1F, subject.getEntryForIndex(3).y)
+        assertEquals(2F, subject.getEntryForIndex(4).y)
     }
+
+    @Test
+    fun `formatHours returns hours when minutes parameter is greater than or equal to 60`() {
+
+        val subject = weekUseCase.formatHours(60F)
+
+        assertEquals(1F, subject)
+    }
+
+    @Test
+    fun `formatHours returns decimal minutes when minutes parameter is less than 60`() {
+
+        val subject = weekUseCase.formatHours(59F)
+
+        assertEquals(0.59F, subject)
+    }
+
+
 
 
 }

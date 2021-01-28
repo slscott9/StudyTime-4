@@ -10,7 +10,7 @@ import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
 class MainCoroutineTestRule(
-    private val dispatcher : CoroutineDispatcher = TestCoroutineDispatcher()
+    val dispatcher : CoroutineDispatcher = TestCoroutineDispatcher()
 
 ) : TestWatcher(), TestCoroutineScope by TestCoroutineScope(dispatcher){
 
