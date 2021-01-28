@@ -1,16 +1,15 @@
-package com.sscott.studytime_4.ui.week
+package com.sscott.studytime_4.ui.usecases.weekview
 
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.sscott.studytime_4.data.local.entities.StudySession
 import com.sscott.studytime_4.data.local.entities.WeeklyGoal
 import com.sscott.studytime_4.data.repo.Repository
-import com.sscott.studytime_4.other.TimeUtil
+import com.sscott.studytime_4.other.util.time.TimeUtil
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
-class WeekUseCaseImpl(private val repository: Repository, private val timeUtil: TimeUtil) : WeekUseCase {
+class WeekUseCaseImpl(private val repository: Repository, private val timeUtil: TimeUtil) :
+    WeekUseCase {
 
     override fun sessionsForWeek(): Flow<List<StudySession>> {
         return repository.weeklyStudySessions()
@@ -21,7 +20,7 @@ class WeekUseCaseImpl(private val repository: Repository, private val timeUtil: 
     }
 
     override fun totalHours(studySessionList: List<StudySession>): Float {
-        return studySessionList.map { it.minutes }.sum().also { formatHours(it) }
+        return studySessionList.map { it.minutes }.sum().also { timeUtil.formatHours(it) }
     }
 
     override fun toBarDataSet(studySessionList: List<StudySession>): BarDataSet {
@@ -29,7 +28,7 @@ class WeekUseCaseImpl(private val repository: Repository, private val timeUtil: 
         val weekBarData = Array<BarEntry>(7){it -> BarEntry(it * 1.toFloat(), null)}
 
         studySessionList.forEach {
-            weekBarData[it.weekDay].y = formatHours(it.minutes)
+            weekBarData[it.weekDay].y = timeUtil.formatHours(it.minutes)
         }
 
         return BarDataSet(weekBarData.toList(), "Hours")
@@ -50,13 +49,5 @@ class WeekUseCaseImpl(private val repository: Repository, private val timeUtil: 
 
 
 
-    override fun formatHours(minutes: Float): Float {
-        return when {
-            minutes >= 60 -> {
-                minutes /60
-            }
-            else -> minutes / 100
 
-        }
-    }
 }

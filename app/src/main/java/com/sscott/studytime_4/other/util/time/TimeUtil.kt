@@ -1,4 +1,4 @@
-package com.sscott.studytime_4.other
+package com.sscott.studytime_4.other.util.time
 
 interface TimeUtil {
 
@@ -11,4 +11,7 @@ interface TimeUtil {
     fun weekDay() : Int
 
     fun year() : Int
+
+    fun formatHours(minutes: Float) : Float
+
 }

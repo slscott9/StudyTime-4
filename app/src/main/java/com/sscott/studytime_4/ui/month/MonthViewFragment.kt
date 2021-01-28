@@ -20,9 +20,11 @@ import com.sscott.studytime_4.databinding.FragmentMonthViewBinding
 import com.sscott.studytime_4.ui.week.WeekViewFragment
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.android.material.transition.MaterialContainerTransform
+import com.sscott.studytime_4.data.local.entities.MonthlyGoal
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_month_view.*
 import kotlinx.android.synthetic.main.fragment_week_view.*
@@ -48,13 +50,13 @@ class MonthViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.monthBarData.observe(viewLifecycleOwner){
+        viewModel.monthBarDataSet.observe(viewLifecycleOwner){
             it?.let {
                 setMonthBarChart(it)
             }
         }
 
-        viewModel.goalData.observe(viewLifecycleOwner){
+        viewModel.monthlyGoal.observe(viewLifecycleOwner){
             it?.let {
                 setMonthGoalBarChart(it)
             }
@@ -116,7 +118,7 @@ class MonthViewFragment : Fragment() {
             if(etMonthlyGoal.text.isNullOrBlank()){
                 Toast.makeText(requireActivity(), "Please enter a goal", Toast.LENGTH_SHORT).show()
             }else{
-                viewModel.addGoal(etMonthlyGoal.text.toString().toInt())
+                viewModel.saveGoal(etMonthlyGoal.text.toString().toInt())
                 hideSoftKeyboard(it)
                 collapseAddGoalCV()
             }
@@ -130,21 +132,22 @@ class MonthViewFragment : Fragment() {
     }
 
 
-    private fun setMonthGoalBarChart(goalData: GoalData) {
+    private fun setMonthGoalBarChart(goal: MonthlyGoal) {
 
-        val label = setLabel(goalData.limit.toFloat())
-        val limitLine = LimitLine(goalData.limit.toFloat(), label)
-
-        goalData.totalHours.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
+        val label = setLabel(goal.hours.toFloat())
+        val limitLine = LimitLine(goal.hours.toFloat(), label)
 
         binding.totalMonthHoursChart.apply {
-            data = BarData(goalData.totalHours)
-            axisLeft.axisMaximum = (goalData.limit.toFloat() + goalData.totalHours.yMax)
+            data = BarData(viewModel.totalHours.value.also {
+                it?.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
+
+            })
+            axisLeft.axisMaximum = (goal.hours.toFloat() + data.yMax)
             axisLeft.axisMinimum = 0F
 
             //if limit is zero dont draw it
             //if there a limit line remove the current and add new one
-            if(goalData.limit != 0){
+            if(goal.hours != 0){
                 axisLeft.removeAllLimitLines()
                 axisLeft.addLimitLine(limitLine)
             }
@@ -169,26 +172,25 @@ class MonthViewFragment : Fragment() {
         }
     }
 
-    private fun setMonthBarChart(monthData: MonthData) {
+    private fun setMonthBarChart(monthData : BarDataSet) {
 
-        monthData.monthBarData.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
+        monthData.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
 
-        val force: Boolean = if(monthData.labels.size > 1) {
-            binding.monthBarChart.xAxis.setCenterAxisLabels(false)
-            false
-        } else {
-            binding.monthBarChart.xAxis.setCenterAxisLabels(true)
-            true
-        }
+//        val force: Boolean = if(monthData.labels.size > 1) {
+//            binding.monthBarChart.xAxis.setCenterAxisLabels(false)
+//            false
+//        } else {
+//            binding.monthBarChart.xAxis.setCenterAxisLabels(true)
+//            true
+//        }
 
         binding.monthBarChart.apply {
-            data = BarData( monthData.monthBarData) // set the data and list of labels into chart
+            data = BarData( monthData) // set the data and list of labels into chart
             xAxis.setLabelCount(
-                monthData.labels.size,
-                force
+                monthData.entryCount,true
             ) //force = false aligns values with labels
             data.barWidth = .25F
-            xAxis.valueFormatter = IndexAxisValueFormatter(monthData.labels);
+            xAxis.valueFormatter = IndexAxisValueFormatter(viewModel.monthLabels.value);
             axisLeft.valueFormatter = MyValueFormatter()
             axisLeft.axisMinimum = 0F
             axisRight.setDrawLabels(false)

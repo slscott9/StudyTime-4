@@ -1,15 +1,13 @@
 package com.sscott.studytime_4.ui.week
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.github.mikephil.charting.data.BarDataSet
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import com.sscott.studytime_4.MainCoroutineTestRule
 import com.sscott.studytime_4.data.local.entities.StudySession
 import com.sscott.studytime_4.data.repo.Repository
-import com.sscott.studytime_4.data.repo.RepositoryImpl
-import com.sscott.studytime_4.other.TimeUtil
-import com.sscott.studytime_4.other.TimeUtilImpl
+import com.sscott.studytime_4.other.util.time.TimeUtil
+import com.sscott.studytime_4.ui.usecases.weekview.WeekUseCase
+import com.sscott.studytime_4.ui.usecases.weekview.WeekUseCaseImpl
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule

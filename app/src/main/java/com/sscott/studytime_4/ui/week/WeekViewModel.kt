@@ -2,20 +2,12 @@ package com.sscott.studytime_4.ui.week
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.sscott.studytime_4.data.GoalData
-import com.sscott.studytime_4.data.WeekData
-import com.sscott.studytime_4.data.local.entities.StudySession
-import com.sscott.studytime_4.data.local.entities.WeeklyGoal
-import com.sscott.studytime_4.data.repo.Repository
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
 import com.sscott.studytime_4.di.DispatcherModule
+import com.sscott.studytime_4.ui.usecases.weekview.WeekUseCase
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class WeekViewModel @ViewModelInject constructor(
     private val weekUseCase: WeekUseCase,

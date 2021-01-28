@@ -1,30 +1,23 @@
 package com.sscott.studytime_4.ui.week
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
-import androidx.lifecycle.asLiveData
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.sscott.studytime_4.CoroutineTestRule
-import com.sscott.studytime_4.MainCoroutineTestRule
 import com.sscott.studytime_4.data.local.entities.StudySession
 import com.sscott.studytime_4.data.local.entities.WeeklyGoal
 import com.sscott.studytime_4.data.repo.Repository
 import com.sscott.studytime_4.getOrAwaitValue
-import com.sscott.studytime_4.other.TimeUtil
-import kotlinx.coroutines.CoroutineScope
+import com.sscott.studytime_4.other.util.time.TimeUtil
+import com.sscott.studytime_4.ui.usecases.weekview.WeekUseCase
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
-import org.mockito.Mockito.mock
 import java.time.OffsetDateTime
-import kotlin.coroutines.coroutineContext
 
 class WeekViewModelTest {
 
@@ -110,6 +103,14 @@ class WeekViewModelTest {
 
 
     }
+
+    /*
+        CREATE NEW BRANCH!!!!!!1
+        !!!!!!!!!!!!!!!!!!!!!!!!!!
+        !!!!!!!!!!!!!!!!!!!!!!!!!
+        !!!!!!!!!!!!!!!!!!!!!!!!!
+        !!!!!!!!!!!!!!!!!!!!
+     */
 
     @Test
     fun `viewModel weeklyGoal set to weekUseCase weeklyGoal() return value`() = mainCoroutineTestRule.testDispatcher.runBlockingTest {

@@ -1,5 +1,6 @@
-package com.sscott.studytime_4.other
+package com.sscott.studytime_4.other.util
 
+import com.sscott.studytime_4.other.util.time.TimeUtil
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -21,4 +22,13 @@ class TimeUtilImpl : TimeUtil {
     override fun year(): Int =
         LocalDateTime.now().year
 
+    override fun formatHours(minutes: Float): Float {
+        return when {
+            minutes >= 60 -> {
+                minutes /60
+            }
+            else -> minutes / 100
+
+        }
+    }
 }

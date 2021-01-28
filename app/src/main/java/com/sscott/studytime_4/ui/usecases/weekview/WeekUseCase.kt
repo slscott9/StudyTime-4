@@ -1,4 +1,4 @@
-package com.sscott.studytime_4.ui.week
+package com.sscott.studytime_4.ui.usecases.weekview
 
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -21,7 +21,6 @@ interface WeekUseCase {
 
     fun sessionsForWeek() : Flow<List<StudySession>>
 
-    fun formatHours(minutes: Float) : Float
 
 
 }
