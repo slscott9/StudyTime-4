@@ -42,57 +42,57 @@ class MonthDetailViewModelTest {
 
         viewModel = MonthDetailViewModel(repository, savedStateHandle)
 
-        studySessionList = listOf(
-            StudySession(
-                hours = 1F,
-                minutes = 60,
-                date = "2020-12-02", //formattedDate
-                weekDay = 3,
-                month = 12,
-                dayOfMonth = 2,
-                year = 2020,
-                startTime = "1: 30 am",
-                endTime = "2: 30 pm",
-                offsetDateTime = OffsetDateTime.now(),
-                epochDate = 1
-            ),
-
-            StudySession(
-                hours = 2F,
-                minutes = 120,
-                date = "2020-12-08", //formattedDate
-                weekDay = 2,
-                month = 12,
-                dayOfMonth = 8,
-                year = 2020,
-                startTime = "1: 30 am",
-                endTime = "2: 30 pm",
-                epochDate = 1,
-                offsetDateTime = OffsetDateTime.now()
-
-            ),
-
-            StudySession(
-                hours = 3F,
-                minutes = 180,
-                date = "2020-12-10", //formattedDate
-                weekDay = 4,
-                month = 12,
-                dayOfMonth = 10,
-                year = 2020,
-                startTime = "1: 30 am",
-                endTime = "2: 30 pm",
-                epochDate = 1,
-                offsetDateTime = OffsetDateTime.now()
-
-            )
-        )
-
-        monthData = MonthData(
-            labels = mock(),
-            monthBarData = mock(),
-            totalHours = 5F
-        )
+//        studySessionList = listOf(
+//            StudySession(
+//                hours = 1F,
+//                minutes = 60,
+//                date = "2020-12-02", //formattedDate
+//                weekDay = 3,
+//                month = 12,
+//                dayOfMonth = 2,
+//                year = 2020,
+//                startTime = "1: 30 am",
+//                endTime = "2: 30 pm",
+//                offsetDateTime = OffsetDateTime.now(),
+//                epochDate = 1
+//            ),
+//
+//            StudySession(
+//                hours = 2F,
+//                minutes = 120,
+//                date = "2020-12-08", //formattedDate
+//                weekDay = 2,
+//                month = 12,
+//                dayOfMonth = 8,
+//                year = 2020,
+//                startTime = "1: 30 am",
+//                endTime = "2: 30 pm",
+//                epochDate = 1,
+//                offsetDateTime = OffsetDateTime.now()
+//
+//            ),
+//
+//            StudySession(
+//                hours = 3F,
+//                minutes = 180,
+//                date = "2020-12-10", //formattedDate
+//                weekDay = 4,
+//                month = 12,
+//                dayOfMonth = 10,
+//                year = 2020,
+//                startTime = "1: 30 am",
+//                endTime = "2: 30 pm",
+//                epochDate = 1,
+//                offsetDateTime = OffsetDateTime.now()
+//
+//            )
+//        )
+//
+//        monthData = MonthData(
+//            labels = mock(),
+//            monthBarData = mock(),
+//            totalHours = 5F
+//        )
 
 
     }

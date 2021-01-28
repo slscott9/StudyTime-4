@@ -20,9 +20,12 @@ import com.sscott.studytime_4.data.WeekData
 import com.sscott.studytime_4.databinding.FragmentWeekViewBinding
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.android.material.transition.MaterialContainerTransform
+import com.sscott.studytime_4.data.local.entities.WeeklyGoal
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_week_view.*
 import java.text.DecimalFormat
@@ -32,6 +35,9 @@ class WeekViewFragment : Fragment() {
 
     private lateinit var binding: FragmentWeekViewBinding
     private val viewModel: WeekViewModel by viewModels()
+
+    private val weekDays = listOf<String>("S","M","T","W","T","F","S")
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +58,7 @@ class WeekViewFragment : Fragment() {
             }
         }
 
-        viewModel.goalData.observe(viewLifecycleOwner) {
+        viewModel.weeklyGoal.observe(viewLifecycleOwner){
             it?.let {
                 setupGoalBarChart(it)
             }
@@ -65,20 +71,23 @@ class WeekViewFragment : Fragment() {
 
     }
 
-    private fun setupGoalBarChart(goalData: GoalData) {
-        val limitLineLabel = setLabel(goalData.limit.toFloat())
-        val limitLine = LimitLine(goalData.limit.toFloat(), limitLineLabel)
+    private fun setupGoalBarChart(goal : WeeklyGoal) {
+        val limitLineLabel = setLabel(goal.hours.toFloat())
+        val limitLine = LimitLine(goal.hours.toFloat(), limitLineLabel)
 
-        goalData.totalHours.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
+        val totalHours = BarDataSet(
+            listOf(BarEntry(0F, viewModel.totalHours.value?.toFloat() ?: 0F)), "Total weekly hours")
+
+//        .color = ResourcesCompat.getColor(resources, R.color.marigold, null)
 
         binding.totalHoursChart.apply {
-            data = BarData(goalData.totalHours)
-            axisLeft.axisMaximum = (goalData.limit.toFloat() + goalData.totalHours.yMax)
+            data = BarData(totalHours)
+            axisLeft.axisMaximum = (goal.hours.toFloat() + totalHours.yMax)
             axisLeft.axisMinimum = 0F
 
             //if limit is zero dont draw it
             //if there a limit line remove the current and add new one
-            if(goalData.limit != 0){
+            if(goal.hours != 0){
                 axisLeft.removeAllLimitLines()
                 axisLeft.addLimitLine(limitLine)
             }
@@ -154,7 +163,7 @@ class WeekViewFragment : Fragment() {
             if(etWeeklyGoal.text.isNullOrBlank()){
                 Toast.makeText(requireActivity(), "Please enter a goal", Toast.LENGTH_SHORT).show()
             }else{
-                viewModel.addGoal(etWeeklyGoal.text.toString().toInt())
+                viewModel.saveGoal(etWeeklyGoal.text.toString().toInt())
                 hideSoftKeyboard(it)
                 collapseAddGoalCV()
             }
@@ -170,28 +179,32 @@ class WeekViewFragment : Fragment() {
         }
     }
 
-    private fun setupWeekBarChart(weekData: WeekData) {
-        weekData.weekBarData.color = ContextCompat.getColor(requireActivity(), R.color.marigold)
+    private fun setupWeekBarChart(weekData: BarDataSet) {
+        weekData.color = ContextCompat.getColor(requireActivity(), R.color.marigold)
 
         //case 1 multiple bar chart values -> axis labels need to move in order to match chart values
         //case 2 only one bar chart value -> so center the label over value
-        val force: Boolean = if (weekData.labels.size > 1) {
-            binding.weekBarChart.xAxis.setCenterAxisLabels(false)
-            false
-        } else {
-            binding.weekBarChart.xAxis.setCenterAxisLabels(true)
-            true
-        }
+//        val force: Boolean = if (weekData.labels.size > 1) {
+//            binding.weekBarChart.xAxis.setCenterAxisLabels(false)
+//        }
+////            false
+////        } else {
+////            binding.weekBarChart.xAxis.setCenterAxisLabels(true)
+////            true
+////        }
+
 
         binding.weekBarChart.apply {
 
-            data = BarData( weekData.weekBarData) // set the data and list of lables into chart
+            data = BarData(weekData) // set the data and list of lables into chart
+            xAxis.setCenterAxisLabels(false)
+            xAxis.setLabelCount(weekDays.size, false)
             //for labels since we know they will only ever be 7 values for the week
-            xAxis.setLabelCount(
-                weekData.labels.size,
-                force
-            ) //force = false aligns values with labels
-            xAxis.valueFormatter = IndexAxisValueFormatter(weekData.labels);
+//            xAxis.setLabelCount(
+//                weekData.labels.size,
+//                force
+//            ) //force = false aligns values with labels
+            xAxis.valueFormatter = IndexAxisValueFormatter(weekDays);
             axisLeft.axisMinimum = 0F
             axisRight.setDrawLabels(false)
             axisRight.setDrawGridLines(false)

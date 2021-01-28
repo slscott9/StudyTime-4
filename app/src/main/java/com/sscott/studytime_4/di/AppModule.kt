@@ -6,6 +6,10 @@ import com.sscott.studytime_4.data.local.database.StudyDao
 import com.sscott.studytime_4.data.local.database.StudyDatabase
 import com.sscott.studytime_4.data.repo.Repository
 import com.sscott.studytime_4.data.repo.RepositoryImpl
+import com.sscott.studytime_4.other.TimeUtil
+import com.sscott.studytime_4.other.TimeUtilImpl
+import com.sscott.studytime_4.ui.week.WeekUseCase
+import com.sscott.studytime_4.ui.week.WeekUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,6 +38,12 @@ object AppModule {
     @Singleton
     @Provides
     fun provideRepo(dao: StudyDao): Repository = RepositoryImpl(dao)
+
+    @Provides
+    fun provideTimeUtil(): TimeUtil = TimeUtilImpl()
+    @Singleton
+    @Provides
+    fun provideWeekUseCase(repository: Repository, timeUtil: TimeUtil) : WeekUseCase = WeekUseCaseImpl(repository, timeUtil)
 
 //
 //    @Provides

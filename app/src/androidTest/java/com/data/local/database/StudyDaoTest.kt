@@ -56,32 +56,31 @@ class StudyDaoTest {
         /*
             weekDay should be 1 to monday, 2 to tuesday, 3 to wednesday, 4 to thursday , 5 to friday , 6 to saturday, 7 to sunday
          */
-
-        studySession1 = StudySession(
-            hours = 1F,
-            minutes = 60,
-            date = "2020-12-20", //formattedDate
-            weekDay = 7,
-            month = 12,
-            dayOfMonth = 20,
-            year = 2020,
-            startTime = "1",
-            endTime = "3",
-            epochDate = 1608524461
-        )
-
-        studySession2 = StudySession(
-            hours = 2F,
-            minutes = 120,
-            date = "2020-12-26", //formattedDate
-            weekDay = 6,
-            month = 12,
-            dayOfMonth = 26,
-            year = 2020,
-            startTime = "1",
-            endTime = "3",
-            epochDate = 1609042861
-        )
+//
+//        studySession1 = StudySession(
+//            minutes = 60F,
+//            date = "2020-12-20", //formattedDate
+//            weekDay = 7,
+//            month = 12,
+//            dayOfMonth = 20,
+//            year = 2020,
+//            startTime = "1",
+//            endTime = "3",
+//            epochDate = 1608524461,
+//            offsetDateTime =
+//        )
+//
+//        studySession2 = StudySession(
+//            minutes = 120F,
+//            date = "2020-12-26", //formattedDate
+//            weekDay = 6,
+//            month = 12,
+//            dayOfMonth = 26,
+//            year = 2020,
+//            startTime = "1",
+//            endTime = "3",
+//            epochDate = 1609042861
+//        )
 
 
 
@@ -132,102 +131,102 @@ class StudyDaoTest {
     }
 
 
-    //getLastSevenSessions should return any study sessions between todays date and todays date minus todays day of the week
-    @Test
-    fun getLastSevenSessions2() = runBlockingTest {
-
-        dao.insertStudySession(studySession1)
-        dao.insertStudySession(studySession2)
-
-        val list = dao.getLastSevenSessions(6 * 86400).asLiveData().getOrAwaitValue()
-
-        assertThat(list.size).isEqualTo(2)
-    }
-
-    //checkForWeeklyGoal returns WeeklyGoal for this week
-    @Test
-    fun getGoalForWeek() = runBlockingTest {
-
-
-        //upsertWeeklyGoal is a Transaction and cannot be tested properly
-        dao.insertWeeklyGoal(weeklyGoal1)
-        dao.insertWeeklyGoal(weeklyGoal2)
-
-        val goalToTest = dao.getGoalForWeek(12, 2020, 6).take(1).toList()
-
-        assertThat(goalToTest[0]).isEqualTo(weeklyGoal1)
-        assertThat(goalToTest.size).isEqualTo(1)
-
-
-
-    }
-
-    //should return a null when goal does not exist
-    @Test
-    fun checkForWeeklyGoal()  = runBlocking {
-
-
-        val goal = dao.checkForWeeklyGoal(12, 2020, 2)
-
-        assertThat(goal).isEqualTo(null)
-
-
-    }
-
-    //should update an existing goal
-    @Test
-    fun updateWeeklyGoal() = runBlocking<Unit> {
-
-        dao.insertWeeklyGoal(weeklyGoal1)
-
-        val updatedWeeklyGoal = weeklyGoal1.copy(hours = 100)
-        dao.updateWeeklyGoal(updatedWeeklyGoal)
-
-        val goalToTest = dao.getGoalForWeek(12, 2020, 5).take(1).toList()
-
-        assertThat(goalToTest[0]).isEqualTo(updatedWeeklyGoal)
-    }
-
-    //should return last seven study sessions from todays date
-//   @Test
-//   fun getLastSevenSessions() = runBlocking {
+//    //getLastSevenSessions should return any study sessions between todays date and todays date minus todays day of the week
+//    @Test
+//    fun getLastSevenSessions2() = runBlockingTest {
 //
-//       dao.insertStudySession(studySession1)
-//       dao.insertStudySession(studySession2)
-//        dao.insertStudySession(studySession3) //this studySesion is out of range of last seven days from now
+//        dao.insertStudySession(studySession1)
+//        dao.insertStudySession(studySession2)
 //
-//       val lastSevenStudySessionsHours = dao.getLastSevenSessions(12, 8, 2020).asLiveData().getOrAwaitValue()
+//        val list = dao.getLastSevenSessions(6 * 86400).asLiveData().getOrAwaitValue()
 //
-//       assertThat(lastSevenStudySessionsHours.size).isEqualTo(2)
+//        assertThat(list.size).isEqualTo(2)
+//    }
+//
+//    //checkForWeeklyGoal returns WeeklyGoal for this week
+//    @Test
+//    fun getGoalForWeek() = runBlockingTest {
+//
+//
+//        //upsertWeeklyGoal is a Transaction and cannot be tested properly
+//        dao.insertWeeklyGoal(weeklyGoal1)
+//        dao.insertWeeklyGoal(weeklyGoal2)
+//
+//        val goalToTest = dao.getGoalForWeek(12, 2020, 6).take(1).toList()
+//
+//        assertThat(goalToTest[0]).isEqualTo(weeklyGoal1)
+//        assertThat(goalToTest.size).isEqualTo(1)
 //
 //
 //
-//   }
-
-    //should return DISTINCT years with study sessions
-    @Test
-    fun getYearsWithSessions() = runBlocking {
-
-        dao.insertStudySession(studySession1)
-        dao.insertStudySession(studySession2)
-        dao.insertStudySession(studySession3)
-        dao.insertStudySession(studySession4)
-
-        val yearsWithStudySessions = dao.getYearsWithSessions().asLiveData().getOrAwaitValue()
-
-        assertThat(yearsWithStudySessions.size).isEqualTo(2)
-    }
-
-    //should return list of months with study sessions for a selected year
-    @Test
-    fun getMonthWithSelectedYear() = runBlocking {
-        dao.insertStudySession(studySession1)
-        dao.insertStudySession(studySession4) //year is 2021 should not return this study session
-
-        val monthList = dao.getMonthsWithSelectedYear(2020).asLiveData().getOrAwaitValue()
-
-        assertThat(monthList.size).isEqualTo(1)
-    }
+//    }
+//
+//    //should return a null when goal does not exist
+//    @Test
+//    fun checkForWeeklyGoal()  = runBlocking {
+//
+//
+//        val goal = dao.checkForWeeklyGoal(12, 2020, 2)
+//
+//        assertThat(goal).isEqualTo(null)
+//
+//
+//    }
+//
+//    //should update an existing goal
+//    @Test
+//    fun updateWeeklyGoal() = runBlocking<Unit> {
+//
+//        dao.insertWeeklyGoal(weeklyGoal1)
+//
+//        val updatedWeeklyGoal = weeklyGoal1.copy(hours = 100)
+//        dao.updateWeeklyGoal(updatedWeeklyGoal)
+//
+//        val goalToTest = dao.getGoalForWeek(12, 2020, 5).take(1).toList()
+//
+//        assertThat(goalToTest[0]).isEqualTo(updatedWeeklyGoal)
+//    }
+//
+//    //should return last seven study sessions from todays date
+////   @Test
+////   fun getLastSevenSessions() = runBlocking {
+////
+////       dao.insertStudySession(studySession1)
+////       dao.insertStudySession(studySession2)
+////        dao.insertStudySession(studySession3) //this studySesion is out of range of last seven days from now
+////
+////       val lastSevenStudySessionsHours = dao.getLastSevenSessions(12, 8, 2020).asLiveData().getOrAwaitValue()
+////
+////       assertThat(lastSevenStudySessionsHours.size).isEqualTo(2)
+////
+////
+////
+////   }
+//
+//    //should return DISTINCT years with study sessions
+//    @Test
+//    fun getYearsWithSessions() = runBlocking {
+//
+//        dao.insertStudySession(studySession1)
+//        dao.insertStudySession(studySession2)
+//        dao.insertStudySession(studySession3)
+//        dao.insertStudySession(studySession4)
+//
+//        val yearsWithStudySessions = dao.getYearsWithSessions().asLiveData().getOrAwaitValue()
+//
+//        assertThat(yearsWithStudySessions.size).isEqualTo(2)
+//    }
+//
+//    //should return list of months with study sessions for a selected year
+//    @Test
+//    fun getMonthWithSelectedYear() = runBlocking {
+//        dao.insertStudySession(studySession1)
+//        dao.insertStudySession(studySession4) //year is 2021 should not return this study session
+//
+//        val monthList = dao.getMonthsWithSelectedYear(2020).asLiveData().getOrAwaitValue()
+//
+//        assertThat(monthList.size).isEqualTo(1)
+//    }
 
 
 

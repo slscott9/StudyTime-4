@@ -7,23 +7,6 @@ import java.time.OffsetDateTime
 /*
     Study session will be stored separately in order to get start and end times for each session
  */
-//@Entity(tableName = "study_table_4")
-//data class StudySession(
-//    @PrimaryKey
-//    val id : Int = 0,
-//    val date : String,
-//    val hours: Float,
-//    val minutes: Long,
-//    val weekDay: Int,
-//    val dayOfMonth: Int,
-//    val month: Int,
-//    val year: Int,
-//    val epochDate : Long,
-//    val startTime : String,
-//    val endTime : String,
-//    val offsetDateTime: OffsetDateTime
-//) {
-//}
 
 @Entity(tableName = "study_table_4")
 data class StudySession(
@@ -67,12 +50,7 @@ data class Duration(
     val endTime : String,
     val minutes: Float,
     val epochDate: Long,
-){
-
-}
-
-
-
+)
 /*
     Add a goal entity
 
