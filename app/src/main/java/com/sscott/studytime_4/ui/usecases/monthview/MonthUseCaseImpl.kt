@@ -65,18 +65,19 @@ class MonthUseCaseImpl(
     }
 
     override fun totalHours(studySessionList: List<StudySession>): BarDataSet {
-        val totalHours = studySessionList.map { it.minutes }.sum().also { timeUtil.formatHours(it) }
+        val totalHours = studySessionList.map { it.minutes }.sum()
 
 
         Timber.i("Total hours is $totalHours")
         return BarDataSet(
-            listOf(BarEntry(0F, totalHours)),
+            listOf(BarEntry(0F, timeUtil.formatHours(totalHours) )),
             "Total monthly hours"
         )
     }
 
     override fun monthlyGoal(): Flow<MonthlyGoal?> {
-        return repository.monthlyGoal(timeUtil.month(), timeUtil.year())
+        Timber.i("Monthly goal is called")
+        return repository.monthlyGoal(curYear =  timeUtil.year(), curMonth = timeUtil.month())
     }
 
     override fun sessionsForMonth(): Flow<List<StudySession>> {

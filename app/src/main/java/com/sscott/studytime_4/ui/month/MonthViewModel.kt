@@ -12,6 +12,7 @@ import com.sscott.studytime_4.data.repo.Repository
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.sscott.studytime_4.ui.usecases.monthview.MonthUseCase
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -27,10 +28,12 @@ class MonthViewModel @ViewModelInject constructor(
     val monthLabels = sessionsForMonth
         .map { monthUseCase.setLabels(it) }.asLiveData(viewModelScope.coroutineContext)
 
-    val monthlyGoal = monthUseCase.monthlyGoal().asLiveData(viewModelScope.coroutineContext)
-
     val totalHours = sessionsForMonth
         .map { monthUseCase.totalHours(it) }.asLiveData(viewModelScope.coroutineContext)
+
+    val monthlyGoal = monthUseCase.monthlyGoal().asLiveData(viewModelScope.coroutineContext)
+
+
 
     val monthBarDataSet = sessionsForMonth
         .map { monthUseCase.toBarDataSet(it) }

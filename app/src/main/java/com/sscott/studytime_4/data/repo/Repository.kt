@@ -9,7 +9,7 @@ interface Repository {
 
     //GET AND SAVE MONTHLY GOAL
 
-    fun monthlyGoal(yearSelected: Int, monthSelected: Int) : Flow<MonthlyGoal?>
+    fun monthlyGoal(curYear: Int, curMonth: Int) : Flow<MonthlyGoal?>
 
     suspend fun saveMonthlyGoal(monthlyGoal: MonthlyGoal) : Long
 

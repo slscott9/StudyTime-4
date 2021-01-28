@@ -50,6 +50,14 @@ class MonthViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //observe first so there is data for setGoal to set the axisLeft.axisMax with limitline
+        //crashes is there is no data available
+        viewModel.totalHours.observe(viewLifecycleOwner){
+            it?.let {
+                setTotalHours(it)
+            }
+        }
+
         viewModel.monthBarDataSet.observe(viewLifecycleOwner){
             it?.let {
                 setMonthBarChart(it)
@@ -58,7 +66,13 @@ class MonthViewFragment : Fragment() {
 
         viewModel.monthlyGoal.observe(viewLifecycleOwner){
             it?.let {
-                setMonthGoalBarChart(it)
+                setGoal(it)
+            }
+        }
+
+        viewModel.monthLabels.observe(viewLifecycleOwner){
+            it?.let {
+                setLabels(it)
             }
         }
 
@@ -67,6 +81,94 @@ class MonthViewFragment : Fragment() {
         }
 
     }
+
+    private fun hideSoftKeyboard(view: View) {
+        val imm =
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun setTotalHours(totalHours : BarDataSet) {
+        binding.totalMonthHoursChart.apply {
+            data = BarData(totalHours.apply {
+                color = ResourcesCompat.getColor(resources, R.color.marigold, null)
+            })
+            data.barWidth = .25F
+            axisLeft.valueFormatter = MyValueFormatter()
+            axisLeft.axisMinimum = 0F
+            axisRight.setDrawLabels(false)
+            axisRight.setDrawGridLines(false)
+            xAxis.setDrawLabels(false) //top labels
+            description.isEnabled = false
+            axisLeft.valueFormatter = WeekViewFragment.MyValueFormatter() //remove float decimals
+            axisLeft.granularity = 1F //sets steps by one
+            animateY(1000)
+        }
+    }
+
+    private fun setGoal(goal: MonthlyGoal) {
+
+        val label = setLabel(goal.hours.toFloat())
+        val limitLine = LimitLine(goal.hours.toFloat(), label)
+
+        binding.totalMonthHoursChart.apply {
+            axisLeft.axisMinimum = 0F
+            axisLeft.axisMaximum = (goal.hours.toFloat() + data.yMax)
+
+            //if limit is zero dont draw it
+            //if there a limit line remove the current and add new one
+            if(goal.hours != 0){
+                axisLeft.removeAllLimitLines()
+                axisLeft.addLimitLine(limitLine)
+            }
+        }
+    }
+
+    private fun setLabels(labelList : List<String>) {
+        binding.monthBarChart.apply {
+            xAxis.valueFormatter = IndexAxisValueFormatter(labelList);
+        }
+    }
+
+    private fun setLabel(hours : Float) : String{
+
+        return when {
+            hours == 1F -> "$hours hour"
+            hours > 1F -> "$hours hours"
+            else -> "$hours minutes"
+        }
+    }
+
+    private fun setMonthBarChart(monthData : BarDataSet) {
+
+        monthData.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
+
+        binding.monthBarChart.apply {
+            data = BarData( monthData) // set the data and list of labels into chart
+
+            xAxis.setLabelCount(monthData.entryCount,monthData.entryCount <= 1 )
+            xAxis.setCenterAxisLabels(monthData.entryCount <= 1)
+
+            data.barWidth = .25F
+            axisLeft.valueFormatter = MyValueFormatter()
+            axisLeft.axisMinimum = 0F
+            axisRight.setDrawLabels(false)
+            axisRight.setDrawGridLines(false)
+            description.isEnabled = false
+            axisLeft.valueFormatter = WeekViewFragment.MyValueFormatter() //remove float decimals
+            axisLeft.granularity = 1F //sets steps by one
+            animateY(1000)
+        }
+    }
+
+    class MyValueFormatter : ValueFormatter() {
+        private val format = DecimalFormat("###,##0.0")
+
+        override fun getFormattedValue(value: Float): String {
+            return value.toInt().toString() //gets y axis values to integers instead of 0.0 floats
+        }
+    }
+
 
     private fun expandAddGoalCV(){
         binding.run {
@@ -122,93 +224,6 @@ class MonthViewFragment : Fragment() {
                 hideSoftKeyboard(it)
                 collapseAddGoalCV()
             }
-        }
-    }
-
-    private fun hideSoftKeyboard(view: View) {
-        val imm =
-            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
-
-    private fun setMonthGoalBarChart(goal: MonthlyGoal) {
-
-        val label = setLabel(goal.hours.toFloat())
-        val limitLine = LimitLine(goal.hours.toFloat(), label)
-
-        binding.totalMonthHoursChart.apply {
-            data = BarData(viewModel.totalHours.value.also {
-                it?.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
-
-            })
-            axisLeft.axisMaximum = (goal.hours.toFloat() + data.yMax)
-            axisLeft.axisMinimum = 0F
-
-            //if limit is zero dont draw it
-            //if there a limit line remove the current and add new one
-            if(goal.hours != 0){
-                axisLeft.removeAllLimitLines()
-                axisLeft.addLimitLine(limitLine)
-            }
-
-            //Both must be set to false or double gridlines will be drawn for the goalbarchart
-            data.barWidth = .25F
-            axisRight.setDrawLabels(false)
-            axisRight.setDrawGridLines(false)
-            description.isEnabled = false
-            axisLeft.valueFormatter = WeekViewFragment.MyValueFormatter() //remove float decimals
-            axisLeft.granularity = 1F //sets steps by ones
-            xAxis.setDrawLabels(false) //disable labels for x axis
-        }
-    }
-
-    private fun setLabel(hours : Float) : String{
-
-        return when {
-            hours == 1F -> "$hours hour"
-            hours > 1F -> "$hours hours"
-            else -> "$hours minutes"
-        }
-    }
-
-    private fun setMonthBarChart(monthData : BarDataSet) {
-
-        monthData.color = ResourcesCompat.getColor(resources, R.color.marigold, null)
-
-//        val force: Boolean = if(monthData.labels.size > 1) {
-//            binding.monthBarChart.xAxis.setCenterAxisLabels(false)
-//            false
-//        } else {
-//            binding.monthBarChart.xAxis.setCenterAxisLabels(true)
-//            true
-//        }
-
-        binding.monthBarChart.apply {
-            data = BarData( monthData) // set the data and list of labels into chart
-            xAxis.setLabelCount(
-                monthData.entryCount,true
-            ) //force = false aligns values with labels
-            data.barWidth = .25F
-            xAxis.valueFormatter = IndexAxisValueFormatter(viewModel.monthLabels.value);
-            axisLeft.valueFormatter = MyValueFormatter()
-            axisLeft.axisMinimum = 0F
-            axisRight.setDrawLabels(false)
-            axisRight.setDrawGridLines(false)
-            description.isEnabled = false
-            axisLeft.valueFormatter = WeekViewFragment.MyValueFormatter() //remove float decimals
-            axisLeft.granularity = 1F //sets steps by one
-            animateY(1000)
-        }
-
-
-    }
-
-    class MyValueFormatter : ValueFormatter() {
-        private val format = DecimalFormat("###,##0.0")
-
-        override fun getFormattedValue(value: Float): String {
-            return value.toInt().toString() //gets y axis values to integers instead of 0.0 floats
         }
     }
 

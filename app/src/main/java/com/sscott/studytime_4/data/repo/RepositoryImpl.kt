@@ -17,8 +17,8 @@ class RepositoryImpl @Inject constructor (
 
     //MONTHLY GOAL
 
-    override fun monthlyGoal(yearSelected: Int, monthSelected: Int): Flow<MonthlyGoal?> {
-        return dao.monthlyGoal(yearSelected, monthSelected)
+    override fun monthlyGoal(curYear: Int, curMonth: Int): Flow<MonthlyGoal?> {
+        return dao.monthlyGoal(curYear = curYear, curMonth = curMonth)
     }
 
     override suspend fun saveMonthlyGoal(monthlyGoal: MonthlyGoal) : Long {

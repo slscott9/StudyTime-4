@@ -1,6 +1,7 @@
 package com.sscott.studytime_4.other.util
 
 import com.sscott.studytime_4.other.util.time.TimeUtil
+import timber.log.Timber
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -24,10 +25,13 @@ class TimeUtilImpl : TimeUtil {
 
     override fun formatHours(minutes: Float): Float {
         return when {
-            minutes >= 60 -> {
-                minutes /60
+            minutes >= 60F -> {
+                minutes /60F
             }
-            else -> minutes / 100
+            else ->{
+
+                minutes / 100F
+            }
 
         }
     }
