@@ -1,4 +1,4 @@
-package com.sscott.studytime_4.ui.week
+package com.sscott.studytime_4.ui.usecases.weekview
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.mock
@@ -9,7 +9,7 @@ import com.sscott.studytime_4.data.local.entities.WeeklyGoal
 import com.sscott.studytime_4.data.repo.Repository
 import com.sscott.studytime_4.getOrAwaitValue
 import com.sscott.studytime_4.other.util.time.TimeUtil
-import com.sscott.studytime_4.ui.usecases.weekview.WeekUseCase
+import com.sscott.studytime_4.ui.week.WeekViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test

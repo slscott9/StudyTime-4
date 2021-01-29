@@ -20,7 +20,9 @@ class WeekUseCaseImpl(private val repository: Repository, private val timeUtil: 
     }
 
     override fun totalHours(studySessionList: List<StudySession>): Float {
-        return studySessionList.map { it.minutes }.sum().also { timeUtil.formatHours(it) }
+        val totalHours = studySessionList.map { it.minutes }.sum()
+
+        return  timeUtil.formatHours(totalHours)
     }
 
     override fun toBarDataSet(studySessionList: List<StudySession>): BarDataSet {

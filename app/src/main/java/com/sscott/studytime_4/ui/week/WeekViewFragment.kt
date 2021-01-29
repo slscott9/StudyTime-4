@@ -28,6 +28,7 @@ import com.google.android.material.transition.MaterialContainerTransform
 import com.sscott.studytime_4.data.local.entities.WeeklyGoal
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_week_view.*
+import timber.log.Timber
 import java.text.DecimalFormat
 
 @AndroidEntryPoint
@@ -58,6 +59,12 @@ class WeekViewFragment : Fragment() {
             }
         }
 
+        viewModel.totalHours.observe(viewLifecycleOwner){
+            it?.let {
+                setTotalHours(it)
+            }
+        }
+
         viewModel.weeklyGoal.observe(viewLifecycleOwner){
             it?.let {
                 setupGoalBarChart(it)
@@ -67,22 +74,16 @@ class WeekViewFragment : Fragment() {
         binding.addGoalChip.setOnClickListener {
             expandAddGoalCV()
         }
-
-
     }
 
     private fun setupGoalBarChart(goal : WeeklyGoal) {
         val limitLineLabel = setLabel(goal.hours.toFloat())
         val limitLine = LimitLine(goal.hours.toFloat(), limitLineLabel)
 
-        val totalHours = BarDataSet(
-            listOf(BarEntry(0F, viewModel.totalHours.value?.toFloat() ?: 0F)), "Total weekly hours")
-
 //        .color = ResourcesCompat.getColor(resources, R.color.marigold, null)
 
         binding.totalHoursChart.apply {
-            data = BarData(totalHours)
-            axisLeft.axisMaximum = (goal.hours.toFloat() + totalHours.yMax)
+            axisLeft.axisMaximum = (goal.hours.toFloat() + 7)
             axisLeft.axisMinimum = 0F
 
             //if limit is zero dont draw it
@@ -91,15 +92,6 @@ class WeekViewFragment : Fragment() {
                 axisLeft.removeAllLimitLines()
                 axisLeft.addLimitLine(limitLine)
             }
-
-            //Both must be set to false or double grid lines will be drawn for the goalbarchart
-            data.barWidth = .25F
-            axisRight.setDrawLabels(false)
-            axisRight.setDrawGridLines(false)
-            description.isEnabled = false
-            axisLeft.valueFormatter = MyValueFormatter() //remove float decimals
-            axisLeft.granularity = 1F //sets steps by ones
-            xAxis.setDrawLabels(false) //disable labels for x axis
         }
     }
 
@@ -154,8 +146,6 @@ class WeekViewFragment : Fragment() {
         TransitionManager.beginDelayedTransition(binding.clBarCharts, transformation)
         binding.addGoalChip.visibility = View.VISIBLE
         binding.mcvAddGoal.visibility = View.INVISIBLE
-
-
     }
 
     private fun setupSaveGoalButton(){
@@ -169,7 +159,6 @@ class WeekViewFragment : Fragment() {
             }
         }
     }
-
 
     class MyValueFormatter : ValueFormatter() {
         private val format = DecimalFormat("###,##0.0")
@@ -190,11 +179,6 @@ class WeekViewFragment : Fragment() {
             data = BarData(weekData) // set the data and list of lables into chart
             xAxis.setCenterAxisLabels(false)
             xAxis.setLabelCount(weekDays.size, false)
-            //for labels since we know they will only ever be 7 values for the week
-//            xAxis.setLabelCount(
-//                weekData.labels.size,
-//                force
-//            ) //force = false aligns values with labels
             xAxis.valueFormatter = IndexAxisValueFormatter(weekDays);
             axisLeft.axisMinimum = 0F
             axisRight.setDrawLabels(false)
@@ -204,8 +188,25 @@ class WeekViewFragment : Fragment() {
             axisLeft.granularity = 1F //sets steps by one
             animateY(1000)
         }
+    }
 
+    private fun setTotalHours(hours : Float){
 
+        Timber.i("Total hours is $hours")
+        binding.totalHoursChart.apply {
+            data = BarData(BarDataSet(listOf(BarEntry(0F, hours)), "").apply {
+                color = ContextCompat.getColor(requireActivity(), R.color.marigold)
+
+            })
+            //Both must be set to false or double grid lines will be drawn for the goalbarchart
+            data.barWidth = .25F
+            axisRight.setDrawLabels(false)
+            axisRight.setDrawGridLines(false)
+            description.isEnabled = false
+            axisLeft.valueFormatter = MyValueFormatter() //remove float decimals
+            axisLeft.granularity = 1F //sets steps by ones
+            xAxis.setDrawLabels(false) //disable labels for x axis
+        }
     }
 
     private fun hideSoftKeyboard(view: View) {

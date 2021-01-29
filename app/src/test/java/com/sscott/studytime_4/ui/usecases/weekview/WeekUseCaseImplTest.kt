@@ -1,10 +1,11 @@
-package com.sscott.studytime_4.ui.week
+package com.sscott.studytime_4.ui.usecases.weekview
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.mock
 import com.sscott.studytime_4.MainCoroutineTestRule
 import com.sscott.studytime_4.data.local.entities.StudySession
 import com.sscott.studytime_4.data.repo.Repository
+import com.sscott.studytime_4.other.util.TimeUtilImpl
 import com.sscott.studytime_4.other.util.time.TimeUtil
 import com.sscott.studytime_4.ui.usecases.weekview.WeekUseCase
 import com.sscott.studytime_4.ui.usecases.weekview.WeekUseCaseImpl
@@ -30,9 +31,6 @@ class WeekUseCaseImplTest {
 
     @Before
     fun setup() {
-
-
-
         studySession1 = StudySession(
             minutes = 60F,
             date = "2020-12-02", //formattedDate
@@ -61,7 +59,7 @@ class WeekUseCaseImplTest {
         studySessionList = listOf(
             studySession1, studySession2
         )
-        timeUtil = mock()
+        timeUtil = TimeUtilImpl()
         repository = mock()
 
         weekUseCase = WeekUseCaseImpl(repository, timeUtil)
@@ -99,21 +97,7 @@ class WeekUseCaseImplTest {
         assertEquals(2F, subject.getEntryForIndex(4).y)
     }
 
-    @Test
-    fun `formatHours returns hours when minutes parameter is greater than or equal to 60`() {
 
-        val subject = weekUseCase.formatHours(60F)
-
-        assertEquals(1F, subject)
-    }
-
-    @Test
-    fun `formatHours returns decimal minutes when minutes parameter is less than 60`() {
-
-        val subject = weekUseCase.formatHours(59F)
-
-        assertEquals(0.59F, subject)
-    }
 
 
 
