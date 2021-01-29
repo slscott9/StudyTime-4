@@ -38,9 +38,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
             </com.google.android.material.card.MaterialCardView>
 
-
-
-
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cvTotalMonthlyHours"
                 android:layout_width="match_parent"
@@ -62,7 +59,7 @@
 
 
                         <com.github.mikephil.charting.charts.BarChart
-                            android:id="@+id/totalMonthHoursChart"
+                            android:id="@+id/monthlyGoalChart"
                             android:layout_width="match_parent"
                             android:layout_height="300dp"
                             android:layout_margin="16dp"
@@ -86,7 +83,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/totalMonthHoursChart" />
+                            app:layout_constraintTop_toBottomOf="@id/monthlyGoalChart" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

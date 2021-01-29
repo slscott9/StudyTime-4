@@ -31,13 +31,12 @@ class MonthViewModel @ViewModelInject constructor(
     val totalHours = sessionsForMonth
         .map { monthUseCase.totalHours(it) }.asLiveData(viewModelScope.coroutineContext)
 
-    val monthlyGoal = monthUseCase.monthlyGoal().asLiveData(viewModelScope.coroutineContext)
-
-
 
     val monthBarDataSet = sessionsForMonth
         .map { monthUseCase.toBarDataSet(it) }
         .asLiveData(viewModelScope.coroutineContext)
+
+    val monthlyGoal = monthUseCase.monthlyGoal().asLiveData(viewModelScope.coroutineContext)
 
     fun saveGoal(hours : Int ){
         viewModelScope.launch {

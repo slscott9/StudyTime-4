@@ -21,6 +21,7 @@ interface WeekUseCase {
 
     fun sessionsForWeek() : Flow<List<StudySession>>
 
+    suspend fun  insertTestStudySession()
 
 
 }

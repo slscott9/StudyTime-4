@@ -184,15 +184,6 @@ class WeekViewFragment : Fragment() {
 
         //case 1 multiple bar chart values -> axis labels need to move in order to match chart values
         //case 2 only one bar chart value -> so center the label over value
-//        val force: Boolean = if (weekData.labels.size > 1) {
-//            binding.weekBarChart.xAxis.setCenterAxisLabels(false)
-//        }
-////            false
-////        } else {
-////            binding.weekBarChart.xAxis.setCenterAxisLabels(true)
-////            true
-////        }
-
 
         binding.weekBarChart.apply {
 

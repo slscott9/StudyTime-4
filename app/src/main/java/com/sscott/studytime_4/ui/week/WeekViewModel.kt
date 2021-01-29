@@ -14,9 +14,12 @@ class WeekViewModel @ViewModelInject constructor(
     @DispatcherModule.IoDispatcher private val dispatcher : CoroutineDispatcher
 ) : ViewModel() {
 
-    var month: String = ""
-    private val currentMonth = LocalDateTime.now().monthValue
-    private val currentDayOfMonth = LocalDateTime.now().dayOfMonth
+   init {
+        viewModelScope.launch {
+//            weekUseCase.insertTestStudySession()
+
+        }
+   }
     /*
         1 is monday 7 is sunday
         week view displays 0 as sunday and saturday as 6

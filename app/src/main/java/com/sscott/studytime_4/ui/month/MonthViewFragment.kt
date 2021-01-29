@@ -43,7 +43,6 @@ class MonthViewFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_month_view, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
-
         return binding.root
     }
 
@@ -57,29 +56,24 @@ class MonthViewFragment : Fragment() {
                 setTotalHours(it)
             }
         }
-
         viewModel.monthBarDataSet.observe(viewLifecycleOwner){
             it?.let {
                 setMonthBarChart(it)
             }
         }
-
         viewModel.monthlyGoal.observe(viewLifecycleOwner){
             it?.let {
                 setGoal(it)
             }
         }
-
         viewModel.monthLabels.observe(viewLifecycleOwner){
             it?.let {
                 setLabels(it)
             }
         }
-
         binding.addMonthlyGoalChip.setOnClickListener {
             expandAddGoalCV()
         }
-
     }
 
     private fun hideSoftKeyboard(view: View) {
@@ -89,12 +83,11 @@ class MonthViewFragment : Fragment() {
     }
 
     private fun setTotalHours(totalHours : BarDataSet) {
-        binding.totalMonthHoursChart.apply {
+        binding.monthlyGoalChart.apply {
             data = BarData(totalHours.apply {
                 color = ResourcesCompat.getColor(resources, R.color.marigold, null)
             })
             data.barWidth = .25F
-            axisLeft.valueFormatter = MyValueFormatter()
             axisLeft.axisMinimum = 0F
             axisRight.setDrawLabels(false)
             axisRight.setDrawGridLines(false)
@@ -111,9 +104,9 @@ class MonthViewFragment : Fragment() {
         val label = setLabel(goal.hours.toFloat())
         val limitLine = LimitLine(goal.hours.toFloat(), label)
 
-        binding.totalMonthHoursChart.apply {
+        binding.monthlyGoalChart.apply {
             axisLeft.axisMinimum = 0F
-            axisLeft.axisMaximum = (goal.hours.toFloat() + data.yMax)
+            axisLeft.axisMaximum = (goal.hours.toFloat() + 7) //data must be set first or it will crash
 
             //if limit is zero dont draw it
             //if there a limit line remove the current and add new one
@@ -131,7 +124,6 @@ class MonthViewFragment : Fragment() {
     }
 
     private fun setLabel(hours : Float) : String{
-
         return when {
             hours == 1F -> "$hours hour"
             hours > 1F -> "$hours hours"
@@ -146,6 +138,7 @@ class MonthViewFragment : Fragment() {
         binding.monthBarChart.apply {
             data = BarData( monthData) // set the data and list of labels into chart
 
+            //logic for 1 label or more than 1, labels will be centered either way
             xAxis.setLabelCount(monthData.entryCount,monthData.entryCount <= 1 )
             xAxis.setCenterAxisLabels(monthData.entryCount <= 1)
 
