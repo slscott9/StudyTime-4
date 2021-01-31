@@ -30,7 +30,6 @@ class MainViewModel @ViewModelInject constructor(
     }
 
     private var starTimeHours = 0L
-
     private var startTime = ""
     private var endTime = ""
 

@@ -28,6 +28,7 @@ import com.sscott.studytime_4.data.local.entities.MonthlyGoal
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_month_view.*
 import kotlinx.android.synthetic.main.fragment_week_view.*
+import timber.log.Timber
 import java.text.DecimalFormat
 
 @AndroidEntryPoint
@@ -53,21 +54,28 @@ class MonthViewFragment : Fragment() {
         //crashes is there is no data available
         viewModel.totalHours.observe(viewLifecycleOwner){
             it?.let {
+                Timber.i("total hours changed")
                 setTotalHours(it)
             }
         }
         viewModel.monthBarDataSet.observe(viewLifecycleOwner){
             it?.let {
+                Timber.i("monthBarDataSEt changed")
+
                 setMonthBarChart(it)
             }
         }
         viewModel.monthlyGoal.observe(viewLifecycleOwner){
             it?.let {
+                Timber.i("monthlyGoal changed")
+
                 setGoal(it)
             }
         }
         viewModel.monthLabels.observe(viewLifecycleOwner){
             it?.let {
+                Timber.i("monthlabels changed")
+
                 setLabels(it)
             }
         }

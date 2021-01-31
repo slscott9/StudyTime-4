@@ -10,6 +10,7 @@ import com.sscott.studytime_4.other.util.TimeUtilImpl
 import com.sscott.studytime_4.other.util.time.TimeUtil
 import org.junit.Assert.*
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import java.time.OffsetDateTime
 
@@ -21,7 +22,11 @@ class MonthUseCaseImplTest {
     private lateinit var studySession1 : StudySession
     private lateinit var studySession2 : StudySession
     private lateinit var studySessionList : List<StudySession>
+
+    @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
     var mainCoroutineTestRule = MainCoroutineTestRule()
 
 

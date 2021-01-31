@@ -7,6 +7,8 @@ import com.sscott.studytime_4.data.local.entities.StudySession
 import com.sscott.studytime_4.data.repo.Repository
 import com.sscott.studytime_4.other.util.time.TimeUtil
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 import kotlin.time.hours
 
@@ -30,7 +32,14 @@ class MonthUseCaseImpl(
         "December"
     )
 
+    override fun sessionsForMonth(): Flow<List<StudySession>> {
+        Timber.i("sessionsForMonth")
+        return repository.monthlyStudySessions(timeUtil.month(), timeUtil.year())
+    }
+
     override fun toBarDataSet(studySessionList: List<StudySession>): BarDataSet {
+        Timber.i("toBarDataSet")
+
         return BarDataSet(
             studySessionList.mapIndexed { index, studySession ->
                 BarEntry(
@@ -44,6 +53,8 @@ class MonthUseCaseImpl(
 
 
     override fun setLabels(studySessionList: List<StudySession>): List<String> {
+        Timber.i("setLabels")
+
         return studySessionList.map { studySession -> studySession.date }
     }
 
@@ -68,7 +79,7 @@ class MonthUseCaseImpl(
         val totalHours = studySessionList.map { it.minutes }.sum()
 
 
-        Timber.i("Total hours is $totalHours")
+        Timber.i("totalHours")
         return BarDataSet(
             listOf(BarEntry(0F, timeUtil.formatHours(totalHours) )),
             "Total monthly hours"
@@ -76,11 +87,9 @@ class MonthUseCaseImpl(
     }
 
     override fun monthlyGoal(): Flow<MonthlyGoal?> {
-        Timber.i("Monthly goal is called")
+        Timber.i("monthlyGoal")
         return repository.monthlyGoal(curYear =  timeUtil.year(), curMonth = timeUtil.month())
     }
 
-    override fun sessionsForMonth(): Flow<List<StudySession>> {
-        return repository.monthlyStudySessions(timeUtil.month(), timeUtil.year())
-    }
+
 }
