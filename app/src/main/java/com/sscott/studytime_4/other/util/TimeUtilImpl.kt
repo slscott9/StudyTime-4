@@ -3,6 +3,7 @@ package com.sscott.studytime_4.other.util
 import com.sscott.studytime_4.other.util.time.TimeUtil
 import timber.log.Timber
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 class TimeUtilImpl : TimeUtil {
@@ -22,6 +23,14 @@ class TimeUtilImpl : TimeUtil {
 
     override fun year(): Int =
         LocalDateTime.now().year
+
+    override fun epochTimeSeconds(): Long {
+        return OffsetDateTime.now().toEpochSecond()
+    }
+
+    override fun offsetDateTime(): OffsetDateTime {
+        return OffsetDateTime.now()
+    }
 
     override fun formatHours(minutes: Float): Float {
         return when {

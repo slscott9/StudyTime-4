@@ -62,4 +62,5 @@
     <string name="s">S</string>
     <string name="start_time">Start time:</string>
     <string name="end_time">End time:</string>
+    <string name="study">Study</string>
 </resources>

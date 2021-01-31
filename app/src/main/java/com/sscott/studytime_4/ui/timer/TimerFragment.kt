@@ -66,181 +66,65 @@ class TimerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.viewModel = viewModel
 
-        if(viewModel.isTimeAvailable()){
-            binding.timerTextInputLayout.visibility = View.GONE
+        binding.btnStudy.setOnClickListener {
+            if(etTimeInput.text.isNullOrBlank()){
+                Toast.makeText(requireContext(), "Please enter a study duration.", Toast.LENGTH_SHORT).show()
+            }else{
+                viewModel.setIsRunning(true)
+            }
         }
 
-        setupStartButton()
-        setupResetButton()
-        setupNav()
-        setupSaveSessionButton()
+        binding.btnStart.setOnClickListener {
+            if(btnStart.text == getString(R.string.start_timer_button_pause)){
+                viewModel.setIsRunning(false)
+            }else{
+                viewModel.setIsRunning(true)
+            }
+        }
 
-        binding.viewModel = viewModel
+        binding.btnReset.setOnClickListener {
+            viewModel.resetTime()
+        }
 
         viewModel.isRunning.observe(viewLifecycleOwner){
             if(it){
-                binding.startButton.text = getString(R.string.start_timer_button_pause)
-                viewModel.startTimer(viewModel.getCurrentTimeMilli())
+                startTime()
             }else{
-                binding.startButton.text = getString(R.string.start_timer_button)
-                viewModel.setEndTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a")))
-                viewModel.cancelTimer()
+                viewModel.stopTimer()
             }
         }
 
-        viewModel.timerFinished.observe(viewLifecycleOwner){
-            if (it == true){
-                saveSessionDialog()
-            }
-        }
-    }
-
-    private fun setupResetButton() {
-        binding.btnReset.setOnClickListener {
-            resetTimer()
-        }
-    }
-
-    private fun resetTimer() {
-        viewModel.setCurrentTimeMilli(0L)
-        viewModel.setStartTimeHours(0)
-        viewModel.setIsRunning(false)
-        viewModel.setIsTimeAvailable(false)
-        viewModel.setTimerFinished(false)
-        binding.timerTextInputLayout.visibility = View.VISIBLE
-    }
-
-    private fun setupStartButton() {
-
-        binding.startButton.setOnClickListener {
-
-            if (binding.timerTextInputLayout.isVisible && binding.etTimeInput.text.isNullOrBlank() ) {
-                Toast.makeText(
-                    requireActivity(),
-                    "Please enter a study duration",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-            }else{ //either time is left on previous timer or user is starting timer for first time
-
-                if(binding.startButton.text == getString(R.string.start_timer_button_pause)){
-                    viewModel.setIsRunning(false)
-                }else{
-                    if(viewModel.isTimeAvailable()){ //previous time on clock continue running timer
-                        viewModel.setIsRunning(true)
-
-                    }else{ //Clock is set for first time
-
-                        viewModel.setCurrentTimeMilli(TimeUnit.HOURS.toMillis(etTimeInput.text.toString().toLong()))
-//                        viewModel.setCurrentTimeMilli(100000)
-                        viewModel.setIsTimeAvailable(true)
-                        viewModel.setIsRunning(true)
-                        viewModel.setStartTimeHours(etTimeInput.text.toString().toLong())
-                        viewModel.setStartTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a")))
-                        binding.timerTextInputLayout.visibility = View.GONE
-
-                    }
-                }
-                hideSoftKeyboard(it)
-            }
-
-        }
-    }
-
-    private fun setupSaveSessionButton() {
-
-        //Adding a study session needs to insert into database
         binding.addStudySessionChip.setOnClickListener {
-            if (viewModel.getStartTimeHours() == 0L) {
-                Toast.makeText(
-                    requireActivity(),
-                    "Please enter a study duration",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-
-                viewModel.setIsRunning(false)
-                val minutesStudied = minutesStudied()
-                Timber.i("minutes studied is ${minutesStudied.toString()}")
-                val hoursStudied =  decimalFormat.format(minutesStudied / 60.0).toFloat() //minutesStudied / 60.0
-                Timber.i("hours studied is $hoursStudied")
-
-                studySession = StudySession(
-                    minutes = decimalFormat.format(minutesStudied).toFloat(),
-                    date = formattedDate, //formattedDate
-                    weekDay = weekDayMap[currentWeekDay]!!, //current weekday
-                    month = currentMonth,
-                    dayOfMonth = currentDayOfMonth,
-                    year = currentYear,
-                    epochDate = OffsetDateTime.now().toEpochSecond(),
-                    startTime = viewModel.getStartTime(),
-                    endTime = viewModel.getEndTime(),
-                    offsetDateTime = OffsetDateTime.now()
-                )
-
-                val duration = Duration(
-                    date = formattedDate.toString(),
-                    startTime = viewModel.getStartTime(),
-                    endTime = viewModel.getEndTime(),
-                    epochDate = OffsetDateTime.now().toEpochSecond(),
-                    minutes = decimalFormat.format(minutesStudied).toFloat(),
-                )
-
-                resetTimer()
-                viewModel.upsertStudySession(studySession)
-                viewModel.insertStudyDuration(duration)
-                redirectToHomeFragment()
-            }
+            viewModel.saveSession()
+            redirectToHomeFragment()
         }
     }
 
-    private fun minutesStudied() : Float {
-        Timber.i("from minutes studied function minutes studied are ${ TimeUnit.HOURS.toMillis(viewModel.getStartTimeHours()) - viewModel.getCurrentTimeMilli()}")
-        Timber.i("view models currentTimeMilli is ${viewModel.getCurrentTimeMilli()}")
-        Timber.i("helllloooooooooo")
+    private fun startTime() {
 
-        return TimeUnit.MILLISECONDS.toMinutes(
-            TimeUnit.HOURS.toMillis(viewModel.getStartTimeHours()) - viewModel.getCurrentTimeMilli()
-        ).toFloat()
+        viewModel.setStartTime(TimeUnit.HOURS.toMillis(etTimeInput.text.toString().toLong()))
+        viewModel.startTimer()
+    }
+
+    private fun hideTimerButtons() {
+        binding.btnReset.visibility = View.VISIBLE
+        binding.addStudySessionChip.visibility = View.VISIBLE
+        binding.btnStudy.visibility = View.VISIBLE
     }
 
 
     private fun saveSessionDialog() {
 
-        Timber.i(decimalFormat.format(viewModel.getStartTimeHours()/60).toFloat().toString())
-
-        studySession = StudySession(
-            date = formattedDate.toString(),
-//            hours = decimalFormat.format(viewModel.getStartTimeHours()).toFloat(),
-            minutes = decimalFormat.format(minutesStudied()).toFloat(),
-            weekDay = currentWeekDay,
-            dayOfMonth = currentDayOfMonth,
-            month = currentMonth,
-            year = currentYear,
-            epochDate = OffsetDateTime.now().toEpochSecond(),
-            startTime = viewModel.getStartTime(),
-            endTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a")),
-            offsetDateTime = OffsetDateTime.now()
-
-        )
-
-        val duration = Duration(
-            date = formattedDate.toString(),
-            startTime = viewModel.getStartTime(),
-            endTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a")),
-            epochDate = OffsetDateTime.now().toEpochSecond(),
-//            hours = decimalFormat.format(viewModel.getStartTimeHours()).toFloat(),
-            minutes = decimalFormat.format(minutesStudied()).toFloat(),
-        )
-
+//        Timber.i(decimalFormat.format(viewModel.getStartTimeHours()/60).toFloat().toString())
         val dialogBuilder = AlertDialog.Builder(requireActivity())
         dialogBuilder.setMessage("Do you want to save this study session?")
             .setCancelable(false)
             .setPositiveButton("Yes") { _, _ ->
-                resetTimer()
-                viewModel.upsertStudySession(studySession)
-                viewModel.insertStudyDuration(duration)
+
+                //CLEAR CLOCK
+                viewModel.saveSession()
                 redirectToHomeFragment()
             }
             .setNegativeButton("No") { dialogInterface, _ ->

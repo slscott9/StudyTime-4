@@ -6,147 +6,141 @@ import androidx.lifecycle.*
 import com.sscott.studytime_4.data.local.entities.Duration
 import com.sscott.studytime_4.data.local.entities.StudySession
 import com.sscott.studytime_4.data.repo.Repository
+import com.sscott.studytime_4.other.util.time.TimeUtil
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class MainViewModel @ViewModelInject constructor(
-    private val repository: Repository
+    private val repository: Repository,
+    private val timeUtil: TimeUtil
 ) : ViewModel(){
 
+    private val _startTimeMilli = MutableLiveData<Long>()
+    val startingTime : LiveData<Long> = _startTimeMilli
 
-    private var timer : CountDownTimer ? = null
-
-    private val _isRunning =  MutableLiveData<Boolean>()
-    val isRunning : LiveData<Boolean> = _isRunning
-
-
-    private val _currentTimeMilli = MutableLiveData<Long>()
-
-    val currentTimeString : LiveData<String> = _currentTimeMilli.switchMap {
+    private val _currentTime = _startTimeMilli
+    val currentTimeString : LiveData<String> = _startTimeMilli.switchMap {
         liveData {
-            emit(timerFormatter(it))
+            emit(formatTime(it))
         }
     }
 
-    private var starTimeHours = 0L
-    private var startTime = ""
-    private var endTime = ""
+    private val _isRunning  = MutableLiveData<Boolean>()
+    val isRunning : LiveData<Boolean> = _isRunning
 
-    private var timeAvailable = false
+    private var timer : CountDownTimer? = null
 
     private val _timerFinished = MutableLiveData<Boolean>()
     val timerFinished : LiveData<Boolean> = _timerFinished
 
-    fun setTimerFinished(finished : Boolean) {
-        _timerFinished.value = finished
-    }
+    private var startTimeHours : String? = null
 
-    fun setStartTime(startingTime: String){
-        startTime = startingTime
-    }
+    private var endTimeHours : String? = null
 
-    fun getStartTime() : String {
-        return startTime
-    }
-
-    fun setEndTime(endingTime : String){
-        endTime = endingTime
-    }
-
-    fun getEndTime() : String {
-        return endTime
-    }
-
-    fun isTimeAvailable() : Boolean {
-        return timeAvailable
-    }
-
-    fun setIsTimeAvailable(availabe: Boolean){
-        timeAvailable = availabe
+    fun setStartTimeHours(time : String) {
+        startTimeHours = time
     }
 
 
-    fun getCurrentTimeMilli() : Long {
-        return _currentTimeMilli.value ?: 0L
-    }
+    fun startTimer() {
 
-    fun setCurrentTimeMilli(milliseconds : Long) {
-        _currentTimeMilli.value = milliseconds
-    }
+        timer = object : CountDownTimer(
+            _currentTime.value ?: 0
+            , 1000
+        ) {
 
-    fun setStartTimeHours(hours : Long) {
-        starTimeHours = hours
-    }
-
-    fun  getStartTimeHours() : Long {
-        return starTimeHours
-    }
-
-    fun setIsRunning(running : Boolean){
-        _isRunning.value = running
-    }
-
-    fun startTimer(startingTime: Long) : Boolean{
-
-        timer = object : CountDownTimer(startingTime, 1000) {
             override fun onFinish() {
                 _timerFinished.value = true
             }
 
             override fun onTick(milliseconds: Long) {
-                Timber.i("in on tick")
+                _currentTime.value = milliseconds
 
-                _currentTimeMilli.value = milliseconds
             }
         }
 
         timer?.start()
-        return true
     }
 
-    private fun timerFormatter(time_in_milli : Long) : String {
 
-        val time = String.format( "%02d:%02d:%02d",
-            TimeUnit.MILLISECONDS.toHours(time_in_milli),
-            TimeUnit.MILLISECONDS.toMinutes(time_in_milli) -
-                    TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time_in_milli)), // The change is in this line
-            TimeUnit.MILLISECONDS.toSeconds(time_in_milli) -
-                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time_in_milli))
-        )
-
-        return time
-    }
-
-    fun cancelTimer() : Boolean {
+    fun stopTimer() {
         timer?.cancel()
-
-        return false
     }
 
-
-    /*
-        Dont need to observer insertStatus since this is activity's view model.
-        once insertStatus is set, when navigating backto timer fragment the live data triggers again and redirects to home fragment.
-     */
-
-    fun insertStudyDuration(duration: Duration){
-        viewModelScope.launch {
-            repository.insertStudyDuration(duration)
-        }
+    fun formatTime(milliseconds: Long): String {
+        return  String.format( "%02d:%02d:%02d",
+            TimeUnit.MILLISECONDS.toHours(milliseconds),
+            TimeUnit.MILLISECONDS.toMinutes(milliseconds) -
+                    TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milliseconds)), // The change is in this line
+            TimeUnit.MILLISECONDS.toSeconds(milliseconds) -
+                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliseconds))
+        )
     }
 
-
-    fun upsertStudySession(newStudySession: StudySession){
-        viewModelScope.launch {
-            val status = repository.upsertStudySession(newStudySession)
-
-        }
+    fun setIsRunning(isRunning : Boolean){
+        _isRunning.value = true
     }
 
-    fun testSessions() {
-        viewModelScope.launch {
+    fun cancelTimer() {
+        timer?.cancel()
+    }
 
+    fun setStartTime(milliseconds: Long) {
+        _startTimeMilli.value = milliseconds
+    }
+
+    fun cancelStartTime() {
+        _startTimeMilli.value = null
+    }
+
+    fun setCurrentTime(milliseconds: Long) {
+        _currentTime.value = milliseconds
+    }
+
+    fun cancelCurrentTime() {
+        _currentTime.value = null
+    }
+
+    fun resetTime() {
+        _currentTime.value = 0
+        _startTimeMilli.value = 0
+        _isRunning.value = false
+        timer?.cancel()
+    }
+
+    fun getMinutesStudies() : Float {
+        return TimeUnit.MILLISECONDS.toMinutes((_startTimeMilli.value!!.minus(_currentTime.value!!))
+        ).toFloat()
+    }
+
+    fun saveSession(){
+        viewModelScope.launch {
+            repository.upsertStudySession(
+                StudySession(
+                    minutes = getMinutesStudies(),
+                    date = timeUtil.date(),
+                    weekDay = timeUtil.weekDay(),
+                    month = timeUtil.month(),
+                    dayOfMonth = timeUtil.dayOfMonth(),
+                    year = timeUtil.year(),
+                    epochDate = timeUtil.epochTimeSeconds(),
+                    startTime = startTimeHours ?: "",
+                    endTime = endTimeHours ?: "",
+                    offsetDateTime = timeUtil.offsetDateTime()
+                )
+            )
+
+            repository.insertStudyDuration(
+                Duration(
+                    date = timeUtil.date(),
+                    startTime = startTimeHours ?: "",
+                    endTime = endTimeHours ?: "",
+                    epochDate = timeUtil.epochTimeSeconds(),
+                    minutes = getMinutesStudies()
+
+                )
+            )
         }
     }
 
