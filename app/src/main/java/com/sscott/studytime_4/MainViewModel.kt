@@ -19,12 +19,15 @@ class MainViewModel @ViewModelInject constructor(
     private val _startTimeMilli = MutableLiveData<Long>()
     val startingTime : LiveData<Long> = _startTimeMilli
 
-    private val _currentTime = _startTimeMilli
-    val currentTimeString : LiveData<String> = _startTimeMilli.switchMap {
+    val _currentTime = MutableLiveData<Long>()
+
+    val currentTimeString : LiveData<String> = _currentTime.switchMap {
         liveData {
             emit(formatTime(it))
         }
     }
+
+    private var timeAvailable = false
 
     private val _isRunning  = MutableLiveData<Boolean>()
     val isRunning : LiveData<Boolean> = _isRunning
@@ -42,8 +45,16 @@ class MainViewModel @ViewModelInject constructor(
         startTimeHours = time
     }
 
+    fun getTimeAvailable() : Boolean {
+        return timeAvailable
+    }
+
+    fun setTimeAvailable(isAvailable : Boolean) {
+        timeAvailable = isAvailable
+    }
 
     fun startTimer() {
+        Timber.i("viewmodel startTimer called")
 
         timer = object : CountDownTimer(
             _currentTime.value ?: 0
@@ -55,6 +66,7 @@ class MainViewModel @ViewModelInject constructor(
             }
 
             override fun onTick(milliseconds: Long) {
+                Timber.i("onTick called milliseconds is $milliseconds")
                 _currentTime.value = milliseconds
 
             }
@@ -78,8 +90,16 @@ class MainViewModel @ViewModelInject constructor(
         )
     }
 
+    fun getCurrentTime() : Long {
+        return _currentTime.value ?: 0
+    }
+
+    fun getStartTime() : Long {
+        return _startTimeMilli.value ?: 0
+    }
+
     fun setIsRunning(isRunning : Boolean){
-        _isRunning.value = true
+        _isRunning.postValue(isRunning)
     }
 
     fun cancelTimer() {
@@ -103,18 +123,26 @@ class MainViewModel @ViewModelInject constructor(
     }
 
     fun resetTime() {
+//        _currentTime.postValue(0)
+//        _startTimeMilli.postValue(0)
+//        _isRunning.postValue(false)
         _currentTime.value = 0
         _startTimeMilli.value = 0
         _isRunning.value = false
         timer?.cancel()
+        timeAvailable = false
     }
 
     fun getMinutesStudies() : Float {
-        return TimeUnit.MILLISECONDS.toMinutes((_startTimeMilli.value!!.minus(_currentTime.value!!))
-        ).toFloat()
+
+        Timber.i(getStartTime().toString())
+        Timber.i(getCurrentTime().toString())
+        val minutes = getStartTime() - getCurrentTime()
+        Timber.i("minutes studies is ${_startTimeMilli.value?.minus(_currentTime.value!!)!!}")
+        return TimeUnit.MILLISECONDS.toMinutes(_startTimeMilli.value?.minus(_currentTime.value!!)!!).toFloat()
     }
 
-    fun saveSession(){
+    fun saveSession(minutes: Float){
         viewModelScope.launch {
             repository.upsertStudySession(
                 StudySession(

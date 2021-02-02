@@ -66,51 +66,86 @@ class TimerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if(viewModel.getTimeAvailable()){
+            renderTimerButtons()
+        }else{
+            hideTimerButtons()
+        }
+
         binding.viewModel = viewModel
 
         binding.btnStudy.setOnClickListener {
             if(etTimeInput.text.isNullOrBlank()){
                 Toast.makeText(requireContext(), "Please enter a study duration.", Toast.LENGTH_SHORT).show()
             }else{
+                hideSoftKeyboard(it)
+                viewModel.setCurrentTime(TimeUnit.HOURS.toMillis(etTimeInput.text.toString().toLong()))
+                viewModel.setStartTime(TimeUnit.HOURS.toMillis(etTimeInput.text.toString().toLong()))
+                binding.btnStart.text = getString(R.string.start_timer_button_pause)
                 viewModel.setIsRunning(true)
+                viewModel.setTimeAvailable(true)
+
             }
         }
 
         binding.btnStart.setOnClickListener {
             if(btnStart.text == getString(R.string.start_timer_button_pause)){
+                Timber.i("btnStart is pause setting is running to false")
                 viewModel.setIsRunning(false)
             }else{
+                Timber.i("btnStart is start setting is running to true")
                 viewModel.setIsRunning(true)
             }
         }
 
         binding.btnReset.setOnClickListener {
             viewModel.resetTime()
+            hideTimerButtons()
+        }
+
+        viewModel.startingTime.observe(viewLifecycleOwner){
+            if(it != null && it != 0L){
+
+            }
         }
 
         viewModel.isRunning.observe(viewLifecycleOwner){
             if(it){
+                Timber.i("isrunning is true")
+                binding.btnStart.text = getString(R.string.start_timer_button_pause)
                 startTime()
             }else{
+                Timber.i("isrunning is false")
+                binding.btnStart.text = getString(R.string.start_timer_button)
                 viewModel.stopTimer()
             }
         }
 
         binding.addStudySessionChip.setOnClickListener {
-            viewModel.saveSession()
+            viewModel.setIsRunning(false)
+            viewModel.saveSession(viewModel.getMinutesStudies())
             redirectToHomeFragment()
         }
     }
 
     private fun startTime() {
 
-        viewModel.setStartTime(TimeUnit.HOURS.toMillis(etTimeInput.text.toString().toLong()))
+        renderTimerButtons()
         viewModel.startTimer()
+
     }
 
-    private fun hideTimerButtons() {
+    private fun renderTimerButtons() {
         binding.btnReset.visibility = View.VISIBLE
         binding.addStudySessionChip.visibility = View.VISIBLE
+        binding.btnStart.visibility = View.VISIBLE
+        binding.btnStudy.visibility = View.GONE
+    }
+
+    private fun hideTimerButtons(){
+        binding.btnReset.visibility = View.GONE
+        binding.addStudySessionChip.visibility = View.GONE
+        btnStart.visibility = View.GONE
         binding.btnStudy.visibility = View.VISIBLE
     }
 
@@ -124,7 +159,7 @@ class TimerFragment : Fragment() {
             .setPositiveButton("Yes") { _, _ ->
 
                 //CLEAR CLOCK
-                viewModel.saveSession()
+                viewModel.saveSession(viewModel.getMinutesStudies())
                 redirectToHomeFragment()
             }
             .setNegativeButton("No") { dialogInterface, _ ->
@@ -156,11 +191,18 @@ class TimerFragment : Fragment() {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.setIsRunning(false)
+    }
+
 
     override fun onPause() {
         super.onPause()
+        Timber.i("onPause() called")
         viewModel.setIsRunning(false)
     }
+
 
 
 
