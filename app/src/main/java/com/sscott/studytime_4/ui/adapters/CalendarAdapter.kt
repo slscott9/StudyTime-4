@@ -23,7 +23,6 @@ class CalendarAdapter(
 
     private val weekDays = listOf<String>("S", "M","T","W","T","F","S")
 
-
     private val lastIndex = daysInMonth + WEEKDAYS + firstDayOfMonth
 
     private val firstIndex = firstDayOfMonth + WEEKDAYS

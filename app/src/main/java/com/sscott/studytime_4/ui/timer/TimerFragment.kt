@@ -84,6 +84,7 @@ class TimerFragment : Fragment() {
                 binding.btnStart.text = getString(R.string.start_timer_button_pause)
                 viewModel.setIsRunning(true)
                 viewModel.setTimeAvailable(true)
+                viewModel.setStartTimeHours( LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a")))
 
             }
         }
@@ -122,6 +123,7 @@ class TimerFragment : Fragment() {
         }
 
         binding.addStudySessionChip.setOnClickListener {
+            viewModel.setEndTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm a")))
             viewModel.setIsRunning(false)
             viewModel.saveSession(viewModel.getMinutesStudies())
             redirectToHomeFragment()

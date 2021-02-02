@@ -98,6 +98,18 @@ class MainViewModel @ViewModelInject constructor(
         return _startTimeMilli.value ?: 0
     }
 
+    fun setEndTime(time : String) {
+        endTimeHours = time
+    }
+
+    fun getStartTimeHours() : String? {
+        return endTimeHours
+    }
+
+    fun getEndTime() : String?{
+        return endTimeHours
+    }
+
     fun setIsRunning(isRunning : Boolean){
         _isRunning.postValue(isRunning)
     }

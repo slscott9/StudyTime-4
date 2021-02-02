@@ -202,6 +202,7 @@ class WeekViewFragment : Fragment() {
             data.barWidth = .25F
             axisRight.setDrawLabels(false)
             axisRight.setDrawGridLines(false)
+            axisLeft.axisMinimum = 0F
             description.isEnabled = false
             axisLeft.valueFormatter = MyValueFormatter() //remove float decimals
             axisLeft.granularity = 1F //sets steps by ones
